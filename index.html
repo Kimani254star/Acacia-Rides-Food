@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acacia Rides & Food</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+scroll-behavior:smooth;
+}
+body{
+font-family:'cambria',sans-serif;
+background:#f8fafc;
+color:#111827;
+overflow-x:hidden;
+}
+a{
+text-decoration:none;
+color:inherit;
+}
+ul{
+list-style:none;
+}
+img{
+max-width:100%;
+display:block;
+}
+.container{
+width:92%;
+max-width:1400px;
+margin:auto;
+}
+header{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+background:#fff;
+box-shadow:0 2px 20px rgba(0,0,0,.08);
+z-index:1000;
+}
+nav{
+height:85px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+.logo{
+display:flex;
+align-items:center;
+gap:12px;
+font-size:30px;
+font-weight:700;
+color:#15803d;
+cursor:pointer;
+}
+.logo i{
+font-size:36px;
+}
+.menu{
+display:flex;
+align-items:center;
+gap:35px;
+font-size:17px;
+font-weight:600;
+}
+.menu a{
+transition:.3s;
+cursor:pointer;
+}
+.menu a:hover{
+color:#16a34a;
+}
+.nav-buttons{
+display:flex;
+align-items:center;
+gap:15px;
+}
+.btn-login{
+padding:12px 28px;
+border:2px solid #16a34a;
+border-radius:10px;
+font-weight:700;
+background:white;
+cursor:pointer;
+transition:.3s;
+}
+.btn-login:hover{
+background:#16a34a;
+color:white;
+}
+.btn-register{
+padding:12px 28px;
+background:#16a34a;
+border:none;
+border-radius:10px;
+color:white;
+font-weight:700;
+cursor:pointer;
+transition:.3s;
+}
+.btn-register:hover{
+background:#166534;
+}
+.hero{
+padding-top:140px;
+padding-bottom:90px;
+background:linear-gradient(135deg,#f0fdf4,#dcfce7,#bbf7d0);
+}
+.hero-grid{
+display:grid;
+grid-template-columns:1.2fr .8fr;
+gap:70px;
+align-items:center;
+}
+.hero h1{
+font-size:65px;
+line-height:1.1;
+margin-bottom:25px;
+color:#052e16;
+}
+.hero p{
+font-size:22px;
+line-height:1.8;
+color:#374151;
+margin-bottom:40px;
+}
+.hero-buttons{
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+}
+.primary-btn{
+padding:18px 40px;
+background:#16a34a;
+color:white;
+border-radius:12px;
+font-size:18px;
+font-weight:700;
+transition:.3s;
+display:inline-flex;
+align-items:center;
+gap:12px;
+cursor:pointer;
+}
+.primary-btn:hover{
+background:#166534;
+transform:translateY(-3px);
+}
+.secondary-btn{
+padding:18px 40px;
+background:white;
+border-radius:12px;
+font-size:18px;
+font-weight:700;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+transition:.3s;
+display:inline-flex;
+align-items:center;
+gap:12px;
+cursor:pointer;
+}
+.secondary-btn:hover{
+transform:translateY(-3px);
+}
+.booking-card{
+background:white;
+padding:35px;
+border-radius:25px;
+box-shadow:0 20px 50px rgba(0,0,0,.12);
+}
+.tabs{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-bottom:30px;
+}
+.tab{
+padding:16px;
+border-radius:12px;
+background:#f3f4f6;
+text-align:center;
+font-weight:700;
+cursor:pointer;
+transition:.3s;
+}
+.tab.active{
+background:#16a34a;
+color:white;
+}
+.input-group{
+margin-bottom:18px;
+}
+.input-group label{
+display:block;
+margin-bottom:8px;
+font-weight:700;
+}
+.input-group input,
+.input-group select{
+width:100%;
+padding:16px;
+border:2px solid #e5e7eb;
+border-radius:12px;
+font-size:16px;
+outline:none;
+}
+.input-group input:focus,
+.input-group select:focus{
+border-color:#16a34a;
+}
+.find-btn{
+width:100%;
+padding:18px;
+background:#16a34a;
+border:none;
+color:white;
+font-size:18px;
+font-weight:700;
+border-radius:12px;
+cursor:pointer;
+transition:.3s;
+}
+.find-btn:hover{
+background:#166534;
+}
+.hero-stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px;
+margin-top:80px;
+}
+.stat{
+background:white;
+padding:30px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+.stat h2{
+font-size:40px;
+color:#16a34a;
+margin-bottom:8px;
+}
+.stat p{
+font-size:18px;
+margin:0;
+}
+@media(max-width:1100px){
+.hero-grid{
+grid-template-columns:1fr;
+}
+.hero h1{
+font-size:50px;
+}
+.hero-stats{
+grid-template-columns:repeat(2,1fr);
+}
+.menu{
+display:none;
+}
+}
+@media(max-width:700px){
+.hero h1{
+font-size:38px;
+}
+.hero p{
+font-size:18px;
+}
+.hero-buttons{
+flex-direction:column;
+}
+.primary-btn,
+.secondary-btn{
+justify-content:center;
+}
+.hero-stats{
+grid-template-columns:1fr;
+}
+.nav-buttons{
+display:none;
+}
+.logo{
+font-size:24px;
+}
+}
+section{
+padding:90px 0;
+}
+.section-title{
+text-align:center;
+margin-bottom:60px;
+}
+.section-title h2{
+font-size:46px;
+margin-bottom:15px;
+color:#052e16;
+}
+.section-title p{
+font-size:20px;
+color:#6b7280;
+max-width:800px;
+margin:auto;
+line-height:1.8;
+}
+.service-grid,
+.food-grid,
+.restaurant-grid,
+.feature-grid{
+display:grid;
+gap:30px;
+}
+.service-grid{
+grid-template-columns:repeat(4,1fr);
+}
+.food-grid{
+grid-template-columns:repeat(6,1fr);
+}
+.restaurant-grid{
+grid-template-columns:repeat(3,1fr);
+}
+.feature-grid{
+grid-template-columns:repeat(3,1fr);
+}
+.service-card,
+.food-card,
+.restaurant-card,
+.feature-card{
+background:#fff;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 15px 35px rgba(0,0,0,.08);
+transition:.35s;
+}
+.service-card:hover,
+.food-card:hover,
+.restaurant-card:hover,
+.feature-card:hover{
+transform:translateY(-10px);
+}
+.service-card,
+.feature-card{
+padding:35px;
+text-align:center;
+}
+.service-icon{
+width:80px;
+height:80px;
+margin:auto;
+background:#dcfce7;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:34px;
+color:#16a34a;
+margin-bottom:25px;
+}
+.service-card h3,
+.feature-card h3{
+margin-bottom:15px;
+font-size:24px;
+}
+.service-card p,
+.feature-card p{
+line-height:1.8;
+color:#6b7280;
+margin-bottom:20px;
+}
+.service-card a{
+font-weight:700;
+color:#16a34a;
+cursor:pointer;
+}
+.food-card{
+padding:35px;
+text-align:center;
+}
+.food-card i{
+font-size:42px;
+color:#16a34a;
+margin-bottom:18px;
+}
+.food-card h3{
+margin-bottom:10px;
+}
+.restaurant-card img{
+height:230px;
+width:100%;
+object-fit:cover;
+}
+.restaurant-content{
+padding:25px;
+}
+.restaurant-content h3{
+margin-bottom:12px;
+}
+.restaurant-content p{
+color:#16a34a;
+margin-bottom:10px;
+font-weight:700;
+}
+.restaurant-content span{
+color:#6b7280;
+}
+.feature-card i{
+font-size:42px;
+color:#16a34a;
+margin-bottom:25px;
+}
+@media(max-width:1100px){
+.service-grid,
+.feature-grid{
+grid-template-columns:repeat(2,1fr);
+}
+.food-grid{
+grid-template-columns:repeat(3,1fr);
+}
+.restaurant-grid{
+grid-template-columns:1fr;
+}
+}
+@media(max-width:700px){
+.service-grid,
+.feature-grid,
+.food-grid,
+.restaurant-grid{
+grid-template-columns:1fr;
+}
+.section-title h2{
+font-size:34px;
+}
+}
+.faq{
+background:white;
+}
+.faq-container{
+max-width:900px;
+margin:auto;
+}
+.faq-item{
+margin-bottom:20px;
+background:#f8fafc;
+border-radius:15px;
+overflow:hidden;
+}
+.faq-question{
+padding:22px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+cursor:pointer;
+font-size:19px;
+font-weight:700;
+}
+.faq-answer{
+display:none;
+padding:0 22px 22px;
+color:#6b7280;
+line-height:1.8;
+}
+footer{
+background:#111827;
+color:white;
+padding:80px 0 30px;
+}
+.footer-grid{
+display:grid;
+grid-template-columns:2fr 1fr 1fr 1fr;
+gap:50px;
+margin-bottom:50px;
+}
+.footer-grid h3,
+.footer-grid h4{
+margin-bottom:20px;
+font-size:20px;
+color:#ffffff;
+}
+.footer-grid p{
+line-height:1.8;
+color:#9ca3af;
+font-size:16px;
+}
+.footer-grid ul{
+display:grid;
+gap:12px;
+}
+.footer-grid li a{
+color:#9ca3af;
+font-size:16px;
+transition: 0.3s;
+cursor:pointer;
+}
+.footer-grid li a:hover{
+color:#22c55e;
+}
+.socials{
+display:flex;
+gap:15px;
+margin-top:25px;
+}
+.socials a{
+width:45px;
+height:45px;
+background:#1f2937;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+transition: 0.3s;
+color: #9ca3af;
+}
+.socials a:hover{
+background:#16a34a;
+color: white;
+}
+.newsletter{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+.newsletter input{
+padding:15px;
+border:none;
+border-radius:10px;
+background: #1f2937;
+color: white;
+outline: none;
+font-family: inherit;
+}
+.newsletter button{
+padding:15px;
+border:none;
+border-radius:10px;
+background:#16a34a;
+color:white;
+font-weight:700;
+cursor:pointer;
+transition: 0.3s;
+}
+.newsletter button:hover{
+background:#166534;
+}
+.footer-bottom{
+padding-top:30px;
+border-top:1px solid rgba(255,255,255,.15);
+text-align:center;
+color:#9ca3af;
+}
+.auth-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(15,23,42,.75);
+backdrop-filter:blur(8px);
+display:none;
+align-items:center;
+justify-content:center;
+padding:30px;
+z-index:10000;
+}
+.auth-container{
+width:100%;
+max-width:1150px;
+min-height:680px;
+background:#fff;
+border-radius:30px;
+overflow:hidden;
+display:grid;
+grid-template-columns:1fr 1fr;
+box-shadow:0 35px 80px rgba(0,0,0,.25);
+}
+.auth-left{
+background:linear-gradient(135deg,#166534,#16a34a,#22c55e);
+padding:70px 60px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+color:#fff;
+}
+.auth-brand{
+margin-bottom:50px;
+}
+.auth-brand i{
+font-size:70px;
+margin-bottom:25px;
+}
+.auth-brand h2{
+font-size:46px;
+margin-bottom:15px;
+font-weight:700;
+}
+.auth-brand p{
+font-size:20px;
+line-height:1.8;
+opacity:.95;
+}
+.auth-features{
+display:grid;
+gap:22px;
+}
+.auth-features div{
+display:flex;
+align-items:center;
+gap:14px;
+font-size:19px;
+font-weight:600;
+}
+.auth-right{
+padding:60px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+.auth-tabs{
+display:flex;
+background:#f3f4f6;
+border-radius:14px;
+padding:6px;
+margin-bottom:35px;
+}
+.auth-tab{
+flex:1;
+padding:15px;
+border:none;
+background:transparent;
+border-radius:10px;
+font-size:17px;
+font-weight:700;
+cursor:pointer;
+transition:.3s;
+}
+.auth-tab.active{
+background:#16a34a;
+color:#fff;
+}
+.auth-form h2{
+font-size:34px;
+margin-bottom:10px;
+color:#111827;
+}
+.input-box{
+margin-bottom:22px;
+}
+.input-box label{
+display:block;
+margin-bottom:8px;
+font-size:15px;
+font-weight:700;
+color:#374151;
+}
+.input-box input,
+.input-box select{
+width:100%;
+padding:17px 18px;
+border:2px solid #e5e7eb;
+border-radius:12px;
+font-size:16px;
+font-family:Cambria,serif;
+outline:none;
+transition:.3s;
+}
+.input-box input:focus,
+.input-box select:focus{
+border-color:#16a34a;
+box-shadow:0 0 0 4px rgba(22,163,74,.12);
+}
+.password-box{
+position:relative;
+}
+.password-box input{
+padding-right:60px;
+}
+.password-box button{
+position:absolute;
+right:0;
+top:0;
+width:56px;
+height:100%;
+border:none;
+background:transparent;
+cursor:pointer;
+font-size:18px;
+color:#6b7280;
+}
+.auth-button{
+width:100%;
+padding:18px;
+border:none;
+background:#16a34a;
+color:#fff;
+font-size:18px;
+font-weight:700;
+border-radius:12px;
+cursor:pointer;
+transition:.3s;
+}
+.auth-button:hover{
+background:#166534;
+}
+.dashboard-wrapper{
+display:grid;
+grid-template-columns:280px 1fr;
+min-height:100vh;
+background:#f8fafc;
+}
+.dashboard-sidebar{
+background:#111827;
+color:#fff;
+padding:30px 0;
+display:flex;
+flex-direction:column;
+}
+.dashboard-logo{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:12px;
+font-size:28px;
+font-weight:700;
+margin-bottom:40px;
+color:#22c55e;
+}
+.dashboard-sidebar ul{
+list-style:none;
+padding:0;
+margin:0;
+}
+.dashboard-sidebar li{
+display:flex;
+align-items:center;
+gap:16px;
+padding:18px 30px;
+font-size:17px;
+font-weight:600;
+cursor:pointer;
+transition:.3s;
+border-left:4px solid transparent;
+}
+.dashboard-sidebar li:hover{
+background:#1f2937;
+border-left-color:#22c55e;
+}
+.dashboard-sidebar li.active{
+background:#16a34a;
+border-left-color:#86efac;
+}
+.dashboard-sidebar li i{
+width:24px;
+text-align:center;
+font-size:18px;
+}
+.dashboard-content{
+padding:35px;
+}
+.dashboard-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:35px;
+}
+.dashboard-header h1{
+font-size:34px;
+color:#111827;
+}
+.dashboard-header span{
+color:#16a34a;
+}
+.dashboard-cards{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:25px;
+margin-bottom:40px;
+}
+.dashboard-card{
+background:#fff;
+padding:30px;
+border-radius:20px;
+box-shadow:0 15px 35px rgba(0,0,0,.08);
+}
+.dashboard-card h3{
+font-size:14px;
+color:#6b7280;
+margin-bottom:15px;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+.dashboard-card h2{
+font-size:32px;
+color:#111827;
+}
+.dashboard-panel{
+background:#fff;
+border-radius:20px;
+padding:30px;
+box-shadow:0 15px 35px rgba(0,0,0,.08);
+margin-bottom:25px;
+}
+.dashboard-panel h2{
+margin-bottom:20px;
+font-size:24px;
+color:#111827;
+}
+.quick-actions{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:18px;
+}
+.quick-btn{
+padding:18px;
+border:none;
+border-radius:15px;
+background:#16a34a;
+color:#fff;
+font-size:17px;
+font-weight:700;
+cursor:pointer;
+transition:.3s;
+}
+.quick-btn:hover{
+background:#166534;
+}
+.activity-list{
+display:grid;
+gap:15px;
+}
+.activity-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px;
+background:#f9fafb;
+border-radius:12px;
+border-left:4px solid #e5e7eb;
+}
+.activity-item.customer-item { border-left-color: #3b82f6; }
+.activity-item.driver-item { border-left-color: #10b981; }
+.activity-item.restaurant-item { border-left-color: #f59e0b; }
+.activity-item strong{
+display:block;
+margin-bottom:5px;
+}
+.activity-item span{
+font-size:14px;
+color:#6b7280;
+}
+.status{
+padding:8px 14px;
+border-radius:30px;
+font-size:13px;
+font-weight:700;
+}
+.status.completed{
+background:#dcfce7;
+color:#15803d;
+}
+.request-btn{
+padding:10px 20px;
+background:#16a34a;
+color:white;
+border:none;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+transition: .2s;
+}
+.request-btn:hover{
+background:#166534;
+}
+.admin-module-title {
+background: #f1f5f9;
+padding: 10px 15px;
+border-radius: 8px;
+font-size: 14px;
+font-weight: bold;
+color: #475569;
+margin-top: 15px;
+margin-bottom: 8px;
+text-transform: uppercase;
+}
+.complaint-form {
+display: grid;
+gap: 15px;
+margin-top: 15px;
+}
+.complaint-form textarea {
+width: 100%;
+height: 120px;
+padding: 15px;
+border: 2px solid #e5e7eb;
+border-radius: 12px;
+outline: none;
+font-family: inherit;
+resize: none;
+}
+@media(max-width:1200px){
+.dashboard-cards{
+grid-template-columns:repeat(2,1fr);
+}
+}
+@media(max-width:900px){
+.dashboard-wrapper{
+grid-template-columns:1fr;
+}
+.dashboard-sidebar{
+padding:20px;
+}
+.dashboard-sidebar ul{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+.dashboard-sidebar li{
+justify-content:center;
+border-left:none;
+border-radius:10px;
+padding:15px;
+}
+}
+</style>
+</head>
+<body>
+
+<div id="mainWebsite">
+<header>
+<div class="container">
+<nav>
+<div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+<i class="fa-solid fa-car-side"></i>
+<span>Acacia Rides & Food</span>
+</div>
+<ul class="menu">
+<li><a onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Home</a></li>
+<li><a onclick="document.getElementById('services-section').scrollIntoView()">Ride</a></li>
+<li><a onclick="document.getElementById('food-categories').scrollIntoView()">Food</a></li>
+<li><a onclick="document.getElementById('services-section').scrollIntoView()">Deliver</a></li>
+<li><a onclick="document.getElementById('services-section').scrollIntoView()">Business</a></li>
+<li><a onclick="openAuth('register', 'driver')">Drivers</a></li>
+<li><a onclick="openAuth('register', 'restaurant')">Restaurants</a></li>
+<li><a onclick="document.getElementById('faq-section').scrollIntoView()">Support</a></li>
+</ul>
+<div class="nav-buttons">
+<button class="btn-login" onclick="openAuth('login')">Login</button>
+<button class="btn-register" onclick="openAuth('register')">Register</button>
+</div>
+</nav>
+</div>
+</header>
+
+<section class="hero">
+<div class="container">
+<div class="hero-grid">
+<div>
+<h1>Ride, Eat & Deliver Across Kenya With One App</h1>
+<p>Book affordable rides, order delicious meals from your favourite restaurants, send parcels, and manage business deliveries using Acacia Rides & Food.</p>
+<div class="hero-buttons">
+<a class="primary-btn" onclick="openAuth('login')"><i class="fa-solid fa-car"></i>Book a Ride</a>
+<a class="secondary-btn" onclick="openAuth('login')"><i class="fa-solid fa-utensils"></i>Order Food</a>
+<a class="secondary-btn" onclick="openAuth('register', 'driver')"><i class="fa-solid fa-motorcycle"></i>Become a Driver</a>
+</div>
+</div>
+<div>
+<div class="booking-card">
+<div class="tabs">
+<div class="tab active">Ride</div>
+<div class="tab" onclick="openAuth('login')">Food</div>
+<div class="tab" onclick="openAuth('login')">Parcel</div>
+</div>
+<div class="input-group">
+<label>Pickup Location</label>
+<input type="text" id="heroPickup" placeholder="Enter pickup location">
+</div>
+<div class="input-group">
+<label>Destination</label>
+<input type="text" id="heroDropoff" placeholder="Where are you going?">
+</div>
+<div class="input-group">
+<label>Ride Type</label>
+<select id="heroRideType">
+<option>Economy</option>
+<option>Premium</option>
+<option>XL</option>
+<option>Motorbike</option>
+</select>
+</div>
+<button class="find-btn" onclick="submitGuestRideRequest()">Find Driver</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="services" id="services-section">
+<div class="container">
+<div class="section-title">
+<h2>Everything You Need in One Platform</h2>
+<p>Whether you need a ride, your favourite meal delivered, or a parcel sent across town, Acacia Rides & Food has you covered.</p>
+</div>
+<div class="service-grid">
+<div class="service-card">
+<div class="service-icon"><i class="fa-solid fa-car-side"></i></div>
+<h3>Ride</h3>
+<p>Book safe and affordable rides with professional drivers anytime.</p>
+<a onclick="openAuth('login')">Book Now <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+<div class="service-card">
+<div class="service-icon"><i class="fa-solid fa-burger"></i></div>
+<h3>Food Delivery</h3>
+<p>Order delicious meals from restaurants near you.</p>
+<a onclick="openAuth('login')">Order Food <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+<div class="service-card">
+<div class="service-icon"><i class="fa-solid fa-box"></i></div>
+<h3>Parcel Delivery</h3>
+<p>Fast and secure package delivery across Kenya.</p>
+<a onclick="openAuth('login')">Send Parcel <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+<div class="service-card">
+<div class="service-icon"><i class="fa-solid fa-building"></i></div>
+<h3>Business</h3>
+<p>Corporate transport and logistics solutions for companies.</p>
+<a onclick="openAuth('login')">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+</div>
+</div>
+</section>
+
+<section class="food-section" id="food-categories">
+<div class="container">
+<div class="section-title">
+<h2>Popular Food Categories</h2>
+<p>Discover your favourite meals from hundreds of restaurants.</p>
+</div>
+<div class="food-grid">
+<div class="food-card"><i class="fa-solid fa-pizza-slice"></i><h3>Pizza</h3><p>120+ Restaurants</p></div>
+<div class="food-card"><i class="fa-solid fa-drumstick-bite"></i><h3>Chicken</h3><p>90+ Restaurants</p></div>
+<div class="food-card"><i class="fa-solid fa-burger"></i><h3>Burgers</h3><p>80+ Restaurants</p></div>
+<div class="food-card"><i class="fa-solid fa-mug-hot"></i><h3>Coffee</h3><p>60+ Cafes</p></div>
+<div class="food-card"><i class="fa-solid fa-fish"></i><h3>Sea Food</h3><p>45+ Restaurants</p></div>
+<div class="food-card"><i class="fa-solid fa-bowl-rice"></i><h3>African Cuisine</h3><p>150+ Restaurants</p></div>
+</div>
+</div>
+</section>
+
+<section class="faq" id="faq-section">
+<div class="container">
+<div class="section-title">
+<h2>Frequently Asked Questions</h2>
+<p>Find answers to common questions about Acacia Rides & Food.</p>
+</div>
+<div class="faq-container">
+<div class="faq-item">
+<div class="faq-question"><span>How do I book a ride?</span><i class="fa-solid fa-plus"></i></div>
+<div class="faq-answer"><p>Enter your pickup and destination, choose your ride type, and confirm your booking.</p></div>
+</div>
+<div class="faq-item">
+<div class="faq-question"><span>Which payment methods are accepted?</span><i class="fa-solid fa-plus"></i></div>
+<div class="faq-answer"><p>We support M-Pesa, Airtel Money, Visa, Mastercard and wallet payments.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+<div class="container">
+<div class="footer-grid">
+<div>
+<div class="logo" style="color: #fff; margin-bottom: 20px;">
+<i class="fa-solid fa-car-side" style="color: #22c55e;"></i>
+<span>Acacia</span>
+</div>
+<p>Providing seamless, modern rides and rapid item deliveries across Kenya. Safe, budget-friendly transportation workflows in a single robust app infrastructure.</p>
+<div class="socials">
+<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+<a href="#"><i class="fa-brands fa-twitter"></i></a>
+<a href="#"><i class="fa-brands fa-instagram"></i></a>
+<a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+</div>
+</div>
+<div>
+<h3>Services</h3>
+<ul>
+<li><a onclick="openAuth('login')">Book a Ride</a></li>
+<li><a onclick="openAuth('login')">Order Food</a></li>
+<li><a onclick="openAuth('login')">Parcel Delivery</a></li>
+<li><a onclick="openAuth('login')">Business Accounts</a></li>
+</ul>
+</div>
+<div>
+<h3>Partnerships</h3>
+<ul>
+<li><a onclick="openAuth('register', 'driver')">Sign Up as Driver</a></li>
+<li><a onclick="openAuth('register', 'restaurant')">Partner Restaurant</a></li>
+<li><a onclick="openAuth('login')">Fleet Management</a></li>
+</ul>
+</div>
+<div>
+<h3>Stay Updated</h3>
+<p style="margin-bottom: 15px;">Subscribe to receive promotional offers and neighborhood updates.</p>
+<div class="newsletter">
+<input type="email" placeholder="Enter your email">
+<button type="button" onclick="alert('Thank you for subscribing!')">Subscribe</button>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Acacia Rides & Food. All Rights Reserved.</p>
+</div>
+</div>
+</footer>
+</div>
+
+<div id="authOverlay" class="auth-overlay">
+<div class="auth-container">
+<div class="auth-left">
+<div class="auth-brand">
+<i class="fa-solid fa-car-side"></i>
+<h2>Acacia Rides & Food</h2>
+<p>Ride, Eat and Deliver from one platform.</p>
+</div>
+<div class="auth-features">
+<div><i class="fa-solid fa-circle-check"></i> Book rides in seconds</div>
+<div><i class="fa-solid fa-circle-check"></i> Order food from nearby restaurants</div>
+<div><i class="fa-solid fa-circle-check"></i> Manage live workflows securely</div>
+</div>
+</div>
+<div class="auth-right">
+<div class="auth-tabs">
+<button id="loginTab" class="auth-tab active" onclick="showAuth('login')">Login</button>
+<button id="registerTab" class="auth-tab" onclick="showAuth('register')">Register</button>
+</div>
+
+<form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+<h2>Welcome Back</h2>
+<div class="input-box">
+<label>Email</label>
+<input type="email" id="loginEmail" placeholder="Email Address" required>
+</div>
+<div class="input-box">
+<label>Password</label>
+<div class="password-box">
+<input type="password" id="loginPassword" placeholder="Password" required>
+<button type="button" onclick="togglePasswordVisibility('loginPassword', this)">
+<i class="fa-solid fa-eye"></i>
+</button>
+</div>
+</div>
+<button type="submit" class="auth-button">Login</button>
+</form>
+
+<form id="registerForm" class="auth-form" style="display:none;" onsubmit="handleRegister(event)">
+<h2>Create Account</h2>
+<div class="input-box">
+<label>Full Name</label>
+<input type="text" id="regName" placeholder="Full Name" required>
+</div>
+<div class="input-box">
+<label>Email</label>
+<input type="email" id="regEmail" placeholder="Email Address" required>
+</div>
+<div class="input-box">
+<label>Account Type (Role)</label>
+<select id="regRole" required>
+<option value="customer">Customer / User</option>
+<option value="driver">Driver (Accept Rides)</option>
+<option value="restaurant">Restaurant Owner (Accept Orders)</option>
+</select>
+</div>
+<div class="input-box">
+<label>Password</label>
+<div class="password-box">
+<input type="password" id="regPassword" placeholder="Password" required>
+<button type="button" onclick="togglePasswordVisibility('regPassword', this)">
+<i class="fa-solid fa-eye"></i>
+</button>
+</div>
+</div>
+<button type="submit" class="auth-button">Create Account</button>
+</form>
+</div>
+</div>
+</div>
+
+<section id="customerDashboard" style="display:none; padding:0;">
+<div class="dashboard-wrapper">
+<aside class="dashboard-sidebar">
+<div class="dashboard-logo"><i class="fa-solid fa-car-side"></i><span>Acacia</span></div>
+<ul>
+<li id="custMainTab" class="active" onclick="switchCustomerTab('main')"><i class="fa-solid fa-house"></i>Dashboard</li>
+<li id="custSupportTab" onclick="switchCustomerTab('complaints')"><i class="fa-solid fa-headset"></i>Support Tickets</li>
+<li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
+</ul>
+</aside>
+<div class="dashboard-content">
+<div id="customerMainPanel">
+<div class="dashboard-header"><h1>Welcome, <span id="customerName">Customer</span></h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>Wallet Balance</h3><h2 id="custWallet" style="color:#16a34a;">KES 1,250</h2></div>
+<div class="dashboard-card"><h3>Trips Count</h3><h2 id="custTrips">4</h2></div>
+<div class="dashboard-card"><h3>Active Orders</h3><h2 id="custOrders">1</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Request Platform Services</h2>
+<div class="quick-actions">
+<button class="quick-btn" onclick="requestRideService()"><i class="fa-solid fa-car"></i> Request Quick Ride (KES 500)</button>
+<button class="quick-btn" style="background:#f59e0b;" onclick="requestFoodService()"><i class="fa-solid fa-hamburger"></i> Order Quick Pizza (KES 1000)</button>
+</div>
+</div>
+</div>
+
+<div id="customerComplaintsPanel" style="display:none;">
+<div class="dashboard-header"><h1>File a Support Complaint</h1></div>
+<div class="dashboard-panel">
+<h2>Detail Your Complaint Below</h2>
+<div class="complaint-form">
+<textarea id="complaintText" placeholder="Describe what went wrong with your ride or delivery order..."></textarea>
+<button class="quick-btn" onclick="submitComplaint()">Submit Complaint Ticket</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="driverDashboard" style="display:none; padding:0;">
+<div class="dashboard-wrapper">
+<aside class="dashboard-sidebar">
+<div class="dashboard-logo"><i class="fa-solid fa-motorcycle"></i><span>Driver Portal</span></div>
+<ul>
+<li class="active"><i class="fa-solid fa-route"></i>Ride Requests</li>
+<li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
+</ul>
+</aside>
+<div class="dashboard-content">
+<div class="dashboard-header"><h1>Driver Dashboard: <span id="driverName">Driver</span></h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>My Take-Home (80%)</h3><h2 id="driverEarnings" style="color:#10b981;">KES 0</h2></div>
+<div class="dashboard-card"><h3>Completed Rides</h3><h2 id="driverCount">0</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Available Customer Ride Requests</h2>
+<div class="activity-list" id="rideRequestsContainer"></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="restaurantDashboard" style="display:none; padding:0;">
+<div class="dashboard-wrapper">
+<aside class="dashboard-sidebar">
+<div class="dashboard-logo"><i class="fa-solid fa-store"></i><span>Restaurant Portal</span></div>
+<ul>
+<li class="active"><i class="fa-solid fa-utensils"></i>Incoming Orders</li>
+<li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
+</ul>
+</aside>
+<div class="dashboard-content">
+<div class="dashboard-header"><h1>Restaurant Dashboard: <span id="restaurantName">Store</span></h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>My Take-Home (80%)</h3><h2 id="restEarnings" style="color:#f59e0b;">KES 0</h2></div>
+<div class="dashboard-card"><h3>Orders Completed</h3><h2 id="restCount">0</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Incoming Food Preparation Requests</h2>
+<div class="activity-list" id="foodRequestsContainer"></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="adminDashboard" style="display:none; padding:0;">
+<div class="dashboard-wrapper">
+<aside class="dashboard-sidebar">
+<div class="dashboard-logo"><i class="fa-solid fa-user-gear"></i><span>Admin Console</span></div>
+<ul>
+<li id="adminRevenueTab" class="active" onclick="switchAdminTab('revenue')"><i class="fa-solid fa-wallet"></i>Revenue Module</li>
+<li id="adminCustomersTab" onclick="switchAdminTab('customers')"><i class="fa-solid fa-users"></i>Customer Modules</li>
+<li id="adminDriversTab" onclick="switchAdminTab('drivers')"><i class="fa-solid fa-car"></i>Drivers Module</li>
+<li id="adminRestaurantsTab" onclick="switchAdminTab('restaurants')"><i class="fa-solid fa-utensils"></i>Restaurant Module</li>
+<li id="adminSupportTab" onclick="switchAdminTab('support')"><i class="fa-solid fa-headset"></i>Support Tickets</li>
+<li id="adminSettingsTab" onclick="switchAdminTab('settings')"><i class="fa-solid fa-gear"></i>Settings Button</li>
+<li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
+</ul>
+</aside>
+<div class="dashboard-content">
+<!-- REVENUE MODULE VIEW -->
+<div id="adminRevenuePanel">
+<div class="dashboard-header"><h1>Revenue Module Overview</h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card" style="grid-column: span 2;">
+<h3>Platform Total Earnings (20% Cut)</h3>
+<h2 id="adminRevenue" style="color:#16a34a; font-weight:800; font-size:42px;">KES 0</h2>
+</div>
+</div>
+<div class="dashboard-panel">
+<h2>Financial Split Settings Summary</h2>
+<p style="color:#475569; line-height: 1.6;">The standard setup tracks a persistent 20% platform management surcharge deducted directly upon active fulfillment transactions made across the local server drivers and restaurants registry metrics.</p>
+</div>
+</div>
+
+<!-- CUSTOMER MODULES VIEW -->
+<div id="adminCustomersPanel" style="display:none;">
+<div class="dashboard-header"><h1>Customer System Management</h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>Registered Consumers</h3><h2 id="adminTotalCustomersCount">0</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Consumer Registry Logs</h2>
+<div class="activity-list" id="adminCustomersList"></div>
+</div>
+</div>
+
+<!-- DRIVERS MODULE VIEW -->
+<div id="adminDriversPanel" style="display:none;">
+<div class="dashboard-header"><h1>Driver Logistics Module</h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>Registered Logistics Partners</h3><h2 id="adminTotalDriversCount">0</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Logistics Registry Logs</h2>
+<div class="activity-list" id="adminDriversList"></div>
+</div>
+</div>
+
+<!-- RESTAURANT MODULE VIEW -->
+<div id="adminRestaurantsPanel" style="display:none;">
+<div class="dashboard-header"><h1>Restaurant Merchant Module</h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>Registered Kitchen Partners</h3><h2 id="adminTotalRestaurantsCount">0</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Merchant Registry Logs</h2>
+<div class="activity-list" id="adminRestaurantsList"></div>
+</div>
+</div>
+
+<!-- SUPPORT MODULE VIEW -->
+<div id="adminSupportPanel" style="display:none;">
+<div class="dashboard-header"><h1>Active Support Complaints Inbox</h1></div>
+<div class="dashboard-panel">
+<h2>Received Customer Incident Tickets</h2>
+<div class="activity-list" id="adminComplaintsList"></div>
+</div>
+</div>
+
+<!-- SETTINGS MODULE VIEW -->
+<div id="adminSettingsPanel" style="display:none;">
+<div class="dashboard-header"><h1>System Configuration Panel</h1></div>
+<div class="dashboard-panel">
+<h2>Adjust Platform Commissions</h2>
+<div style="padding:15px; background:#f8fafc; border-radius:12px;">
+<p style="margin-bottom:10px;"><strong>Current Commission Mode:</strong> 20% Uniform Platform Split Fee</p>
+<button class="quick-btn" onclick="alert('Settings parameters updated globally.')">Save Parameters</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<script>
+let currentUser = null;
+
+if (!localStorage.getItem("acaciaRides")) localStorage.setItem("acaciaRides", JSON.stringify([]));
+if (!localStorage.getItem("acaciaFoods")) localStorage.setItem("acaciaFoods", JSON.stringify([]));
+if (!localStorage.getItem("acaciaComplaints")) localStorage.setItem("acaciaComplaints", JSON.stringify([]));
+if (!localStorage.getItem("acaciaSystemRevenue")) localStorage.setItem("acaciaSystemRevenue", "0");
+
+function getUsers() { return JSON.parse(localStorage.getItem("acaciaUsers") || "[]"); }
+function saveUsers(users) { localStorage.setItem("acaciaUsers", JSON.stringify(users)); }
+function getRevenue() { return parseFloat(localStorage.getItem("acaciaSystemRevenue") || "0"); }
+function addRevenue(amount) { localStorage.setItem("acaciaSystemRevenue", (getRevenue() + amount).toString()); }
+
+document.querySelectorAll(".faq-question").forEach(item => {
+    item.onclick = () => {
+        const answer = item.nextElementSibling;
+        const icon = item.querySelector("i");
+        if (answer.style.display === "block") {
+            answer.style.display = "none";
+            icon.className = "fa-solid fa-plus";
+        } else {
+            document.querySelectorAll(".faq-answer").forEach(a => a.style.display = "none");
+            document.querySelectorAll(".faq-question i").forEach(i => i.className = "fa-solid fa-plus");
+            answer.style.display = "block";
+            icon.className = "fa-solid fa-minus";
+        }
+    };
+});
+
+function openAuth(mode = "login", roleDefault = "customer") {
+    document.getElementById("authOverlay").style.display = "flex";
+    showAuth(mode);
+    document.getElementById("regRole").value = roleDefault;
+}
+
+function closeAuth() { document.getElementById("authOverlay").style.display = "none"; }
+
+function showAuth(mode) {
+    document.getElementById("loginForm").style.display = mode === "login" ? "block" : "none";
+    document.getElementById("registerForm").style.display = mode === "register" ? "block" : "none";
+    document.getElementById("loginTab").className = mode === "login" ? "auth-tab active" : "auth-tab";
+    document.getElementById("registerTab").className = mode === "register" ? "auth-tab active" : "auth-tab";
+}
+
+function togglePasswordVisibility(id, btn) {
+    const input = document.getElementById(id);
+    if (input.type === "password") {
+        input.type = "text";
+        btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+    } else {
+        input.type = "password";
+        btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
+    }
+}
+
+document.getElementById("authOverlay").onclick = function(e) { if (e.target === this) closeAuth(); };
+
+function handleRegister(e) {
+    e.preventDefault();
+    const name = document.getElementById("regName").value.trim();
+    const email = document.getElementById("regEmail").value.trim().toLowerCase();
+    const role = document.getElementById("regRole").value;
+    const password = document.getElementById("regPassword").value;
+
+    let users = getUsers();
+    if (users.find(u => u.email === email)) {
+        alert("An account with this email address already exists.");
+        return;
+    }
+
+    users.push({ name, email, role, password, balance: 0, actionsCount: 0 });
+    saveUsers(users);
+    alert("Registration successful! Proceed to Login.");
+    showAuth("login");
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+    const password = document.getElementById("loginPassword").value;
+
+    if (email === "developeracaciabooks@gmail.com" && password === "admin123") {
+        currentUser = { name: "System Admin", email, role: "admin" };
+        closeAuth();
+        showSection("adminDashboard");
+        switchAdminTab('revenue');
+        return;
+    }
+
+    const users = getUsers();
+    const match = users.find(u => u.email === email && u.password === password);
+    if (!match) {
+        alert("Invalid email credentials or wrong password pattern.");
+        return;
+    }
+
+    currentUser = match;
+    closeAuth();
+    if (currentUser.role === "customer") { showSection("customerDashboard"); renderCustomerDashboard(); }
+    else if (currentUser.role === "driver") { showSection("driverDashboard"); renderDriverDashboard(); }
+    else if (currentUser.role === "restaurant") { showSection("restaurantDashboard"); renderRestaurantDashboard(); }
+}
+
+function showSection(id) {
+    document.getElementById("mainWebsite").style.display = "none";
+    document.getElementById("customerDashboard").style.display = "none";
+    document.getElementById("driverDashboard").style.display = "none";
+    document.getElementById("restaurantDashboard").style.display = "none";
+    document.getElementById("adminDashboard").style.display = "none";
+    document.getElementById(id).style.display = "block";
+}
+
+function logout() { currentUser = null; showSection("mainWebsite"); }
+
+function switchCustomerTab(tab) {
+    document.getElementById("customerMainPanel").style.display = tab === 'main' ? 'block' : 'none';
+    document.getElementById("customerComplaintsPanel").style.display = tab === 'complaints' ? 'block' : 'none';
+    document.getElementById("custMainTab").className = tab === 'main' ? 'active' : '';
+    document.getElementById("custSupportTab").className = tab === 'complaints' ? 'active' : '';
+}
+
+function renderCustomerDashboard() {
+    document.getElementById("customerName").textContent = currentUser.name;
+    document.getElementById("custWallet").textContent = "KES " + (currentUser.balance || 0).toLocaleString();
+    document.getElementById("custTrips").textContent = currentUser.actionsCount || 0;
+}
+
+function requestRideService() {
+    let rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    rides.push({ id: Date.now(), customer: currentUser.name, email: currentUser.email, pickup: "Your Location", dropoff: "Destination", fare: 500 });
+    localStorage.setItem("acaciaRides", JSON.stringify(rides));
+    alert("Ride requested! Dispatched to the driver workflows.");
+}
+
+function requestFoodService() {
+    let foods = JSON.parse(localStorage.getItem("acaciaFoods") || "[]");
+    foods.push({ id: Date.now(), customer: currentUser.name, email: currentUser.email, item: "1x Deluxe Crispy Pizza House Deal", price: 1000 });
+    localStorage.setItem("acaciaFoods", JSON.stringify(foods));
+    alert("Food request generated! The order pipeline has been sent to restaurants.");
+}
+
+function submitComplaint() {
+    const text = document.getElementById("complaintText").value.trim();
+    if (!text) return alert("Please clarify your complaint description.");
+    let complaints = JSON.parse(localStorage.getItem("acaciaComplaints") || "[]");
+    complaints.push({ id: Date.now(), user: currentUser.name, email: currentUser.email, text: text });
+    localStorage.setItem("acaciaComplaints", JSON.stringify(complaints));
+    document.getElementById("complaintText").value = "";
+    alert("Your support issue has been submitted to the administration office desk.");
+    switchCustomerTab('main');
+}
+
+function renderDriverDashboard() {
+    document.getElementById("driverName").textContent = currentUser.name;
+    document.getElementById("driverEarnings").textContent = "KES " + (currentUser.balance || 0).toLocaleString();
+    document.getElementById("driverCount").textContent = currentUser.actionsCount || 0;
+
+    const container = document.getElementById("rideRequestsContainer");
+    const rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    if(rides.length === 0) {
+        container.innerHTML = `<p style='color:#6b7280; padding:15px;'>No active ride requests currently open across the region.</p>`;
+        return;
+    }
+    container.innerHTML = rides.map(ride => `
+        <div class="activity-item driver-item">
+            <div><strong>${ride.pickup} ➔ ${ride.dropoff}</strong><span>Rider: ${ride.customer}</span></div>
+            <div>
+                <span style="font-weight:bold; color:#10b981; margin-right:15px;">KES ${ride.fare * 0.8} (After 20% Fee)</span>
+                <button class="request-btn" onclick="acceptRide(${ride.id}, ${ride.fare})">Accept Job</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function acceptRide(id, grossFare) {
+    let rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    rides = rides.filter(r => r.id !== id);
+    localStorage.setItem("acaciaRides", JSON.stringify(rides));
+
+    const driverCut = grossFare * 0.80;
+    const systemCut = grossFare * 0.20;
+
+    currentUser.balance = (currentUser.balance || 0) + driverCut;
+    currentUser.actionsCount = (currentUser.actionsCount || 0) + 1;
+    updateUserInStorage(currentUser);
+    addRevenue(systemCut);
+
+    alert(`Job complete! KES ${driverCut} added to your balance. 20% platform cut retained by system.`);
+    renderDriverDashboard();
+}
+
+function renderRestaurantDashboard() {
+    document.getElementById("restaurantName").textContent = currentUser.name;
+    document.getElementById("restEarnings").textContent = "KES " + (currentUser.balance || 0).toLocaleString();
+    document.getElementById("restCount").textContent = currentUser.actionsCount || 0;
+
+    const container = document.getElementById("foodRequestsContainer");
+    const foods = JSON.parse(localStorage.getItem("acaciaFoods") || "[]");
+    if(foods.length === 0) {
+        container.innerHTML = `<p style='color:#6b7280; padding:15px;'>No open food orders waiting processing right now.</p>`;
+        return;
+    }
+    container.innerHTML = foods.map(food => `
+        <div class="activity-item restaurant-item">
+            <div><strong>${food.item}</strong><span>Client: ${food.customer}</span></div>
+            <div>
+                <span style="font-weight:bold; color:#f59e0b; margin-right:15px;">KES ${food.price * 0.8} (After 20% Fee)</span>
+                <button class="request-btn" style="background:#f59e0b;" onclick="acceptFood(${food.id}, ${food.price})">Accept Order</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function acceptFood(id, grossPrice) {
+    let foods = JSON.parse(localStorage.getItem("acaciaFoods") || "[]");
+    foods = foods.filter(f => f.id !== id);
+    localStorage.setItem("acaciaFoods", JSON.stringify(foods));
+
+    const restaurantCut = grossPrice * 0.80;
+    const systemCut = grossPrice * 0.20;
+
+    currentUser.balance = (currentUser.balance || 0) + restaurantCut;
+    currentUser.actionsCount = (currentUser.actionsCount || 0) + 1;
+    updateUserInStorage(currentUser);
+    addRevenue(systemCut);
+
+    alert(`Order fulfillment dispatched! KES ${restaurantCut} credited to store balance.`);
+    renderRestaurantDashboard();
+}
+
+// ADMIN PANEL TAB MANAGEMENT FIXED TO DISPLAY EACH ALONE
+function switchAdminTab(panelName) {
+    const panels = ['revenue', 'customers', 'drivers', 'restaurants', 'support', 'settings'];
+    panels.forEach(p => {
+        document.getElementById(`admin${p.charAt(0).toUpperCase() + p.slice(1)}Panel`).style.display = (p === panelName) ? 'block' : 'none';
+    });
+
+    const tabs = ['revenue', 'customers', 'drivers', 'restaurants', 'support', 'settings'];
+    tabs.forEach(t => {
+        document.getElementById(`admin${t.charAt(0).toUpperCase() + t.slice(1)}Tab`).className = (t === panelName) ? 'active' : '';
+    });
+
+    if (panelName === 'revenue') {
+        document.getElementById("adminRevenue").textContent = "KES " + getRevenue().toLocaleString();
+    }
+    if (panelName === 'customers') {
+        const list = document.getElementById("adminCustomersList");
+        const match = getUsers().filter(u => u.role === 'customer');
+        document.getElementById("adminTotalCustomersCount").textContent = match.length;
+        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8; padding:10px;">No registered customers inside database logs.</p>`;
+        else list.innerHTML = match.map(u => `<div class="activity-item customer-item"><div><strong>${u.name}</strong><span>Email: ${u.email}</span></div><span class="status completed">Active Connection</span></div>`).join('');
+    }
+    if (panelName === 'drivers') {
+        const list = document.getElementById("adminDriversList");
+        const match = getUsers().filter(u => u.role === 'driver');
+        document.getElementById("adminTotalDriversCount").textContent = match.length;
+        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8; padding:10px;">No registered drivers active inside logistics system logs.</p>`;
+        else list.innerHTML = match.map(u => `<div class="activity-item driver-item"><div><strong>${u.name}</strong><span>Email: ${u.email}</span></div><span class="status completed">Verified Fleet</span></div>`).join('');
+    }
+    if (panelName === 'restaurants') {
+        const list = document.getElementById("adminRestaurantsList");
+        const match = getUsers().filter(u => u.role === 'restaurant');
+        document.getElementById("adminTotalRestaurantsCount").textContent = match.length;
+        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8; padding:10px;">No registered merchants active inside system database.</p>`;
+        else list.innerHTML = match.map(u => `<div class="activity-item restaurant-item"><div><strong>${u.name}</strong><span>Email: ${u.email}</span></div><span class="status completed">Store Open</span></div>`).join('');
+    }
+    if (panelName === 'support') {
+        const container = document.getElementById("adminComplaintsList");
+        const complaints = JSON.parse(localStorage.getItem("acaciaComplaints") || "[]");
+        if(complaints.length === 0) {
+            container.innerHTML = `<p style="color:#6b7280; padding:15px;">No customer complaint forms waiting processing inside platform inbox.</p>`;
+            return;
+        }
+        container.innerHTML = complaints.map(c => `
+            <div class="activity-item" style="border-left-color: #ef4444;">
+                <div>
+                    <strong>From: ${c.user} (${c.email})</strong>
+                    <p style="margin-top:8px; color:#475569; font-style:italic;">"${c.text}"</p>
+                </div>
+                <button class="request-btn" style="background:#ef4444;" onclick="resolveComplaint(${c.id})">Mark Resolved</button>
+            </div>
+        `).join('');
+    }
+}
+
+function resolveComplaint(id) {
+    let complaints = JSON.parse(localStorage.getItem("acaciaComplaints") || "[]");
+    complaints = complaints.filter(c => c.id !== id);
+    localStorage.setItem("acaciaComplaints", JSON.stringify(complaints));
+    alert("Incident report updated!");
+    switchAdminTab('support');
+}
+
+function submitGuestRideRequest() {
+    const pickup = document.getElementById("heroPickup").value.trim();
+    const dropoff = document.getElementById("heroDropoff").value.trim();
+    if (!pickup || !dropoff) return alert("Please fill travel parameters.");
+    let rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    rides.push({ id: Date.now(), customer: "Web Guest Rider", email: "guest@acacia.com", pickup, dropoff, fare: 400 });
+    localStorage.setItem("acaciaRides", JSON.stringify(rides));
+    alert("Ride parameters published successfully!");
+    document.getElementById("heroPickup").value = "";
+    document.getElementById("heroDropoff").value = "";
+}
+
+function updateUserInStorage(userObj) {
+    let users = getUsers();
+    const idx = users.findIndex(u => u.email === userObj.email);
+    if(idx !== -1) { users[idx] = userObj; saveUsers(users); }
+}
+</script>
+</body>
+</html>
