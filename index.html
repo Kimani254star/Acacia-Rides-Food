@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Acacia Rides & Food</title>
+<title>Acacia Rides & Food - Advanced Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@ box-sizing:border-box;
 scroll-behavior:smooth;
 }
 body{
-font-family:'cambria',sans-serif;
+font-family:'cambria', sans-serif;
 background:#f8fafc;
 color:#111827;
 overflow-x:hidden;
@@ -56,19 +56,19 @@ justify-content:space-between;
 display:flex;
 align-items:center;
 gap:12px;
-font-size:30px;
+font-size:26px;
 font-weight:700;
 color:#15803d;
 cursor:pointer;
 }
 .logo i{
-font-size:36px;
+font-size:32px;
 }
 .menu{
 display:flex;
 align-items:center;
 gap:35px;
-font-size:17px;
+font-size:16px;
 font-weight:600;
 }
 .menu a{
@@ -89,6 +89,7 @@ border:2px solid #16a34a;
 border-radius:10px;
 font-weight:700;
 background:white;
+color:#16a34a;
 cursor:pointer;
 transition:.3s;
 }
@@ -121,13 +122,13 @@ gap:70px;
 align-items:center;
 }
 .hero h1{
-font-size:65px;
+font-size:58px;
 line-height:1.1;
 margin-bottom:25px;
 color:#052e16;
 }
 .hero p{
-font-size:22px;
+font-size:20px;
 line-height:1.8;
 color:#374151;
 margin-bottom:40px;
@@ -138,11 +139,11 @@ gap:20px;
 flex-wrap:wrap;
 }
 .primary-btn{
-padding:18px 40px;
+padding:16px 36px;
 background:#16a34a;
 color:white;
 border-radius:12px;
-font-size:18px;
+font-size:17px;
 font-weight:700;
 transition:.3s;
 display:inline-flex;
@@ -155,10 +156,10 @@ background:#166534;
 transform:translateY(-3px);
 }
 .secondary-btn{
-padding:18px 40px;
+padding:16px 36px;
 background:white;
 border-radius:12px;
-font-size:18px;
+font-size:17px;
 font-weight:700;
 box-shadow:0 10px 30px rgba(0,0,0,.08);
 transition:.3s;
@@ -183,7 +184,7 @@ gap:10px;
 margin-bottom:30px;
 }
 .tab{
-padding:16px;
+padding:14px;
 border-radius:12px;
 background:#f3f4f6;
 text-align:center;
@@ -197,99 +198,67 @@ color:white;
 }
 .input-group{
 margin-bottom:18px;
+position:relative;
 }
 .input-group label{
 display:block;
 margin-bottom:8px;
 font-weight:700;
+font-size:14px;
 }
 .input-group input,
 .input-group select{
 width:100%;
-padding:16px;
+padding:14px 16px;
 border:2px solid #e5e7eb;
 border-radius:12px;
-font-size:16px;
+font-size:15px;
 outline:none;
 }
 .input-group input:focus,
 .input-group select:focus{
 border-color:#16a34a;
 }
+.location-btn{
+position:absolute;
+right:10px;
+top:38px;
+background:#eab308;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:8px;
+font-size:12px;
+font-weight:700;
+cursor:pointer;
+transition:.2s;
+}
+.location-btn:hover{
+background:#ca8a04;
+}
 .find-btn{
 width:100%;
-padding:18px;
+padding:16px;
 background:#16a34a;
 border:none;
 color:white;
-font-size:18px;
+font-size:17px;
 font-weight:700;
 border-radius:12px;
 cursor:pointer;
 transition:.3s;
+margin-top:10px;
 }
 .find-btn:hover{
 background:#166534;
 }
-.hero-stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:25px;
-margin-top:80px;
-}
-.stat{
-background:white;
-padding:30px;
-border-radius:20px;
-text-align:center;
-box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
-.stat h2{
-font-size:40px;
-color:#16a34a;
-margin-bottom:8px;
-}
-.stat p{
-font-size:18px;
-margin:0;
-}
-@media(max-width:1100px){
-.hero-grid{
-grid-template-columns:1fr;
-}
-.hero h1{
-font-size:50px;
-}
-.hero-stats{
-grid-template-columns:repeat(2,1fr);
-}
-.menu{
-display:none;
-}
-}
-@media(max-width:700px){
-.hero h1{
-font-size:38px;
-}
-.hero p{
-font-size:18px;
-}
-.hero-buttons{
-flex-direction:column;
-}
-.primary-btn,
-.secondary-btn{
-justify-content:center;
-}
-.hero-stats{
-grid-template-columns:1fr;
-}
-.nav-buttons{
-display:none;
-}
-.logo{
-font-size:24px;
-}
+.map-box {
+width: 100%;
+height: 180px;
+border-radius: 12px;
+overflow: hidden;
+margin-top: 15px;
+border: 1px solid #e5e7eb;
 }
 section{
 padding:90px 0;
@@ -299,21 +268,19 @@ text-align:center;
 margin-bottom:60px;
 }
 .section-title h2{
-font-size:46px;
+font-size:42px;
 margin-bottom:15px;
 color:#052e16;
 }
 .section-title p{
-font-size:20px;
+font-size:18px;
 color:#6b7280;
 max-width:800px;
 margin:auto;
 line-height:1.8;
 }
 .service-grid,
-.food-grid,
-.restaurant-grid,
-.feature-grid{
+.food-grid{
 display:grid;
 gap:30px;
 }
@@ -323,121 +290,138 @@ grid-template-columns:repeat(4,1fr);
 .food-grid{
 grid-template-columns:repeat(6,1fr);
 }
-.restaurant-grid{
-grid-template-columns:repeat(3,1fr);
-}
-.feature-grid{
-grid-template-columns:repeat(3,1fr);
-}
 .service-card,
-.food-card,
-.restaurant-card,
-.feature-card{
+.food-card{
 background:#fff;
 border-radius:20px;
 overflow:hidden;
 box-shadow:0 15px 35px rgba(0,0,0,.08);
 transition:.35s;
-}
-.service-card:hover,
-.food-card:hover,
-.restaurant-card:hover,
-.feature-card:hover{
-transform:translateY(-10px);
-}
-.service-card,
-.feature-card{
 padding:35px;
 text-align:center;
 }
+.service-card:hover,
+.food-card:hover{
+transform:translateY(-10px);
+}
 .service-icon{
-width:80px;
-height:80px;
+width:70px;
+height:70px;
 margin:auto;
 background:#dcfce7;
 border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:34px;
+font-size:30px;
 color:#16a34a;
-margin-bottom:25px;
+margin-bottom:20px;
 }
-.service-card h3,
-.feature-card h3{
+.service-card h3{
 margin-bottom:15px;
-font-size:24px;
+font-size:22px;
 }
-.service-card p,
-.feature-card p{
-line-height:1.8;
+.service-card p{
+line-height:1.6;
 color:#6b7280;
 margin-bottom:20px;
+font-size:15px;
 }
 .service-card a{
 font-weight:700;
 color:#16a34a;
 cursor:pointer;
 }
-.food-card{
-padding:35px;
-text-align:center;
-}
 .food-card i{
-font-size:42px;
+font-size:36px;
 color:#16a34a;
-margin-bottom:18px;
+margin-bottom:15px;
 }
-.food-card h3{
-margin-bottom:10px;
+
+/* TESTIMONIALS DISPLAY SECTION */
+.testimonials-section {
+background: #f1f5f9;
 }
-.restaurant-card img{
-height:230px;
-width:100%;
-object-fit:cover;
+.testimonials-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 25px;
+margin-top: 30px;
 }
-.restaurant-content{
-padding:25px;
+.testimonial-card {
+background: white;
+padding: 25px;
+border-radius: 16px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+display: flex;
+flex-direction: column;
+justify-content: space-between;
 }
-.restaurant-content h3{
-margin-bottom:12px;
+.testimonial-stars {
+color: #eab308;
+margin-bottom: 12px;
+font-size: 16px;
 }
-.restaurant-content p{
-color:#16a34a;
-margin-bottom:10px;
-font-weight:700;
+.testimonial-text {
+font-size: 15px;
+color: #334155;
+line-height: 1.6;
+margin-bottom: 20px;
+font-style: italic;
 }
-.restaurant-content span{
-color:#6b7280;
+.testimonial-author {
+display: flex;
+align-items: center;
+gap: 12px;
 }
-.feature-card i{
-font-size:42px;
-color:#16a34a;
-margin-bottom:25px;
+.testimonial-avatar {
+width: 42px;
+height: 42px;
+background: #16a34a;
+color: white;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 700;
 }
-@media(max-width:1100px){
-.service-grid,
-.feature-grid{
-grid-template-columns:repeat(2,1fr);
+.testimonial-info h4 {
+font-size: 15px;
+color: #0f172a;
 }
-.food-grid{
-grid-template-columns:repeat(3,1fr);
+.testimonial-info span {
+font-size: 13px;
+color: #64748b;
 }
-.restaurant-grid{
-grid-template-columns:1fr;
+
+/* STAR RATING FEEDBACK WIDGET */
+.feedback-box {
+background: #fff;
+padding: 30px;
+border-radius: 20px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+max-width: 650px;
+margin: 0 auto;
+border: 1px solid #e2e8f0;
 }
+.star-rating-container {
+display: flex;
+justify-content: center;
+gap: 12px;
+margin: 20px 0;
 }
-@media(max-width:700px){
-.service-grid,
-.feature-grid,
-.food-grid,
-.restaurant-grid{
-grid-template-columns:1fr;
+.star-rating-container i {
+font-size: 36px;
+color: #cbd5e1;
+cursor: pointer;
+transition: 0.2s;
 }
-.section-title h2{
-font-size:34px;
+.star-rating-container i.active,
+.star-rating-container i:hover {
+color: #eab308;
+transform: scale(1.15);
 }
-}
+
 .faq{
 background:white;
 }
@@ -457,7 +441,7 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 cursor:pointer;
-font-size:19px;
+font-size:18px;
 font-weight:700;
 }
 .faq-answer{
@@ -477,16 +461,15 @@ grid-template-columns:2fr 1fr 1fr 1fr;
 gap:50px;
 margin-bottom:50px;
 }
-.footer-grid h3,
-.footer-grid h4{
+.footer-grid h3{
 margin-bottom:20px;
-font-size:20px;
+font-size:18px;
 color:#ffffff;
 }
 .footer-grid p{
 line-height:1.8;
 color:#9ca3af;
-font-size:16px;
+font-size:15px;
 }
 .footer-grid ul{
 display:grid;
@@ -494,7 +477,7 @@ gap:12px;
 }
 .footer-grid li a{
 color:#9ca3af;
-font-size:16px;
+font-size:15px;
 transition: 0.3s;
 cursor:pointer;
 }
@@ -507,8 +490,8 @@ gap:15px;
 margin-top:25px;
 }
 .socials a{
-width:45px;
-height:45px;
+width:40px;
+height:40px;
 background:#1f2937;
 border-radius:50%;
 display:flex;
@@ -521,38 +504,12 @@ color: #9ca3af;
 background:#16a34a;
 color: white;
 }
-.newsletter{
-display:flex;
-flex-direction:column;
-gap:15px;
-}
-.newsletter input{
-padding:15px;
-border:none;
-border-radius:10px;
-background: #1f2937;
-color: white;
-outline: none;
-font-family: inherit;
-}
-.newsletter button{
-padding:15px;
-border:none;
-border-radius:10px;
-background:#16a34a;
-color:white;
-font-weight:700;
-cursor:pointer;
-transition: 0.3s;
-}
-.newsletter button:hover{
-background:#166534;
-}
 .footer-bottom{
 padding-top:30px;
 border-top:1px solid rgba(255,255,255,.15);
 text-align:center;
 color:#9ca3af;
+font-size:14px;
 }
 .auth-overlay{
 position:fixed;
@@ -570,8 +527,8 @@ z-index:10000;
 }
 .auth-container{
 width:100%;
-max-width:1150px;
-min-height:680px;
+max-width:1000px;
+min-height:600px;
 background:#fff;
 border-radius:30px;
 overflow:hidden;
@@ -581,42 +538,42 @@ box-shadow:0 35px 80px rgba(0,0,0,.25);
 }
 .auth-left{
 background:linear-gradient(135deg,#166534,#16a34a,#22c55e);
-padding:70px 60px;
+padding:50px;
 display:flex;
 flex-direction:column;
 justify-content:center;
 color:#fff;
 }
 .auth-brand{
-margin-bottom:50px;
+margin-bottom:40px;
 }
 .auth-brand i{
-font-size:70px;
-margin-bottom:25px;
+font-size:50px;
+margin-bottom:20px;
 }
 .auth-brand h2{
-font-size:46px;
-margin-bottom:15px;
+font-size:36px;
+margin-bottom:10px;
 font-weight:700;
 }
 .auth-brand p{
-font-size:20px;
-line-height:1.8;
+font-size:16px;
+line-height:1.6;
 opacity:.95;
 }
 .auth-features{
 display:grid;
-gap:22px;
+gap:18px;
 }
 .auth-features div{
 display:flex;
 align-items:center;
-gap:14px;
-font-size:19px;
+gap:12px;
+font-size:16px;
 font-weight:600;
 }
 .auth-right{
-padding:60px;
+padding:50px;
 display:flex;
 flex-direction:column;
 justify-content:center;
@@ -626,15 +583,15 @@ display:flex;
 background:#f3f4f6;
 border-radius:14px;
 padding:6px;
-margin-bottom:35px;
+margin-bottom:30px;
 }
 .auth-tab{
 flex:1;
-padding:15px;
+padding:12px;
 border:none;
 background:transparent;
 border-radius:10px;
-font-size:17px;
+font-size:15px;
 font-weight:700;
 cursor:pointer;
 transition:.3s;
@@ -644,28 +601,27 @@ background:#16a34a;
 color:#fff;
 }
 .auth-form h2{
-font-size:34px;
+font-size:28px;
 margin-bottom:10px;
 color:#111827;
 }
 .input-box{
-margin-bottom:22px;
+margin-bottom:18px;
 }
 .input-box label{
 display:block;
-margin-bottom:8px;
-font-size:15px;
+margin-bottom:6px;
+font-size:14px;
 font-weight:700;
 color:#374151;
 }
 .input-box input,
 .input-box select{
 width:100%;
-padding:17px 18px;
+padding:14px;
 border:2px solid #e5e7eb;
 border-radius:12px;
-font-size:16px;
-font-family:Cambria,serif;
+font-size:15px;
 outline:none;
 transition:.3s;
 }
@@ -678,35 +634,38 @@ box-shadow:0 0 0 4px rgba(22,163,74,.12);
 position:relative;
 }
 .password-box input{
-padding-right:60px;
+padding-right:50px;
 }
 .password-box button{
 position:absolute;
 right:0;
 top:0;
-width:56px;
+width:50px;
 height:100%;
 border:none;
 background:transparent;
 cursor:pointer;
-font-size:18px;
+font-size:16px;
 color:#6b7280;
 }
 .auth-button{
 width:100%;
-padding:18px;
+padding:16px;
 border:none;
 background:#16a34a;
 color:#fff;
-font-size:18px;
+font-size:16px;
 font-weight:700;
 border-radius:12px;
 cursor:pointer;
 transition:.3s;
+margin-top:10px;
 }
 .auth-button:hover{
 background:#166534;
 }
+
+/* DASHBOARD LAYOUT */
 .dashboard-wrapper{
 display:grid;
 grid-template-columns:280px 1fr;
@@ -725,9 +684,9 @@ display:flex;
 align-items:center;
 justify-content:center;
 gap:12px;
-font-size:28px;
+font-size:22px;
 font-weight:700;
-margin-bottom:40px;
+margin-bottom:30px;
 color:#22c55e;
 }
 .dashboard-sidebar ul{
@@ -739,37 +698,41 @@ margin:0;
 display:flex;
 align-items:center;
 gap:16px;
-padding:18px 30px;
-font-size:17px;
+padding:16px 28px;
+font-size:15px;
 font-weight:600;
 cursor:pointer;
 transition:.3s;
 border-left:4px solid transparent;
+color:#9ca3af;
 }
 .dashboard-sidebar li:hover{
 background:#1f2937;
+color:#fff;
 border-left-color:#22c55e;
 }
 .dashboard-sidebar li.active{
 background:#16a34a;
+color:#fff;
 border-left-color:#86efac;
 }
 .dashboard-sidebar li i{
-width:24px;
+width:20px;
 text-align:center;
-font-size:18px;
+font-size:16px;
 }
 .dashboard-content{
 padding:35px;
+max-width: 1400px;
 }
 .dashboard-header{
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:35px;
+margin-bottom:30px;
 }
 .dashboard-header h1{
-font-size:34px;
+font-size:28px;
 color:#111827;
 }
 .dashboard-header span{
@@ -777,68 +740,74 @@ color:#16a34a;
 }
 .dashboard-cards{
 display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:25px;
-margin-bottom:40px;
+grid-template-columns:repeat( auto-fit, minmax(220px, 1fr) );
+gap:20px;
+margin-bottom:30px;
 }
 .dashboard-card{
 background:#fff;
-padding:30px;
-border-radius:20px;
-box-shadow:0 15px 35px rgba(0,0,0,.08);
+padding:24px;
+border-radius:18px;
+box-shadow:0 10px 25px rgba(0,0,0,.04);
+border: 1px solid #e2e8f0;
 }
 .dashboard-card h3{
-font-size:14px;
+font-size:13px;
 color:#6b7280;
-margin-bottom:15px;
+margin-bottom:10px;
 text-transform: uppercase;
 letter-spacing: 0.5px;
 }
 .dashboard-card h2{
-font-size:32px;
+font-size:28px;
 color:#111827;
 }
 .dashboard-panel{
 background:#fff;
-border-radius:20px;
-padding:30px;
-box-shadow:0 15px 35px rgba(0,0,0,.08);
+border-radius:18px;
+padding:28px;
+box-shadow:0 10px 25px rgba(0,0,0,.04);
+border: 1px solid #e2e8f0;
 margin-bottom:25px;
 }
 .dashboard-panel h2{
-margin-bottom:20px;
-font-size:24px;
+margin-bottom:18px;
+font-size:20px;
 color:#111827;
 }
 .quick-actions{
 display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:18px;
+grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+gap:15px;
 }
 .quick-btn{
-padding:18px;
+padding:16px;
 border:none;
-border-radius:15px;
+border-radius:12px;
 background:#16a34a;
 color:#fff;
-font-size:17px;
+font-size:15px;
 font-weight:700;
 cursor:pointer;
 transition:.3s;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
 }
 .quick-btn:hover{
 background:#166534;
 }
 .activity-list{
 display:grid;
-gap:15px;
+gap:12px;
 }
 .activity-item{
 display:flex;
 justify-content:space-between;
 align-items:center;
 padding:16px;
-background:#f9fafb;
+background:#f8fafc;
 border-radius:12px;
 border-left:4px solid #e5e7eb;
 }
@@ -847,24 +816,25 @@ border-left:4px solid #e5e7eb;
 .activity-item.restaurant-item { border-left-color: #f59e0b; }
 .activity-item strong{
 display:block;
-margin-bottom:5px;
+margin-bottom:4px;
+color: #1f2937;
 }
 .activity-item span{
-font-size:14px;
+font-size:13px;
 color:#6b7280;
 }
 .status{
-padding:8px 14px;
+padding:6px 12px;
 border-radius:30px;
-font-size:13px;
+font-size:12px;
 font-weight:700;
 }
-.status.completed{
-background:#dcfce7;
-color:#15803d;
-}
+.status.completed{ background:#dcfce7; color:#15803d; }
+.status.pending{ background:#fef3c7; color:#d97706; }
+.status.canceled{ background:#fee2e2; color:#dc2626; }
+
 .request-btn{
-padding:10px 20px;
+padding:8px 16px;
 background:#16a34a;
 color:white;
 border:none;
@@ -872,63 +842,180 @@ border-radius:8px;
 font-weight:bold;
 cursor:pointer;
 transition: .2s;
+font-size:14px;
 }
-.request-btn:hover{
-background:#166534;
+.request-btn:hover{ background:#166534; }
+.request-btn.danger{ background:#ef4444; }
+.request-btn.danger:hover{ background:#b91c1c; }
+
+.maps-link {
+display: inline-flex;
+align-items: center;
+gap: 6px;
+color: #2563eb;
+font-weight: 600;
+font-size: 13px;
+margin-top: 4px;
 }
-.admin-module-title {
-background: #f1f5f9;
-padding: 10px 15px;
-border-radius: 8px;
-font-size: 14px;
-font-weight: bold;
-color: #475569;
-margin-top: 15px;
-margin-bottom: 8px;
-text-transform: uppercase;
-}
-.complaint-form {
+.maps-link:hover { text-decoration: underline; }
+
+.complaint-form, .generic-form {
 display: grid;
 gap: 15px;
-margin-top: 15px;
+margin-top: 10px;
 }
-.complaint-form textarea {
+.complaint-form textarea, .generic-form textarea {
 width: 100%;
-height: 120px;
-padding: 15px;
+height: 100px;
+padding: 14px;
 border: 2px solid #e5e7eb;
 border-radius: 12px;
 outline: none;
 font-family: inherit;
 resize: none;
 }
-@media(max-width:1200px){
-.dashboard-cards{
-grid-template-columns:repeat(2,1fr);
+
+/* FLOATING AI ASSISTANT WIDGET */
+#aiAssistantWidget {
+position: fixed;
+bottom: 25px;
+right: 25px;
+z-index: 9999;
 }
+.ai-toggle-btn {
+background: linear-gradient(135deg, #16a34a, #0d9488);
+color: white;
+border: none;
+padding: 14px 22px;
+border-radius: 30px;
+font-weight: 700;
+font-size: 15px;
+box-shadow: 0 10px 25px rgba(22,163,74,0.4);
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 10px;
+transition: 0.3s;
 }
+.ai-toggle-btn:hover {
+transform: scale(1.05);
+}
+.ai-chat-box {
+position: absolute;
+bottom: 70px;
+right: 0;
+width: 360px;
+height: 480px;
+background: #ffffff;
+border-radius: 20px;
+box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+display: none;
+flex-direction: column;
+overflow: hidden;
+border: 1px solid #e2e8f0;
+}
+.ai-chat-header {
+background: #111827;
+color: #fff;
+padding: 16px 20px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.ai-chat-header h4 {
+font-size: 16px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.ai-chat-body {
+flex: 1;
+padding: 16px;
+overflow-y: auto;
+display: flex;
+flex-direction: column;
+gap: 12px;
+background: #f8fafc;
+font-size: 14px;
+}
+.ai-msg {
+padding: 12px 16px;
+border-radius: 14px;
+max-width: 85%;
+line-height: 1.5;
+}
+.ai-msg.bot {
+background: #e0f2fe;
+color: #0369a1;
+align-self: flex-start;
+border-bottom-left-radius: 2px;
+}
+.ai-msg.user {
+background: #16a34a;
+color: white;
+align-self: flex-end;
+border-bottom-right-radius: 2px;
+}
+.ai-options {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+margin-top: 8px;
+}
+.ai-chip {
+background: #ffffff;
+border: 1px solid #cbd5e1;
+color: #334155;
+padding: 6px 12px;
+border-radius: 20px;
+font-size: 12px;
+font-weight: 600;
+cursor: pointer;
+transition: 0.2s;
+}
+.ai-chip:hover {
+background: #16a34a;
+color: white;
+border-color: #16a34a;
+}
+.ai-chat-footer {
+padding: 12px;
+background: #fff;
+border-top: 1px solid #e2e8f0;
+display: flex;
+gap: 8px;
+}
+.ai-chat-footer input {
+flex: 1;
+padding: 10px 14px;
+border: 1px solid #cbd5e1;
+border-radius: 10px;
+outline: none;
+font-size: 13px;
+}
+.ai-chat-footer button {
+background: #16a34a;
+color: white;
+border: none;
+padding: 10px 14px;
+border-radius: 10px;
+cursor: pointer;
+font-weight: 700;
+}
+
 @media(max-width:900px){
-.dashboard-wrapper{
-grid-template-columns:1fr;
-}
-.dashboard-sidebar{
-padding:20px;
-}
-.dashboard-sidebar ul{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-}
-.dashboard-sidebar li{
-justify-content:center;
-border-left:none;
-border-radius:10px;
-padding:15px;
-}
+.dashboard-wrapper{ grid-template-columns:1fr; }
+.dashboard-sidebar{ padding:15px; }
+.dashboard-sidebar ul{ display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:8px; }
+.dashboard-sidebar li{ justify-content:center; border-left:none; border-radius:8px; padding:10px; text-align: center; flex-direction: column; gap: 6px; font-size: 12px;}
+.dashboard-sidebar li i { font-size: 18px; }
+.hero-grid { grid-template-columns: 1fr; }
+.service-grid, .food-grid { grid-template-columns: 1fr; }
+.ai-chat-box { width: 310px; right: -10px; }
 }
 </style>
 </head>
-<body>
+<body onload="checkAutoLogin()">
 
 <div id="mainWebsite">
 <header>
@@ -942,8 +1029,7 @@ padding:15px;
 <li><a onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Home</a></li>
 <li><a onclick="document.getElementById('services-section').scrollIntoView()">Ride</a></li>
 <li><a onclick="document.getElementById('food-categories').scrollIntoView()">Food</a></li>
-<li><a onclick="document.getElementById('services-section').scrollIntoView()">Deliver</a></li>
-<li><a onclick="document.getElementById('services-section').scrollIntoView()">Business</a></li>
+<li><a onclick="document.getElementById('reviews-section').scrollIntoView()">Reviews</a></li>
 <li><a onclick="openAuth('register', 'driver')">Drivers</a></li>
 <li><a onclick="openAuth('register', 'restaurant')">Restaurants</a></li>
 <li><a onclick="document.getElementById('faq-section').scrollIntoView()">Support</a></li>
@@ -977,20 +1063,24 @@ padding:15px;
 </div>
 <div class="input-group">
 <label>Pickup Location</label>
-<input type="text" id="heroPickup" placeholder="Enter pickup location">
+<input type="text" id="heroPickup" placeholder="Enter pickup location or use location button">
+<button type="button" class="location-btn" onclick="detectUserLocation('heroPickup')"><i class="fa-solid fa-location-crosshairs"></i> Use GPS</button>
 </div>
 <div class="input-group">
 <label>Destination</label>
-<input type="text" id="heroDropoff" placeholder="Where are you going?">
+<input type="text" id="heroDropoff" placeholder="Where are you going?" onchange="updateGoogleMapIframe(this.value)">
 </div>
 <div class="input-group">
 <label>Ride Type</label>
 <select id="heroRideType">
-<option>Economy</option>
-<option>Premium</option>
-<option>XL</option>
-<option>Motorbike</option>
+<option value="Economy">Economy</option>
+<option value="Premium">Premium</option>
+<option value="XL">XL</option>
+<option value="Motorbike">Motorbike</option>
 </select>
+</div>
+<div class="map-box">
+<iframe id="googleMapPreview" width="100%" height="100%" frameborder="0" style="border:0" src="https://maps.google.com/maps?q=Nairobi&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
 </div>
 <button class="find-btn" onclick="submitGuestRideRequest()">Find Driver</button>
 </div>
@@ -1041,12 +1131,77 @@ padding:15px;
 <p>Discover your favourite meals from hundreds of restaurants.</p>
 </div>
 <div class="food-grid">
-<div class="food-card"><i class="fa-solid fa-pizza-slice"></i><h3>Pizza</h3><p>120+ Restaurants</p></div>
-<div class="food-card"><i class="fa-solid fa-drumstick-bite"></i><h3>Chicken</h3><p>90+ Restaurants</p></div>
-<div class="food-card"><i class="fa-solid fa-burger"></i><h3>Burgers</h3><p>80+ Restaurants</p></div>
-<div class="food-card"><i class="fa-solid fa-mug-hot"></i><h3>Coffee</h3><p>60+ Cafes</p></div>
-<div class="food-card"><i class="fa-solid fa-fish"></i><h3>Sea Food</h3><p>45+ Restaurants</p></div>
-<div class="food-card"><i class="fa-solid fa-bowl-rice"></i><h3>African Cuisine</h3><p>150+ Restaurants</p></div>
+<div class="food-card"><i class="fa-solid fa-pizza-slice"></i><h3>Pizza</h3></div>
+<div class="food-card"><i class="fa-solid fa-drumstick-bite"></i><h3>Chicken</h3></div>
+<div class="food-card"><i class="fa-solid fa-burger"></i><h3>Burgers</h3></div>
+<div class="food-card"><i class="fa-solid fa-mug-hot"></i><h3>Coffee</h3></div>
+<div class="food-card"><i class="fa-solid fa-fish"></i><h3>Sea Food</h3></div>
+<div class="food-card"><i class="fa-solid fa-bowl-rice"></i><h3>African</h3></div>
+</div>
+</div>
+</section>
+
+<!-- ================= PUBLIC TESTIMONIALS & RATING SECTION ================= -->
+<section class="testimonials-section" id="reviews-section">
+<div class="container">
+<div class="section-title">
+<h2>Customer Experiences & Feedback</h2>
+<p>See what our users are saying or leave your own rating to help us improve.</p>
+</div>
+
+<!-- DISPLAY APPROVED TESTIMONIALS -->
+<div class="testimonials-grid" id="publicTestimonialsContainer">
+<!-- Dynamic Content Rendered Here -->
+</div>
+
+<br><br>
+
+<!-- USER RATING PATTERN WIDGET -->
+<div class="feedback-box">
+<h3 style="text-align: center; font-size: 22px; color: #0f172a;">Rate Your Acacia Experience</h3>
+<p style="text-align: center; color: #64748b; font-size: 14px; margin-top: 5px;">Select a rating score to share feedback</p>
+
+<!-- Star Rating Selection Step -->
+<div class="star-rating-container" id="starRatingSelector">
+<i class="fa-solid fa-star" data-value="1" onclick="selectStarRating(1)"></i>
+<i class="fa-solid fa-star" data-value="2" onclick="selectStarRating(2)"></i>
+<i class="fa-solid fa-star" data-value="3" onclick="selectStarRating(3)"></i>
+<i class="fa-solid fa-star" data-value="4" onclick="selectStarRating(4)"></i>
+<i class="fa-solid fa-star" data-value="5" onclick="selectStarRating(5)"></i>
+</div>
+
+<!-- CONDITIONAL FORM 1: HIGH RATING (4-5 STARS) -->
+<form id="highRatingForm" class="generic-form" style="display:none;" onsubmit="handleFeedbackSubmit(event)">
+<div class="input-box">
+<label>Your Name / Author Name</label>
+<input type="text" id="feedbackAuthor" placeholder="e.g. Jane Doe" required>
+</div>
+<div class="input-box">
+<label>Company / Location (Optional)</label>
+<input type="text" id="feedbackCompany" placeholder="e.g. CEO at TechHub or Nairobi Rider">
+</div>
+<div class="input-box">
+<label>Public Testimonial</label>
+<textarea id="feedbackComment" placeholder="Tell us what you loved about our services..." required></textarea>
+</div>
+<button type="submit" class="find-btn">Submit Public Testimonial</button>
+</form>
+
+<!-- CONDITIONAL FORM 2: LOW RATING (1-3 STARS) -->
+<form id="lowRatingForm" class="generic-form" style="display:none;" onsubmit="handleFeedbackSubmit(event)">
+<div style="background: #fef2f2; border: 1px solid #fecaca; padding: 12px; border-radius: 10px; color: #991b1b; font-size: 13px; margin-bottom: 10px;">
+<i class="fa-solid fa-circle-info"></i> We are sorry your experience wasn't perfect. Your feedback will be sent privately to our service team to resolve issues directly.
+</div>
+<div class="input-box">
+<label>Email Address (For follow-up support)</label>
+<input type="email" id="privateFeedbackEmail" placeholder="yourname@domain.com" required>
+</div>
+<div class="input-box">
+<label>How can we improve customer service or support?</label>
+<textarea id="privateFeedbackText" placeholder="Please share details on what went wrong with your ride, food order, or delivery..." required></textarea>
+</div>
+<button type="submit" class="find-btn" style="background: #e11d48;">Send Private Feedback</button>
+</form>
 </div>
 </div>
 </section>
@@ -1078,12 +1233,11 @@ padding:15px;
 <i class="fa-solid fa-car-side" style="color: #22c55e;"></i>
 <span>Acacia</span>
 </div>
-<p>Providing seamless, modern rides and rapid item deliveries across Kenya. Safe, budget-friendly transportation workflows in a single robust app infrastructure.</p>
+<p>Providing seamless, modern rides and rapid item deliveries across Kenya.</p>
 <div class="socials">
 <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
 <a href="#"><i class="fa-brands fa-twitter"></i></a>
 <a href="#"><i class="fa-brands fa-instagram"></i></a>
-<a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
 </div>
 </div>
 <div>
@@ -1092,7 +1246,6 @@ padding:15px;
 <li><a onclick="openAuth('login')">Book a Ride</a></li>
 <li><a onclick="openAuth('login')">Order Food</a></li>
 <li><a onclick="openAuth('login')">Parcel Delivery</a></li>
-<li><a onclick="openAuth('login')">Business Accounts</a></li>
 </ul>
 </div>
 <div>
@@ -1100,16 +1253,12 @@ padding:15px;
 <ul>
 <li><a onclick="openAuth('register', 'driver')">Sign Up as Driver</a></li>
 <li><a onclick="openAuth('register', 'restaurant')">Partner Restaurant</a></li>
-<li><a onclick="openAuth('login')">Fleet Management</a></li>
 </ul>
 </div>
 <div>
-<h3>Stay Updated</h3>
-<p style="margin-bottom: 15px;">Subscribe to receive promotional offers and neighborhood updates.</p>
-<div class="newsletter">
-<input type="email" placeholder="Enter your email">
-<button type="button" onclick="alert('Thank you for subscribing!')">Subscribe</button>
-</div>
+<h3>Admin Panel</h3>
+<p style="margin-bottom:10px;">Developer Portal Access:</p>
+<button class="request-btn" onclick="openAuth('login'); document.getElementById('loginEmail').value='developeracaciabooks@gmail.com'; document.getElementById('loginPassword').value='admin123';">Admin Autofill</button>
 </div>
 </div>
 <div class="footer-bottom">
@@ -1124,13 +1273,13 @@ padding:15px;
 <div class="auth-left">
 <div class="auth-brand">
 <i class="fa-solid fa-car-side"></i>
-<h2>Acacia Rides & Food</h2>
-<p>Ride, Eat and Deliver from one platform.</p>
+<h2>Acacia Platform</h2>
+<p>Multi-Module Ecosystem for Rides, Food, and Commerce.</p>
 </div>
 <div class="auth-features">
-<div><i class="fa-solid fa-circle-check"></i> Book rides in seconds</div>
-<div><i class="fa-solid fa-circle-check"></i> Order food from nearby restaurants</div>
-<div><i class="fa-solid fa-circle-check"></i> Manage live workflows securely</div>
+<div><i class="fa-solid fa-circle-check"></i> Integrated E-Wallet</div>
+<div><i class="fa-solid fa-circle-check"></i> Multi-Role Portals</div>
+<div><i class="fa-solid fa-circle-check"></i> Instant Commission Distribution</div>
 </div>
 </div>
 <div class="auth-right">
@@ -1142,88 +1291,122 @@ padding:15px;
 <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
 <h2>Welcome Back</h2>
 <div class="input-box">
-<label>Email</label>
-<input type="email" id="loginEmail" placeholder="Email Address" required>
+<label>Email Address</label>
+<input type="email" id="loginEmail" placeholder="e.g. user@acacia.com" required>
 </div>
 <div class="input-box">
 <label>Password</label>
 <div class="password-box">
 <input type="password" id="loginPassword" placeholder="Password" required>
-<button type="button" onclick="togglePasswordVisibility('loginPassword', this)">
-<i class="fa-solid fa-eye"></i>
-</button>
+<button type="button" onclick="togglePasswordVisibility('loginPassword', this)"><i class="fa-solid fa-eye"></i></button>
 </div>
 </div>
-<button type="submit" class="auth-button">Login</button>
+<button type="submit" class="auth-button">Login to Portal</button>
 </form>
 
 <form id="registerForm" class="auth-form" style="display:none;" onsubmit="handleRegister(event)">
 <h2>Create Account</h2>
 <div class="input-box">
-<label>Full Name</label>
+<label>Full Name / Business Name</label>
 <input type="text" id="regName" placeholder="Full Name" required>
 </div>
 <div class="input-box">
-<label>Email</label>
+<label>Email Address</label>
 <input type="email" id="regEmail" placeholder="Email Address" required>
 </div>
 <div class="input-box">
-<label>Account Type (Role)</label>
+<label>Account Role</label>
 <select id="regRole" required>
 <option value="customer">Customer / User</option>
-<option value="driver">Driver (Accept Rides)</option>
-<option value="restaurant">Restaurant Owner (Accept Orders)</option>
+<option value="driver">Driver (Logistics Partner)</option>
+<option value="restaurant">Restaurant / Merchant</option>
 </select>
 </div>
 <div class="input-box">
 <label>Password</label>
 <div class="password-box">
 <input type="password" id="regPassword" placeholder="Password" required>
-<button type="button" onclick="togglePasswordVisibility('regPassword', this)">
-<i class="fa-solid fa-eye"></i>
-</button>
+<button type="button" onclick="togglePasswordVisibility('regPassword', this)"><i class="fa-solid fa-eye"></i></button>
 </div>
 </div>
-<button type="submit" class="auth-button">Create Account</button>
+<button type="submit" class="auth-button">Register Account</button>
 </form>
 </div>
 </div>
 </div>
 
+<!-- ================= CUSTOMER DASHBOARD ================= -->
 <section id="customerDashboard" style="display:none; padding:0;">
 <div class="dashboard-wrapper">
 <aside class="dashboard-sidebar">
-<div class="dashboard-logo"><i class="fa-solid fa-car-side"></i><span>Acacia</span></div>
+<div class="dashboard-logo"><i class="fa-solid fa-car-side"></i><span>Customer</span></div>
 <ul>
-<li id="custMainTab" class="active" onclick="switchCustomerTab('main')"><i class="fa-solid fa-house"></i>Dashboard</li>
+<li id="custMainTab" class="active" onclick="switchCustomerTab('main')"><i class="fa-solid fa-house"></i>Overview</li>
+<li id="custWalletTab" onclick="switchCustomerTab('wallet')"><i class="fa-solid fa-wallet"></i>Wallet & Topup</li>
+<li id="custHistoryTab" onclick="switchCustomerTab('history')"><i class="fa-solid fa-clock-rotate-left"></i>Order History</li>
 <li id="custSupportTab" onclick="switchCustomerTab('complaints')"><i class="fa-solid fa-headset"></i>Support Tickets</li>
 <li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
 </ul>
 </aside>
 <div class="dashboard-content">
+<!-- MAIN OVERVIEW -->
 <div id="customerMainPanel">
 <div class="dashboard-header"><h1>Welcome, <span id="customerName">Customer</span></h1></div>
 <div class="dashboard-cards">
-<div class="dashboard-card"><h3>Wallet Balance</h3><h2 id="custWallet" style="color:#16a34a;">KES 1,250</h2></div>
-<div class="dashboard-card"><h3>Trips Count</h3><h2 id="custTrips">4</h2></div>
-<div class="dashboard-card"><h3>Active Orders</h3><h2 id="custOrders">1</h2></div>
+<div class="dashboard-card"><h3>Wallet Balance</h3><h2 id="custWallet" style="color:#16a34a;">KES 0</h2></div>
+<div class="dashboard-card"><h3>Trips / Orders Completed</h3><h2 id="custTrips">0</h2></div>
+<div class="dashboard-card"><h3>Pending Requests</h3><h2 id="custPending">0</h2></div>
+</div>
+
+<div class="dashboard-panel">
+<h2>Book a Service</h2>
+<div class="quick-actions">
+<button class="quick-btn" onclick="openRideModal()"><i class="fa-solid fa-car"></i> Request Custom Ride</button>
+<button class="quick-btn" style="background:#f59e0b;" onclick="openFoodModal()"><i class="fa-solid fa-utensils"></i> Order Food</button>
+<button class="quick-btn" style="background:#3b82f6;" onclick="openParcelModal()"><i class="fa-solid fa-box"></i> Send Parcel</button>
+</div>
+</div>
+
+<div class="dashboard-panel">
+<h2>Active / Recent Activity</h2>
+<div class="activity-list" id="custRecentActivity"></div>
+</div>
+</div>
+
+<!-- WALLET & TOPUP MODULE -->
+<div id="customerWalletPanel" style="display:none;">
+<div class="dashboard-header"><h1>Wallet Management</h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>Current Balance</h3><h2 id="custWalletDisplay" style="color:#16a34a;">KES 0</h2></div>
 </div>
 <div class="dashboard-panel">
-<h2>Request Platform Services</h2>
-<div class="quick-actions">
-<button class="quick-btn" onclick="requestRideService()"><i class="fa-solid fa-car"></i> Request Quick Ride (KES 500)</button>
-<button class="quick-btn" style="background:#f59e0b;" onclick="requestFoodService()"><i class="fa-solid fa-hamburger"></i> Order Quick Pizza (KES 1000)</button>
+<h2>Add Funds via M-Pesa / Card</h2>
+<div class="generic-form" style="max-width: 400px;">
+<div class="input-box">
+<label>Amount (KES)</label>
+<input type="number" id="topupAmount" placeholder="e.g. 1000" min="100">
+</div>
+<button class="quick-btn" onclick="topUpWallet()">Deposit Funds</button>
 </div>
 </div>
 </div>
 
-<div id="customerComplaintsPanel" style="display:none;">
-<div class="dashboard-header"><h1>File a Support Complaint</h1></div>
+<!-- ORDER HISTORY MODULE -->
+<div id="customerHistoryPanel" style="display:none;">
+<div class="dashboard-header"><h1>Order & Trip History</h1></div>
 <div class="dashboard-panel">
-<h2>Detail Your Complaint Below</h2>
+<div class="activity-list" id="custFullHistory"></div>
+</div>
+</div>
+
+<!-- SUPPORT MODULE -->
+<div id="customerComplaintsPanel" style="display:none;">
+<div class="dashboard-header"><h1>Support Center</h1></div>
+<div class="dashboard-panel">
+<h2>File a Ticket</h2>
 <div class="complaint-form">
-<textarea id="complaintText" placeholder="Describe what went wrong with your ride or delivery order..."></textarea>
-<button class="quick-btn" onclick="submitComplaint()">Submit Complaint Ticket</button>
+<textarea id="complaintText" placeholder="Describe issue with a trip, food delivery, or driver..."></textarea>
+<button class="quick-btn" onclick="submitComplaint()">Submit Incident Ticket</button>
 </div>
 </div>
 </div>
@@ -1231,90 +1414,160 @@ padding:15px;
 </div>
 </section>
 
+<!-- ================= DRIVER DASHBOARD ================= -->
 <section id="driverDashboard" style="display:none; padding:0;">
 <div class="dashboard-wrapper">
 <aside class="dashboard-sidebar">
 <div class="dashboard-logo"><i class="fa-solid fa-motorcycle"></i><span>Driver Portal</span></div>
 <ul>
-<li class="active"><i class="fa-solid fa-route"></i>Ride Requests</li>
+<li id="drvJobsTab" class="active" onclick="switchDriverTab('jobs')"><i class="fa-solid fa-route"></i>Available Jobs</li>
+<li id="drvVehicleTab" onclick="switchDriverTab('vehicle')"><i class="fa-solid fa-id-card"></i>Vehicle Status</li>
+<li id="drvEarningsTab" onclick="switchDriverTab('earnings')"><i class="fa-solid fa-money-bill-wave"></i>Payouts & Earnings</li>
 <li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
 </ul>
 </aside>
 <div class="dashboard-content">
-<div class="dashboard-header"><h1>Driver Dashboard: <span id="driverName">Driver</span></h1></div>
+<div id="driverJobsPanel">
+<div class="dashboard-header">
+<h1>Driver Portal: <span id="driverName">Driver</span></h1>
+<div>
+<strong>Status: </strong>
+<select id="driverStatusToggle" onchange="toggleDriverStatus(this.value)" style="padding:6px 12px; border-radius:8px;">
+<option value="Online">Online / Available</option>
+<option value="Offline">Offline</option>
+</select>
+</div>
+</div>
 <div class="dashboard-cards">
 <div class="dashboard-card"><h3>My Take-Home (80%)</h3><h2 id="driverEarnings" style="color:#10b981;">KES 0</h2></div>
-<div class="dashboard-card"><h3>Completed Rides</h3><h2 id="driverCount">0</h2></div>
+<div class="dashboard-card"><h3>Rides Completed</h3><h2 id="driverCount">0</h2></div>
 </div>
 <div class="dashboard-panel">
-<h2>Available Customer Ride Requests</h2>
+<h2>Live Ride & Parcel Requests</h2>
 <div class="activity-list" id="rideRequestsContainer"></div>
 </div>
 </div>
+
+<div id="driverVehiclePanel" style="display:none;">
+<div class="dashboard-header"><h1>Vehicle & Driver Verification</h1></div>
+<div class="dashboard-panel">
+<h2>Vehicle Information</h2>
+<div class="generic-form" style="max-width:500px;">
+<div class="input-box"><label>Vehicle Model / Type</label><input type="text" id="drvVehicleModel" value="Toyota Vitz / Motorbike"></div>
+<div class="input-box"><label>License Plate</label><input type="text" id="drvPlate" value="KDA 123X"></div>
+<button class="quick-btn" onclick="alert('Vehicle info updated!')">Update Details</button>
+</div>
+</div>
+</div>
+
+<div id="driverEarningsPanel" style="display:none;">
+<div class="dashboard-header"><h1>Payouts & Financial Breakdown</h1></div>
+<div class="dashboard-panel">
+<p style="margin-bottom:15px; color:#475569;">80% of every ride fare is credited directly to your net balance. The 20% platform commission is automatically routed to Acacia Systems.</p>
+<button class="quick-btn" onclick="alert('Payout request sent to M-Pesa!')">Request Withdrawal to M-Pesa</button>
+</div>
+</div>
+</div>
 </div>
 </section>
 
+<!-- ================= RESTAURANT DASHBOARD ================= -->
 <section id="restaurantDashboard" style="display:none; padding:0;">
 <div class="dashboard-wrapper">
 <aside class="dashboard-sidebar">
-<div class="dashboard-logo"><i class="fa-solid fa-store"></i><span>Restaurant Portal</span></div>
+<div class="dashboard-logo"><i class="fa-solid fa-store"></i><span>Merchant Portal</span></div>
 <ul>
-<li class="active"><i class="fa-solid fa-utensils"></i>Incoming Orders</li>
+<li id="rstOrdersTab" class="active" onclick="switchRestaurantTab('orders')"><i class="fa-solid fa-utensils"></i>Orders</li>
+<li id="rstMenuTab" onclick="switchRestaurantTab('menu')"><i class="fa-solid fa-book-open"></i>Manage Menu</li>
+<li id="rstEarningsTab" onclick="switchRestaurantTab('earnings')"><i class="fa-solid fa-chart-line"></i>Revenue</li>
 <li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
 </ul>
 </aside>
 <div class="dashboard-content">
-<div class="dashboard-header"><h1>Restaurant Dashboard: <span id="restaurantName">Store</span></h1></div>
+<div id="rstOrdersPanel">
+<div class="dashboard-header"><h1>Merchant: <span id="restaurantName">Store</span></h1></div>
 <div class="dashboard-cards">
-<div class="dashboard-card"><h3>My Take-Home (80%)</h3><h2 id="restEarnings" style="color:#f59e0b;">KES 0</h2></div>
-<div class="dashboard-card"><h3>Orders Completed</h3><h2 id="restCount">0</h2></div>
+<div class="dashboard-card"><h3>Net Sales (80%)</h3><h2 id="restEarnings" style="color:#f59e0b;">KES 0</h2></div>
+<div class="dashboard-card"><h3>Orders Fulfilled</h3><h2 id="restCount">0</h2></div>
 </div>
 <div class="dashboard-panel">
-<h2>Incoming Food Preparation Requests</h2>
+<h2>Incoming Food Preparation Orders</h2>
 <div class="activity-list" id="foodRequestsContainer"></div>
+</div>
+</div>
+
+<div id="rstMenuPanel" style="display:none;">
+<div class="dashboard-header"><h1>Menu & Inventory Items</h1></div>
+<div class="dashboard-panel">
+<h2>Active Menu Catalog</h2>
+<div id="restaurantMenuItems">
+<div class="activity-item">
+<div><strong>Deluxe Pizza Deal</strong><span>KES 1,000</span></div>
+<span class="status completed">In Stock</span>
+</div>
+<div class="activity-item">
+<div><strong>Swahili Biryani Special</strong><span>KES 750</span></div>
+<span class="status completed">In Stock</span>
+</div>
+</div>
+</div>
+</div>
+
+<div id="rstEarningsPanel" style="display:none;">
+<div class="dashboard-header"><h1>Merchant Revenue</h1></div>
+<div class="dashboard-panel">
+<p style="margin-bottom:15px; color:#475569;">Track your kitchen sales performance. System commission (20%) is deducted automatically per order fulfilled.</p>
+<button class="quick-btn" style="background:#f59e0b;" onclick="alert('Merchant payout dispatched!')">Withdraw Earnings</button>
+</div>
 </div>
 </div>
 </div>
 </section>
 
+<!-- ================= ADMIN DASHBOARD ================= -->
 <section id="adminDashboard" style="display:none; padding:0;">
 <div class="dashboard-wrapper">
 <aside class="dashboard-sidebar">
 <div class="dashboard-logo"><i class="fa-solid fa-user-gear"></i><span>Admin Console</span></div>
 <ul>
-<li id="adminRevenueTab" class="active" onclick="switchAdminTab('revenue')"><i class="fa-solid fa-wallet"></i>Revenue Module</li>
-<li id="adminCustomersTab" onclick="switchAdminTab('customers')"><i class="fa-solid fa-users"></i>Customer Modules</li>
-<li id="adminDriversTab" onclick="switchAdminTab('drivers')"><i class="fa-solid fa-car"></i>Drivers Module</li>
-<li id="adminRestaurantsTab" onclick="switchAdminTab('restaurants')"><i class="fa-solid fa-utensils"></i>Restaurant Module</li>
-<li id="adminSupportTab" onclick="switchAdminTab('support')"><i class="fa-solid fa-headset"></i>Support Tickets</li>
-<li id="adminSettingsTab" onclick="switchAdminTab('settings')"><i class="fa-solid fa-gear"></i>Settings Button</li>
+<li id="adminRevenueTab" class="active" onclick="switchAdminTab('revenue')"><i class="fa-solid fa-wallet"></i>Revenue</li>
+<li id="adminCustomersTab" onclick="switchAdminTab('customers')"><i class="fa-solid fa-users"></i>Customers</li>
+<li id="adminDriversTab" onclick="switchAdminTab('drivers')"><i class="fa-solid fa-car"></i>Drivers</li>
+<li id="adminRestaurantsTab" onclick="switchAdminTab('restaurants')"><i class="fa-solid fa-utensils"></i>Restaurants</li>
+<li id="adminFeedbackTab" onclick="switchAdminTab('feedback')"><i class="fa-solid fa-star"></i>Feedback Moderation</li>
+<li id="adminSupportTab" onclick="switchAdminTab('support')"><i class="fa-solid fa-headset"></i>Support & Developer</li>
+<li id="adminSettingsTab" onclick="switchAdminTab('settings')"><i class="fa-solid fa-gear"></i>Settings</li>
 <li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
 </ul>
 </aside>
 <div class="dashboard-content">
-<!-- REVENUE MODULE VIEW -->
+<!-- REVENUE MODULE -->
 <div id="adminRevenuePanel">
-<div class="dashboard-header"><h1>Revenue Module Overview</h1></div>
+<div class="dashboard-header"><h1>System Financials</h1></div>
 <div class="dashboard-cards">
-<div class="dashboard-card" style="grid-column: span 2;">
-<h3>Platform Total Earnings (20% Cut)</h3>
-<h2 id="adminRevenue" style="color:#16a34a; font-weight:800; font-size:42px;">KES 0</h2>
+<div class="dashboard-card">
+<h3>Platform Revenue (20% Cut)</h3>
+<h2 id="adminRevenue" style="color:#16a34a;">KES 0</h2>
+</div>
+<div class="dashboard-card">
+<h3>Total System Transactions</h3>
+<h2 id="adminTotalTxCount">0</h2>
 </div>
 </div>
 <div class="dashboard-panel">
-<h2>Financial Split Settings Summary</h2>
-<p style="color:#475569; line-height: 1.6;">The standard setup tracks a persistent 20% platform management surcharge deducted directly upon active fulfillment transactions made across the local server drivers and restaurants registry metrics.</p>
+<h2>Commission Engine</h2>
+<p style="color:#475569; line-height: 1.6;">The Acacia automated split engine retains a 20% platform management fee on every ride, food, or parcel transaction executed across local drivers and merchants.</p>
 </div>
 </div>
 
-<!-- CUSTOMER MODULES VIEW -->
+<!-- CUSTOMERS MODULE VIEW -->
 <div id="adminCustomersPanel" style="display:none;">
-<div class="dashboard-header"><h1>Customer System Management</h1></div>
+<div class="dashboard-header"><h1>Customer Management</h1></div>
 <div class="dashboard-cards">
-<div class="dashboard-card"><h3>Registered Consumers</h3><h2 id="adminTotalCustomersCount">0</h2></div>
+<div class="dashboard-card"><h3>Total Customers</h3><h2 id="adminTotalCustomersCount">0</h2></div>
 </div>
 <div class="dashboard-panel">
-<h2>Consumer Registry Logs</h2>
+<h2>Registered Customers</h2>
 <div class="activity-list" id="adminCustomersList"></div>
 </div>
 </div>
@@ -1323,43 +1576,67 @@ padding:15px;
 <div id="adminDriversPanel" style="display:none;">
 <div class="dashboard-header"><h1>Driver Logistics Module</h1></div>
 <div class="dashboard-cards">
-<div class="dashboard-card"><h3>Registered Logistics Partners</h3><h2 id="adminTotalDriversCount">0</h2></div>
+<div class="dashboard-card"><h3>Active Fleet Partners</h3><h2 id="adminTotalDriversCount">0</h2></div>
 </div>
 <div class="dashboard-panel">
-<h2>Logistics Registry Logs</h2>
+<h2>Driver Registry</h2>
 <div class="activity-list" id="adminDriversList"></div>
 </div>
 </div>
 
-<!-- RESTAURANT MODULE VIEW -->
+<!-- RESTAURANTS MODULE VIEW -->
 <div id="adminRestaurantsPanel" style="display:none;">
 <div class="dashboard-header"><h1>Restaurant Merchant Module</h1></div>
 <div class="dashboard-cards">
-<div class="dashboard-card"><h3>Registered Kitchen Partners</h3><h2 id="adminTotalRestaurantsCount">0</h2></div>
+<div class="dashboard-card"><h3>Registered Merchants</h3><h2 id="adminTotalRestaurantsCount">0</h2></div>
 </div>
 <div class="dashboard-panel">
-<h2>Merchant Registry Logs</h2>
+<h2>Merchant Registry</h2>
 <div class="activity-list" id="adminRestaurantsList"></div>
 </div>
 </div>
 
-<!-- SUPPORT MODULE VIEW -->
-<div id="adminSupportPanel" style="display:none;">
-<div class="dashboard-header"><h1>Active Support Complaints Inbox</h1></div>
+<!-- FEEDBACK MODERATION VIEW -->
+<div id="adminFeedbackPanel" style="display:none;">
+<div class="dashboard-header"><h1>Feedback & Moderation Desk</h1></div>
 <div class="dashboard-panel">
-<h2>Received Customer Incident Tickets</h2>
+<h2>Public Testimonials Moderation (High Ratings 4-5★)</h2>
+<div class="activity-list" id="adminTestimonialsModerationList"></div>
+</div>
+<div class="dashboard-panel">
+<h2>Private Customer Improvement Feedback (Low Ratings 1-3★)</h2>
+<div class="activity-list" id="adminPrivateFeedbackList"></div>
+</div>
+</div>
+
+<!-- SUPPORT MODULE VIEW WITH DEVELOPER LOCATION ACCESS -->
+<div id="adminSupportPanel" style="display:none;">
+<div class="dashboard-header"><h1>Support Desk & Developer Tools</h1></div>
+
+<div class="dashboard-panel">
+<h2>Developer GPS Location Access</h2>
+<p style="color:#6b7280; margin-bottom:12px; font-size:14px;">Retrieve live high-accuracy location coordinates for developer debugging and geo-fencing diagnostics.</p>
+<button class="quick-btn" style="max-width:280px; margin-bottom:15px;" onclick="fetchDevLocation()"><i class="fa-solid fa-location-crosshairs"></i> Fetch Developer GPS Location</button>
+<div id="devLocationDisplay" style="padding:12px; background:#f1f5f9; border-radius:10px; font-weight:600; font-size:14px; color:#1e293b; display:none;"></div>
+</div>
+
+<div class="dashboard-panel">
+<h2>Active Support Complaints Inbox</h2>
 <div class="activity-list" id="adminComplaintsList"></div>
 </div>
 </div>
 
 <!-- SETTINGS MODULE VIEW -->
 <div id="adminSettingsPanel" style="display:none;">
-<div class="dashboard-header"><h1>System Configuration Panel</h1></div>
+<div class="dashboard-header"><h1>Platform Settings</h1></div>
 <div class="dashboard-panel">
-<h2>Adjust Platform Commissions</h2>
-<div style="padding:15px; background:#f8fafc; border-radius:12px;">
-<p style="margin-bottom:10px;"><strong>Current Commission Mode:</strong> 20% Uniform Platform Split Fee</p>
-<button class="quick-btn" onclick="alert('Settings parameters updated globally.')">Save Parameters</button>
+<h2>Commission Settings</h2>
+<div style="padding:15px; background:#f8fafc; border-radius:12px; max-width: 500px;">
+<div class="input-box">
+<label>Platform Fee Percentage (%)</label>
+<input type="number" id="commissionRate" value="20" min="0" max="50">
+</div>
+<button class="quick-btn" onclick="saveCommissionRate()">Save Configuration</button>
 </div>
 </div>
 </div>
@@ -1367,18 +1644,243 @@ padding:15px;
 </div>
 </section>
 
+<!-- FLOATING AI ASSISTANT WIDGET -->
+<div id="aiAssistantWidget">
+<button class="ai-toggle-btn" onclick="toggleAIChat()"><i class="fa-solid fa-robot"></i> AI Guide</button>
+<div class="ai-chat-box" id="aiChatBox">
+<div class="ai-chat-header">
+<h4><i class="fa-solid fa-robot" style="color:#22c55e;"></i> Acacia AI Assistant</h4>
+<i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleAIChat()"></i>
+</div>
+<div class="ai-chat-body" id="aiChatBody">
+<div class="ai-msg bot">Hello! I am your Acacia AI Guide. How can I assist you with set up today?</div>
+<div class="ai-options">
+<div class="ai-chip" onclick="askAIGuide('driver_setup')">Driver Account Guide</div>
+<div class="ai-chip" onclick="askAIGuide('restaurant_setup')">Restaurant Account Guide</div>
+<div class="ai-chip" onclick="askAIGuide('customer_setup')">Customer Ride/Food Guide</div>
+</div>
+</div>
+<div class="ai-chat-footer">
+<input type="text" id="aiInput" placeholder="Ask AI how to setup account..." onkeydown="if(event.key==='Enter') sendAIMessage()">
+<button onclick="sendAIMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+</div>
+</div>
+</div>
+
 <script>
 let currentUser = null;
+let currentCommissionRate = 20;
+let selectedStarRating = 0;
 
+// Initialize Storage
 if (!localStorage.getItem("acaciaRides")) localStorage.setItem("acaciaRides", JSON.stringify([]));
 if (!localStorage.getItem("acaciaFoods")) localStorage.setItem("acaciaFoods", JSON.stringify([]));
 if (!localStorage.getItem("acaciaComplaints")) localStorage.setItem("acaciaComplaints", JSON.stringify([]));
 if (!localStorage.getItem("acaciaSystemRevenue")) localStorage.setItem("acaciaSystemRevenue", "0");
+if (!localStorage.getItem("acaciaHistory")) localStorage.setItem("acaciaHistory", JSON.stringify([]));
+
+// Seed Default Approved Testimonials if Empty
+if (!localStorage.getItem("acaciaFeedback")) {
+    const seedFeedback = [
+        { id: 1, stars: 5, author: "David Kimani", company: "Frequent Rider, Nairobi", text: "Acacia Rides gets me to meetings on time every day. The drivers are professional and vehicles super clean!", approved: true, type: "public" },
+        { id: 2, stars: 5, author: "Amina Hassan", company: "Swahili Delights Restaurant", text: "As a merchant partner, order dispatching is instantaneous. Payouts are straightforward and transparent.", approved: true, type: "public" },
+        { id: 3, stars: 4, author: "Peter Otieno", company: "Tech Entrepreneur", text: "Fast parcel delivery service across Westlands. Highly recommend for business package logistics.", approved: true, type: "public" }
+    ];
+    localStorage.setItem("acaciaFeedback", JSON.stringify(seedFeedback));
+}
 
 function getUsers() { return JSON.parse(localStorage.getItem("acaciaUsers") || "[]"); }
 function saveUsers(users) { localStorage.setItem("acaciaUsers", JSON.stringify(users)); }
 function getRevenue() { return parseFloat(localStorage.getItem("acaciaSystemRevenue") || "0"); }
 function addRevenue(amount) { localStorage.setItem("acaciaSystemRevenue", (getRevenue() + amount).toString()); }
+
+function getHistory() { return JSON.parse(localStorage.getItem("acaciaHistory") || "[]"); }
+function addHistoryItem(item) {
+    let hist = getHistory();
+    hist.unshift(item);
+    localStorage.setItem("acaciaHistory", JSON.stringify(hist));
+}
+
+function getFeedback() { return JSON.parse(localStorage.getItem("acaciaFeedback") || "[]"); }
+function saveFeedback(list) { localStorage.setItem("acaciaFeedback", JSON.stringify(list)); }
+
+// Auto-Login Persistence
+function checkAutoLogin() {
+    renderPublicTestimonials();
+    const savedUser = localStorage.getItem("acaciaActiveSession");
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        if (currentUser.role === "customer") { showSection("customerDashboard"); renderCustomerDashboard(); }
+        else if (currentUser.role === "driver") { showSection("driverDashboard"); renderDriverDashboard(); }
+        else if (currentUser.role === "restaurant") { showSection("restaurantDashboard"); renderRestaurantDashboard(); }
+        else if (currentUser.role === "admin") { showSection("adminDashboard"); switchAdminTab('revenue'); }
+    }
+}
+
+/* ================= STAR RATING & CONDITIONAL FEEDBACK LOGIC ================= */
+function selectStarRating(score) {
+    selectedStarRating = score;
+    const stars = document.querySelectorAll("#starRatingSelector i");
+    stars.forEach((star, index) => {
+        if (index < score) star.classList.add("active");
+        else star.classList.remove("active");
+    });
+
+    const highForm = document.getElementById("highRatingForm");
+    const lowForm = document.getElementById("lowRatingForm");
+
+    if (score >= 4) {
+        highForm.style.display = "grid";
+        lowForm.style.display = "none";
+        if(currentUser) document.getElementById("feedbackAuthor").value = currentUser.name;
+    } else {
+        highForm.style.display = "none";
+        lowForm.style.display = "grid";
+        if(currentUser) document.getElementById("privateFeedbackEmail").value = currentUser.email;
+    }
+}
+
+function handleFeedbackSubmit(e) {
+    e.preventDefault();
+    if (selectedStarRating === 0) return alert("Please select a star rating between 1 and 5 stars.");
+
+    let list = getFeedback();
+    const isHigh = selectedStarRating >= 4;
+
+    if (isHigh) {
+        const author = document.getElementById("feedbackAuthor").value.trim();
+        const company = document.getElementById("feedbackCompany").value.trim() || "Verified User";
+        const text = document.getElementById("feedbackComment").value.trim();
+
+        list.push({
+            id: Date.now(),
+            stars: selectedStarRating,
+            author,
+            company,
+            text,
+            approved: true, // Auto-published (or set to false if strict admin approval is desired)
+            type: "public",
+            timestamp: Date.now()
+        });
+        saveFeedback(list);
+        alert("Thank you for your testimonial! Your review has been submitted.");
+        document.getElementById("highRatingForm").reset();
+    } else {
+        const email = document.getElementById("privateFeedbackEmail").value.trim();
+        const text = document.getElementById("privateFeedbackText").value.trim();
+
+        list.push({
+            id: Date.now(),
+            stars: selectedStarRating,
+            email,
+            text,
+            type: "private",
+            timestamp: Date.now()
+        });
+        saveFeedback(list);
+        alert("Thank you for your feedback. Our support team has received your comments and will work to improve customer service.");
+        document.getElementById("lowRatingForm").reset();
+    }
+
+    // Reset UI
+    selectedStarRating = 0;
+    document.querySelectorAll("#starRatingSelector i").forEach(s => s.classList.remove("active"));
+    document.getElementById("highRatingForm").style.display = "none";
+    document.getElementById("lowRatingForm").style.display = "none";
+
+    renderPublicTestimonials();
+}
+
+function renderPublicTestimonials() {
+    const container = document.getElementById("publicTestimonialsContainer");
+    if(!container) return;
+    const publicReviews = getFeedback().filter(f => f.type === "public" && f.approved);
+
+    if(publicReviews.length === 0) {
+        container.innerHTML = `<p style="color:#64748b; text-align:center; grid-column:1/-1;">No public testimonials published yet. Be the first to leave a review!</p>`;
+        return;
+    }
+
+    container.innerHTML = publicReviews.map(r => {
+        let starsHtml = '';
+        for(let i=1; i<=5; i++) {
+            starsHtml += `<i class="fa-${i <= r.stars ? 'solid' : 'regular'} fa-star"></i>`;
+        }
+        const initial = r.author ? r.author.charAt(0).toUpperCase() : 'U';
+        return `
+            <div class="testimonial-card">
+                <div>
+                    <div class="testimonial-stars">${starsHtml}</div>
+                    <p class="testimonial-text">"${r.text}"</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">${initial}</div>
+                    <div class="testimonial-info">
+                        <h4>${r.author}</h4>
+                        <span>${r.company}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Location Detection via Geolocation API
+function detectUserLocation(targetInputId) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const locStr = `GPS (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+                document.getElementById(targetInputId).value = locStr;
+                updateGoogleMapIframe(locStr);
+                alert("Current GPS Location attached successfully!");
+            },
+            (error) => {
+                alert("Could not access location. Please enable location permissions in browser settings.");
+            }
+        );
+    } else {
+        alert("Geolocation is not supported by your browser.");
+    }
+}
+
+// Developer GPS Location Access for Support Desk
+function fetchDevLocation() {
+    const display = document.getElementById("devLocationDisplay");
+    display.style.display = "block";
+    display.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Acquiring developer coordinates...';
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const accuracy = position.coords.accuracy;
+                display.innerHTML = `
+                    <strong><i class="fa-solid fa-location-dot" style="color:#16a34a;"></i> Developer Location Acquired:</strong><br>
+                    Latitude: <code>${lat}</code> | Longitude: <code>${lon}</code><br>
+                    GPS Accuracy Margin: ~${accuracy.toFixed(1)} meters<br>
+                    <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" class="maps-link" style="margin-top:8px;"><i class="fa-solid fa-map"></i> Open Developer Position in Google Maps</a>
+                `;
+            },
+            (err) => {
+                display.innerHTML = `<span style="color:#dc2626;"><i class="fa-solid fa-triangle-exclamation"></i> Location Error: ${err.message}. Please allow browser location access permissions.</span>`;
+            },
+            { enableHighAccuracy: true, timeout: 10000 }
+        );
+    } else {
+        display.innerHTML = '<span style="color:#dc2626;">Geolocation unsupported on this device.</span>';
+    }
+}
+
+function updateGoogleMapIframe(query) {
+    if (!query) return;
+    const iframe = document.getElementById("googleMapPreview");
+    if (iframe) {
+        iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+    }
+}
 
 document.querySelectorAll(".faq-question").forEach(item => {
     item.onclick = () => {
@@ -1437,9 +1939,9 @@ function handleRegister(e) {
         return;
     }
 
-    users.push({ name, email, role, password, balance: 0, actionsCount: 0 });
+    users.push({ name, email, role, password, balance: 1000, actionsCount: 0, status: "Online" });
     saveUsers(users);
-    alert("Registration successful! Proceed to Login.");
+    alert("Account created successfully! Default starting bonus wallet: KES 1,000.");
     showAuth("login");
 }
 
@@ -1450,6 +1952,7 @@ function handleLogin(e) {
 
     if (email === "developeracaciabooks@gmail.com" && password === "admin123") {
         currentUser = { name: "System Admin", email, role: "admin" };
+        localStorage.setItem("acaciaActiveSession", JSON.stringify(currentUser));
         closeAuth();
         showSection("adminDashboard");
         switchAdminTab('revenue');
@@ -1459,11 +1962,12 @@ function handleLogin(e) {
     const users = getUsers();
     const match = users.find(u => u.email === email && u.password === password);
     if (!match) {
-        alert("Invalid email credentials or wrong password pattern.");
+        alert("Invalid email credentials or wrong password.");
         return;
     }
 
     currentUser = match;
+    localStorage.setItem("acaciaActiveSession", JSON.stringify(currentUser));
     closeAuth();
     if (currentUser.role === "customer") { showSection("customerDashboard"); renderCustomerDashboard(); }
     else if (currentUser.role === "driver") { showSection("driverDashboard"); renderDriverDashboard(); }
@@ -1479,44 +1983,242 @@ function showSection(id) {
     document.getElementById(id).style.display = "block";
 }
 
-function logout() { currentUser = null; showSection("mainWebsite"); }
+function logout() {
+    currentUser = null;
+    localStorage.removeItem("acaciaActiveSession");
+    showSection("mainWebsite");
+    renderPublicTestimonials();
+}
 
+/* ================= AI ASSISTANT LOGIC ================= */
+function toggleAIChat() {
+    const box = document.getElementById("aiChatBox");
+    box.style.display = box.style.display === "flex" ? "none" : "flex";
+}
+
+function askAIGuide(topic) {
+    const body = document.getElementById("aiChatBody");
+    if (topic === 'driver_setup') {
+        body.innerHTML += `<div class="ai-msg user">How do I set up a Driver Account?</div>`;
+        body.innerHTML += `
+            <div class="ai-msg bot">
+                <strong>Driver Setup Guide:</strong><br>
+                1. Click <b>Register</b> and select <i>Driver</i>.<br>
+                2. Log in and open <b>Vehicle Status</b> tab.<br>
+                3. Enter your vehicle model and plate number.<br>
+                4. Toggle your status to <b>Online</b> to receive live passenger and parcel jobs!<br>
+                5. Earn 80% per completed trip directly to your wallet.
+            </div>`;
+    } else if (topic === 'restaurant_setup') {
+        body.innerHTML += `<div class="ai-msg user">How do I set up a Restaurant Account?</div>`;
+        body.innerHTML += `
+            <div class="ai-msg bot">
+                <strong>Restaurant Setup Guide:</strong><br>
+                1. Click <b>Register</b> and select <i>Restaurant / Merchant</i>.<br>
+                2. Log into your merchant portal.<br>
+                3. Go to <b>Manage Menu</b> tab to review your active dishes.<br>
+                4. Incoming food orders appear on your <b>Orders</b> tab in real time.<br>
+                5. Click <i>Fulfill Order</i> to complete deliveries and receive payout.
+            </div>`;
+    } else if (topic === 'customer_setup') {
+        body.innerHTML += `<div class="ai-msg user">How do I request a ride or order food?</div>`;
+        body.innerHTML += `
+            <div class="ai-msg bot">
+                <strong>Customer User Guide:</strong><br>
+                1. Sign up as a Customer.<br>
+                2. Use the <b>Wallet & Topup</b> tab to fund your account via M-Pesa.<br>
+                3. Click <b>Request Custom Ride</b> or <b>Order Food</b>.<br>
+                4. Use <i>Use GPS</i> for instant location auto-filling.
+            </div>`;
+    }
+    body.scrollTop = body.scrollHeight;
+}
+
+function sendAIMessage() {
+    const input = document.getElementById("aiInput");
+    const val = input.value.trim();
+    if (!val) return;
+    const body = document.getElementById("aiChatBody");
+    body.innerHTML += `<div class="ai-msg user">${val}</div>`;
+    input.value = "";
+
+    const text = val.toLowerCase();
+    setTimeout(() => {
+        let reply = "I can guide you on account setup for Drivers, Restaurants, and Customers! Select an option below or ask about registration, vehicle details, or wallet top-ups.";
+        if (text.includes("driver") || text.includes("car") || text.includes("vehicle")) {
+            reply = "To set up as a Driver: Register with the 'Driver' role. After logging in, set your vehicle details in the Vehicle Status tab, then toggle your status to 'Online' to accept incoming ride requests.";
+        } else if (text.includes("restaurant") || text.includes("food") || text.includes("merchant") || text.includes("menu")) {
+            reply = "To set up a Restaurant: Register under 'Restaurant / Merchant'. Manage your catalog in 'Manage Menu', and click 'Fulfill Order' when customer requests arrive.";
+        } else if (text.includes("wallet") || text.includes("pay") || text.includes("m-pesa") || text.includes("money")) {
+            reply = "To top up your wallet: Navigate to the 'Wallet & Topup' menu in your dashboard, enter the amount in KES, and submit to deposit funds.";
+        }
+        body.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
+        body.scrollTop = body.scrollHeight;
+    }, 400);
+}
+
+/* ================= CUSTOMER LOGIC ================= */
 function switchCustomerTab(tab) {
-    document.getElementById("customerMainPanel").style.display = tab === 'main' ? 'block' : 'none';
-    document.getElementById("customerComplaintsPanel").style.display = tab === 'complaints' ? 'block' : 'none';
+    const panels = ['Main', 'Wallet', 'History', 'Complaints'];
+    panels.forEach(p => {
+        const el = document.getElementById(`customer${p}Panel`);
+        if(el) el.style.display = (p.toLowerCase() === tab) ? 'block' : 'none';
+    });
     document.getElementById("custMainTab").className = tab === 'main' ? 'active' : '';
+    document.getElementById("custWalletTab").className = tab === 'wallet' ? 'active' : '';
+    document.getElementById("custHistoryTab").className = tab === 'history' ? 'active' : '';
     document.getElementById("custSupportTab").className = tab === 'complaints' ? 'active' : '';
+
+    if (tab === 'history') renderCustomerHistory();
 }
 
 function renderCustomerDashboard() {
     document.getElementById("customerName").textContent = currentUser.name;
     document.getElementById("custWallet").textContent = "KES " + (currentUser.balance || 0).toLocaleString();
+    document.getElementById("custWalletDisplay").textContent = "KES " + (currentUser.balance || 0).toLocaleString();
     document.getElementById("custTrips").textContent = currentUser.actionsCount || 0;
+
+    const rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]").filter(r => r.email === currentUser.email);
+    const foods = JSON.parse(localStorage.getItem("acaciaFoods") || "[]").filter(f => f.email === currentUser.email);
+    document.getElementById("custPending").textContent = rides.length + foods.length;
+
+    const activity = document.getElementById("custRecentActivity");
+    if(rides.length === 0 && foods.length === 0) {
+        activity.innerHTML = `<p style="color:#6b7280;">No active pending orders. Request a service above!</p>`;
+    } else {
+        let html = '';
+        rides.forEach(r => {
+            html += `
+            <div class="activity-item customer-item">
+                <div>
+                    <strong>Ride Request: ${r.pickup} ➔ ${r.dropoff}</strong>
+                    <span>Fare: KES ${r.fare}</span><br>
+                    <a href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(r.pickup)}&destination=${encodeURIComponent(r.dropoff)}" target="_blank" class="maps-link"><i class="fa-solid fa-map-location-dot"></i> View Route on Google Maps</a>
+                </div>
+                <span class="status pending">Searching Driver</span>
+            </div>`;
+        });
+        foods.forEach(f => {
+            html += `<div class="activity-item customer-item"><div><strong>Food Order: ${f.item}</strong><span>Price: KES ${f.price}</span></div><span class="status pending">Kitchen Preparing</span></div>`;
+        });
+        activity.innerHTML = html;
+    }
 }
 
-function requestRideService() {
+function topUpWallet() {
+    const amt = parseFloat(document.getElementById("topupAmount").value);
+    if (!amt || amt < 100) return alert("Please enter a valid top-up amount (min KES 100).");
+    currentUser.balance = (currentUser.balance || 0) + amt;
+    updateUserInStorage(currentUser);
+    document.getElementById("topupAmount").value = "";
+    alert(`KES ${amt} added to your wallet!`);
+    renderCustomerDashboard();
+}
+
+function openRideModal() {
+    const pickup = prompt("Enter pickup location:", "Nairobi CBD");
+    const dropoff = prompt("Enter destination:", "Westlands");
+    if (!pickup || !dropoff) return;
+    const fare = 500;
+
+    if ((currentUser.balance || 0) < fare) {
+        alert("Insufficient wallet balance! Please top up your wallet.");
+        switchCustomerTab('wallet');
+        return;
+    }
+
+    currentUser.balance -= fare;
+    updateUserInStorage(currentUser);
+
     let rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
-    rides.push({ id: Date.now(), customer: currentUser.name, email: currentUser.email, pickup: "Your Location", dropoff: "Destination", fare: 500 });
+    rides.push({ id: Date.now(), customer: currentUser.name, email: currentUser.email, pickup, dropoff, fare });
     localStorage.setItem("acaciaRides", JSON.stringify(rides));
-    alert("Ride requested! Dispatched to the driver workflows.");
+
+    alert(`Ride dispatched! KES ${fare} held from wallet.`);
+    renderCustomerDashboard();
 }
 
-function requestFoodService() {
+function openFoodModal() {
+    const item = prompt("What would you like to order?", "Deluxe Pizza Deal");
+    if (!item) return;
+    const price = 800;
+
+    if ((currentUser.balance || 0) < price) {
+        alert("Insufficient balance! Top up your wallet first.");
+        switchCustomerTab('wallet');
+        return;
+    }
+
+    currentUser.balance -= price;
+    updateUserInStorage(currentUser);
+
     let foods = JSON.parse(localStorage.getItem("acaciaFoods") || "[]");
-    foods.push({ id: Date.now(), customer: currentUser.name, email: currentUser.email, item: "1x Deluxe Crispy Pizza House Deal", price: 1000 });
+    foods.push({ id: Date.now(), customer: currentUser.name, email: currentUser.email, item, price });
     localStorage.setItem("acaciaFoods", JSON.stringify(foods));
-    alert("Food request generated! The order pipeline has been sent to restaurants.");
+
+    alert(`Order sent to kitchen! KES ${price} paid.`);
+    renderCustomerDashboard();
+}
+
+function openParcelModal() {
+    const details = prompt("Enter parcel contents & delivery address:", "Documents to Kilimani");
+    if (!details) return;
+    const fare = 400;
+
+    if ((currentUser.balance || 0) < fare) {
+        alert("Insufficient balance!");
+        switchCustomerTab('wallet');
+        return;
+    }
+
+    currentUser.balance -= fare;
+    updateUserInStorage(currentUser);
+
+    let rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    rides.push({ id: Date.now(), customer: currentUser.name, email: currentUser.email, pickup: "Parcel Pickup", dropoff: details, fare });
+    localStorage.setItem("acaciaRides", JSON.stringify(rides));
+
+    alert("Courier dispatched for delivery!");
+    renderCustomerDashboard();
+}
+
+function renderCustomerHistory() {
+    const container = document.getElementById("custFullHistory");
+    const hist = getHistory().filter(h => h.userEmail === currentUser.email);
+    if(hist.length === 0) {
+        container.innerHTML = `<p style="color:#6b7280;">No completed transactions recorded yet.</p>`;
+        return;
+    }
+    container.innerHTML = hist.map(h => `
+        <div class="activity-item customer-item">
+            <div>
+                <strong>${h.title}</strong>
+                <span>Date: ${new Date(h.timestamp).toLocaleDateString()}</span>
+            </div>
+            <span class="status completed">KES ${h.amount}</span>
+        </div>
+    `).join('');
 }
 
 function submitComplaint() {
     const text = document.getElementById("complaintText").value.trim();
-    if (!text) return alert("Please clarify your complaint description.");
+    if (!text) return alert("Please type your complaint.");
     let complaints = JSON.parse(localStorage.getItem("acaciaComplaints") || "[]");
     complaints.push({ id: Date.now(), user: currentUser.name, email: currentUser.email, text: text });
     localStorage.setItem("acaciaComplaints", JSON.stringify(complaints));
     document.getElementById("complaintText").value = "";
-    alert("Your support issue has been submitted to the administration office desk.");
+    alert("Ticket submitted to Admin.");
     switchCustomerTab('main');
+}
+
+/* ================= DRIVER LOGIC ================= */
+function switchDriverTab(tab) {
+    document.getElementById("driverJobsPanel").style.display = tab === 'jobs' ? 'block' : 'none';
+    document.getElementById("driverVehiclePanel").style.display = tab === 'vehicle' ? 'block' : 'none';
+    document.getElementById("driverEarningsPanel").style.display = tab === 'earnings' ? 'block' : 'none';
+    document.getElementById("drvJobsTab").className = tab === 'jobs' ? 'active' : '';
+    document.getElementById("drvVehicleTab").className = tab === 'vehicle' ? 'active' : '';
+    document.getElementById("drvEarningsTab").className = tab === 'earnings' ? 'active' : '';
 }
 
 function renderDriverDashboard() {
@@ -1527,15 +2229,20 @@ function renderDriverDashboard() {
     const container = document.getElementById("rideRequestsContainer");
     const rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
     if(rides.length === 0) {
-        container.innerHTML = `<p style='color:#6b7280; padding:15px;'>No active ride requests currently open across the region.</p>`;
+        container.innerHTML = `<p style='color:#6b7280;'>No available ride/parcel requests in your area.</p>`;
         return;
     }
+    const rate = currentCommissionRate / 100;
     container.innerHTML = rides.map(ride => `
         <div class="activity-item driver-item">
-            <div><strong>${ride.pickup} ➔ ${ride.dropoff}</strong><span>Rider: ${ride.customer}</span></div>
             <div>
-                <span style="font-weight:bold; color:#10b981; margin-right:15px;">KES ${ride.fare * 0.8} (After 20% Fee)</span>
-                <button class="request-btn" onclick="acceptRide(${ride.id}, ${ride.fare})">Accept Job</button>
+                <strong>${ride.pickup} ➔ ${ride.dropoff}</strong>
+                <span>Passenger: ${ride.customer}</span><br>
+                <a href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(ride.pickup)}&destination=${encodeURIComponent(ride.dropoff)}" target="_blank" class="maps-link"><i class="fa-solid fa-map-location-dot"></i> Google Maps Navigation</a>
+            </div>
+            <div>
+                <span style="font-weight:bold; color:#10b981; margin-right:15px;">Payout: KES ${ride.fare * (1 - rate)}</span>
+                <button class="request-btn" onclick="acceptRide(${ride.id}, ${ride.fare})">Accept Request</button>
             </div>
         </div>
     `).join('');
@@ -1543,19 +2250,46 @@ function renderDriverDashboard() {
 
 function acceptRide(id, grossFare) {
     let rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    const ride = rides.find(r => r.id === id);
     rides = rides.filter(r => r.id !== id);
     localStorage.setItem("acaciaRides", JSON.stringify(rides));
 
-    const driverCut = grossFare * 0.80;
-    const systemCut = grossFare * 0.20;
+    const rate = currentCommissionRate / 100;
+    const driverCut = grossFare * (1 - rate);
+    const systemCut = grossFare * rate;
 
     currentUser.balance = (currentUser.balance || 0) + driverCut;
     currentUser.actionsCount = (currentUser.actionsCount || 0) + 1;
     updateUserInStorage(currentUser);
     addRevenue(systemCut);
 
-    alert(`Job complete! KES ${driverCut} added to your balance. 20% platform cut retained by system.`);
+    if (ride) {
+        addHistoryItem({
+            userEmail: ride.email,
+            title: `Completed Trip: ${ride.pickup} to ${ride.dropoff}`,
+            amount: grossFare,
+            timestamp: Date.now()
+        });
+    }
+
+    alert(`Job Completed! KES ${driverCut} added to your earnings balance.`);
     renderDriverDashboard();
+}
+
+function toggleDriverStatus(val) {
+    currentUser.status = val;
+    updateUserInStorage(currentUser);
+    alert(`Status changed to ${val}`);
+}
+
+/* ================= RESTAURANT LOGIC ================= */
+function switchRestaurantTab(tab) {
+    document.getElementById("rstOrdersPanel").style.display = tab === 'orders' ? 'block' : 'none';
+    document.getElementById("rstMenuPanel").style.display = tab === 'menu' ? 'block' : 'none';
+    document.getElementById("rstEarningsPanel").style.display = tab === 'earnings' ? 'block' : 'none';
+    document.getElementById("rstOrdersTab").className = tab === 'orders' ? 'active' : '';
+    document.getElementById("rstMenuTab").className = tab === 'menu' ? 'active' : '';
+    document.getElementById("rstEarningsTab").className = tab === 'earnings' ? 'active' : '';
 }
 
 function renderRestaurantDashboard() {
@@ -1566,15 +2300,16 @@ function renderRestaurantDashboard() {
     const container = document.getElementById("foodRequestsContainer");
     const foods = JSON.parse(localStorage.getItem("acaciaFoods") || "[]");
     if(foods.length === 0) {
-        container.innerHTML = `<p style='color:#6b7280; padding:15px;'>No open food orders waiting processing right now.</p>`;
+        container.innerHTML = `<p style='color:#6b7280;'>No pending food orders.</p>`;
         return;
     }
+    const rate = currentCommissionRate / 100;
     container.innerHTML = foods.map(food => `
         <div class="activity-item restaurant-item">
-            <div><strong>${food.item}</strong><span>Client: ${food.customer}</span></div>
+            <div><strong>${food.item}</strong><span>Customer: ${food.customer}</span></div>
             <div>
-                <span style="font-weight:bold; color:#f59e0b; margin-right:15px;">KES ${food.price * 0.8} (After 20% Fee)</span>
-                <button class="request-btn" style="background:#f59e0b;" onclick="acceptFood(${food.id}, ${food.price})">Accept Order</button>
+                <span style="font-weight:bold; color:#f59e0b; margin-right:15px;">Payout: KES ${food.price * (1 - rate)}</span>
+                <button class="request-btn" style="background:#f59e0b;" onclick="acceptFood(${food.id}, ${food.price})">Fulfill Order</button>
             </div>
         </div>
     `).join('');
@@ -1582,92 +2317,158 @@ function renderRestaurantDashboard() {
 
 function acceptFood(id, grossPrice) {
     let foods = JSON.parse(localStorage.getItem("acaciaFoods") || "[]");
+    const food = foods.find(f => f.id === id);
     foods = foods.filter(f => f.id !== id);
     localStorage.setItem("acaciaFoods", JSON.stringify(foods));
 
-    const restaurantCut = grossPrice * 0.80;
-    const systemCut = grossPrice * 0.20;
+    const rate = currentCommissionRate / 100;
+    const restCut = grossPrice * (1 - rate);
+    const systemCut = grossPrice * rate;
 
-    currentUser.balance = (currentUser.balance || 0) + restaurantCut;
+    currentUser.balance = (currentUser.balance || 0) + restCut;
     currentUser.actionsCount = (currentUser.actionsCount || 0) + 1;
     updateUserInStorage(currentUser);
     addRevenue(systemCut);
 
-    alert(`Order fulfillment dispatched! KES ${restaurantCut} credited to store balance.`);
+    if (food) {
+        addHistoryItem({
+            userEmail: food.email,
+            title: `Food Order Delivered: ${food.item}`,
+            amount: grossPrice,
+            timestamp: Date.now()
+        });
+    }
+
+    alert(`Order dispatched! KES ${restCut} added to store sales.`);
     renderRestaurantDashboard();
 }
 
-// ADMIN PANEL TAB MANAGEMENT FIXED TO DISPLAY EACH ALONE
+/* ================= ADMIN LOGIC ================= */
 function switchAdminTab(panelName) {
-    const panels = ['revenue', 'customers', 'drivers', 'restaurants', 'support', 'settings'];
+    const panels = ['revenue', 'customers', 'drivers', 'restaurants', 'feedback', 'support', 'settings'];
     panels.forEach(p => {
         document.getElementById(`admin${p.charAt(0).toUpperCase() + p.slice(1)}Panel`).style.display = (p === panelName) ? 'block' : 'none';
-    });
-
-    const tabs = ['revenue', 'customers', 'drivers', 'restaurants', 'support', 'settings'];
-    tabs.forEach(t => {
-        document.getElementById(`admin${t.charAt(0).toUpperCase() + t.slice(1)}Tab`).className = (t === panelName) ? 'active' : '';
+        document.getElementById(`admin${p.charAt(0).toUpperCase() + p.slice(1)}Tab`).className = (p === panelName) ? 'active' : '';
     });
 
     if (panelName === 'revenue') {
         document.getElementById("adminRevenue").textContent = "KES " + getRevenue().toLocaleString();
+        document.getElementById("adminTotalTxCount").textContent = getHistory().length;
     }
     if (panelName === 'customers') {
         const list = document.getElementById("adminCustomersList");
         const match = getUsers().filter(u => u.role === 'customer');
         document.getElementById("adminTotalCustomersCount").textContent = match.length;
-        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8; padding:10px;">No registered customers inside database logs.</p>`;
-        else list.innerHTML = match.map(u => `<div class="activity-item customer-item"><div><strong>${u.name}</strong><span>Email: ${u.email}</span></div><span class="status completed">Active Connection</span></div>`).join('');
+        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8;">No registered customers.</p>`;
+        else list.innerHTML = match.map(u => `<div class="activity-item customer-item"><div><strong>${u.name}</strong><span>${u.email} | Wallet: KES ${u.balance || 0}</span></div><span class="status completed">Active</span></div>`).join('');
     }
     if (panelName === 'drivers') {
         const list = document.getElementById("adminDriversList");
         const match = getUsers().filter(u => u.role === 'driver');
         document.getElementById("adminTotalDriversCount").textContent = match.length;
-        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8; padding:10px;">No registered drivers active inside logistics system logs.</p>`;
-        else list.innerHTML = match.map(u => `<div class="activity-item driver-item"><div><strong>${u.name}</strong><span>Email: ${u.email}</span></div><span class="status completed">Verified Fleet</span></div>`).join('');
+        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8;">No drivers registered.</p>`;
+        else list.innerHTML = match.map(u => `<div class="activity-item driver-item"><div><strong>${u.name}</strong><span>${u.email} | Earnings: KES ${u.balance || 0}</span></div><span class="status completed">${u.status || 'Online'}</span></div>`).join('');
     }
     if (panelName === 'restaurants') {
         const list = document.getElementById("adminRestaurantsList");
         const match = getUsers().filter(u => u.role === 'restaurant');
         document.getElementById("adminTotalRestaurantsCount").textContent = match.length;
-        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8; padding:10px;">No registered merchants active inside system database.</p>`;
-        else list.innerHTML = match.map(u => `<div class="activity-item restaurant-item"><div><strong>${u.name}</strong><span>Email: ${u.email}</span></div><span class="status completed">Store Open</span></div>`).join('');
+        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8;">No merchants registered.</p>`;
+        else list.innerHTML = match.map(u => `<div class="activity-item restaurant-item"><div><strong>${u.name}</strong><span>${u.email} | Sales: KES ${u.balance || 0}</span></div><span class="status completed">Store Open</span></div>`).join('');
+    }
+    if (panelName === 'feedback') {
+        const pubList = document.getElementById("adminTestimonialsModerationList");
+        const privList = document.getElementById("adminPrivateFeedbackList");
+        const allFb = getFeedback();
+
+        const pubItems = allFb.filter(f => f.type === 'public');
+        const privItems = allFb.filter(f => f.type === 'private');
+
+        if(pubItems.length === 0) pubList.innerHTML = `<p style="color:#64748b;">No public testimonials submitted.</p>`;
+        else pubList.innerHTML = pubItems.map(item => `
+            <div class="activity-item">
+                <div>
+                    <strong>${item.author} (${item.stars} Stars) - ${item.approved ? '<span style="color:#16a34a;">Published</span>' : '<span style="color:#eab308;">Pending Approval</span>'}</strong>
+                    <p style="font-size:13px; color:#475569;">"${item.text}"</p>
+                </div>
+                <div>
+                    <button class="request-btn" onclick="toggleTestimonialApproval(${item.id})">${item.approved ? 'Unpublish' : 'Approve'}</button>
+                    <button class="request-btn danger" onclick="deleteFeedbackItem(${item.id})">Delete</button>
+                </div>
+            </div>
+        `).join('');
+
+        if(privItems.length === 0) privList.innerHTML = `<p style="color:#64748b;">No low rating service feedback submitted.</p>`;
+        else privList.innerHTML = privItems.map(item => `
+            <div class="activity-item" style="border-left-color:#e11d48;">
+                <div>
+                    <strong>From: ${item.email} (${item.stars} Stars)</strong>
+                    <p style="font-size:13px; color:#475569;">"${item.text}"</p>
+                </div>
+                <button class="request-btn danger" onclick="deleteFeedbackItem(${item.id})">Dismiss</button>
+            </div>
+        `).join('');
     }
     if (panelName === 'support') {
         const container = document.getElementById("adminComplaintsList");
         const complaints = JSON.parse(localStorage.getItem("acaciaComplaints") || "[]");
         if(complaints.length === 0) {
-            container.innerHTML = `<p style="color:#6b7280; padding:15px;">No customer complaint forms waiting processing inside platform inbox.</p>`;
+            container.innerHTML = `<p style="color:#6b7280;">No open complaints in inbox.</p>`;
             return;
         }
         container.innerHTML = complaints.map(c => `
             <div class="activity-item" style="border-left-color: #ef4444;">
                 <div>
                     <strong>From: ${c.user} (${c.email})</strong>
-                    <p style="margin-top:8px; color:#475569; font-style:italic;">"${c.text}"</p>
+                    <p style="margin-top:6px; color:#475569;">"${c.text}"</p>
                 </div>
-                <button class="request-btn" style="background:#ef4444;" onclick="resolveComplaint(${c.id})">Mark Resolved</button>
+                <button class="request-btn danger" onclick="resolveComplaint(${c.id})">Resolve Ticket</button>
             </div>
         `).join('');
     }
+}
+
+function toggleTestimonialApproval(id) {
+    let list = getFeedback();
+    const idx = list.findIndex(item => item.id === id);
+    if(idx !== -1) {
+        list[idx].approved = !list[idx].approved;
+        saveFeedback(list);
+        switchAdminTab('feedback');
+        renderPublicTestimonials();
+    }
+}
+
+function deleteFeedbackItem(id) {
+    let list = getFeedback().filter(item => item.id !== id);
+    saveFeedback(list);
+    switchAdminTab('feedback');
+    renderPublicTestimonials();
+}
+
+function saveCommissionRate() {
+    const val = parseFloat(document.getElementById("commissionRate").value);
+    if(isNaN(val) || val < 0 || val > 100) return alert("Enter valid commission %");
+    currentCommissionRate = val;
+    alert(`System platform fee rate updated to ${currentCommissionRate}%`);
 }
 
 function resolveComplaint(id) {
     let complaints = JSON.parse(localStorage.getItem("acaciaComplaints") || "[]");
     complaints = complaints.filter(c => c.id !== id);
     localStorage.setItem("acaciaComplaints", JSON.stringify(complaints));
-    alert("Incident report updated!");
+    alert("Support ticket marked resolved!");
     switchAdminTab('support');
 }
 
 function submitGuestRideRequest() {
     const pickup = document.getElementById("heroPickup").value.trim();
     const dropoff = document.getElementById("heroDropoff").value.trim();
-    if (!pickup || !dropoff) return alert("Please fill travel parameters.");
+    if (!pickup || !dropoff) return alert("Please specify both pickup and destination locations.");
     let rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
-    rides.push({ id: Date.now(), customer: "Web Guest Rider", email: "guest@acacia.com", pickup, dropoff, fare: 400 });
+    rides.push({ id: Date.now(), customer: "Guest Rider", email: "guest@acacia.com", pickup, dropoff, fare: 450 });
     localStorage.setItem("acaciaRides", JSON.stringify(rides));
-    alert("Ride parameters published successfully!");
+    alert("Ride request broadcasted to active drivers!");
     document.getElementById("heroPickup").value = "";
     document.getElementById("heroDropoff").value = "";
 }
@@ -1676,6 +2477,9 @@ function updateUserInStorage(userObj) {
     let users = getUsers();
     const idx = users.findIndex(u => u.email === userObj.email);
     if(idx !== -1) { users[idx] = userObj; saveUsers(users); }
+    if (currentUser && currentUser.email === userObj.email) {
+        localStorage.setItem("acaciaActiveSession", JSON.stringify(userObj));
+    }
 }
 </script>
 </body>
