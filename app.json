@@ -1,0 +1,7 @@
+{
+  "expo":{"name":"Acacia Rides & Food","slug":"acacia-rides-food","scheme":"acaciarides",
+  "version":"1.0.0","orientation":"portrait","userInterfaceStyle":"light",
+  "ios":{"supportsTablet":true,"bundleIdentifier":"ke.acacia.ridesfood"},
+  "android":{"package":"ke.acacia.ridesfood","permissions":["ACCESS_COARSE_LOCATION","ACCESS_FINE_LOCATION"]},
+  "plugins":["expo-router"]}
+}

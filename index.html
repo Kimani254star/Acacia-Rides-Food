@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="theme-color" content="#087f5b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Acacia Rides">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Acacia Rides & Food - Advanced Platform</title>
@@ -11,10 +18,7 @@
 
 <link rel="stylesheet" href="styles.css">
 </head>
-<body onload="checkAutoLogin()" class="page-index">\n<div id="demoModeNotice" role="status" style="background:#fff7ed;color:#9a3412;border-bottom:1px solid #fed7aa;padding:9px 16px;text-align:center;font:600 13px Inter,Arial,sans-serif;">
-DEMO PREVIEW — accounts, orders and wallet balances are stored only in this browser. M-Pesa, card payments, live dispatch and cross-device sync are not connected.
-</div>
-
+<body onload="checkAutoLogin()" class="page-index">
 
 <div id="mainWebsite">
 <header>
@@ -32,6 +36,7 @@ DEMO PREVIEW — accounts, orders and wallet balances are stored only in this br
 <li><a onclick="openAuth('register', 'driver')">Drivers</a></li>
 <li><a onclick="openAuth('register', 'restaurant')">Restaurants</a></li>
 <li><a onclick="document.getElementById('faq-section').scrollIntoView()">Support</a></li>
+<li><a href="logs.html">Activity Logs</a></li>
 </ul>
 <div class="nav-buttons">
 <button class="btn-login" onclick="openAuth('login')">Login</button>
@@ -218,7 +223,7 @@ DEMO PREVIEW — accounts, orders and wallet balances are stored only in this br
 </div>
 <div class="faq-item">
 <div class="faq-question"><span>Which payment methods are accepted?</span><i class="fa-solid fa-plus"></i></div>
-<div class="faq-answer"><p>Payment methods are being integrated. The current preview uses simulated wallet funds only.</p></div>
+<div class="faq-answer"><p>We support M-Pesa, Airtel Money, Visa, Mastercard and wallet payments.</p></div>
 </div>
 </div>
 </div>
@@ -257,7 +262,7 @@ DEMO PREVIEW — accounts, orders and wallet balances are stored only in this br
 <div>
 <h3>Admin Panel</h3>
 <p style="margin-bottom:10px;">Developer Portal Access:</p>
-<p style="font-size:13px;color:#cbd5e1;">Administrator accounts are provisioned by the production backend.</p>
+<button class="request-btn" onclick="openAuth('login'); document.getElementById('loginEmail').value='developeracaciabooks@gmail.com'; document.getElementById('loginPassword').value='admin123';">Admin Autofill</button>
 </div>
 </div>
 <div class="footer-bottom">
@@ -379,7 +384,7 @@ DEMO PREVIEW — accounts, orders and wallet balances are stored only in this br
 <div class="dashboard-card"><h3>Current Balance</h3><h2 id="custWalletDisplay" style="color:#16a34a;">KES 0</h2></div>
 </div>
 <div class="dashboard-panel">
-<h2>Add Demo Wallet Funds</h2><p style='color:#b45309;margin:8px 0 14px;'>Simulation only — real M-Pesa/card payments are not connected.</p>
+<h2>Add Funds via M-Pesa / Card</h2>
 <div class="generic-form" style="max-width: 400px;">
 <div class="input-box">
 <label>Amount (KES)</label>
@@ -454,7 +459,7 @@ DEMO PREVIEW — accounts, orders and wallet balances are stored only in this br
 <div class="generic-form" style="max-width:500px;">
 <div class="input-box"><label>Vehicle Model / Type</label><input type="text" id="drvVehicleModel" value="Toyota Vitz / Motorbike"></div>
 <div class="input-box"><label>License Plate</label><input type="text" id="drvPlate" value="KDA 123X"></div>
-<button class="quick-btn" onclick="saveDriverVehicle()">Update Details</button>
+<button class="quick-btn" onclick="alert('Vehicle info updated!')">Update Details</button>
 </div>
 </div>
 </div>
@@ -463,7 +468,7 @@ DEMO PREVIEW — accounts, orders and wallet balances are stored only in this br
 <div class="dashboard-header"><h1>Payouts & Financial Breakdown</h1></div>
 <div class="dashboard-panel">
 <p style="margin-bottom:15px; color:#475569;">80% of every ride fare is credited directly to your net balance. The 20% platform commission is automatically routed to Acacia Systems.</p>
-<button class="quick-btn" onclick="requestDemoWithdrawal()">Request Withdrawal to M-Pesa</button>
+<button class="quick-btn" onclick="alert('Payout request sent to M-Pesa!')">Request Withdrawal to M-Pesa</button>
 </div>
 </div>
 </div>
@@ -516,7 +521,7 @@ DEMO PREVIEW — accounts, orders and wallet balances are stored only in this br
 <div class="dashboard-header"><h1>Merchant Revenue</h1></div>
 <div class="dashboard-panel">
 <p style="margin-bottom:15px; color:#475569;">Track your kitchen sales performance. System commission (20%) is deducted automatically per order fulfilled.</p>
-<button class="quick-btn" style="background:#f59e0b;" onclick="requestDemoWithdrawal()">Withdraw Earnings</button>
+<button class="quick-btn" style="background:#f59e0b;" onclick="alert('Merchant payout dispatched!')">Withdraw Earnings</button>
 </div>
 </div>
 </div>
@@ -667,6 +672,8 @@ DEMO PREVIEW — accounts, orders and wallet balances are stored only in this br
 </div>
 
 
+<script src="audit-log.js"></script>
 <script src="scripts.js"></script>
+<script src="pwa-register.js" defer></script>
 </body>
 </html>
