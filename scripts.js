@@ -430,7 +430,7 @@ function renderCustomerDashboard() {
                     <span>Fare: KES ${r.fare}</span><br>
                     <a href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(r.pickup)}&destination=${encodeURIComponent(r.dropoff)}" target="_blank" class="maps-link"><i class="fa-solid fa-map-location-dot"></i> View Route on Google Maps</a>
                 </div>
-                <span class="status pending">Searching Driver</span>
+                <span class="status ${r.status === 'accepted' ? 'pending' : r.status === 'arrived' ? 'pending' : r.status === 'in_progress' ? 'pending' : 'pending'}">${({requested:'Finding driver',accepted:'Driver assigned',arrived:'Driver arrived',in_progress:'Trip in progress',completed:'Completed',cancelled:'Cancelled'})[r.status || 'requested']}</span>
             </div>`;
         });
         foods.forEach(f => {
@@ -568,46 +568,53 @@ function renderDriverDashboard() {
         return;
     }
     const rate = currentCommissionRate / 100;
-    container.innerHTML = rides.map(ride => `
+    container.innerHTML = rides.filter(ride => !['completed','cancelled'].includes(ride.status) && (!ride.driverEmail || ride.driverEmail === currentUser.email)).map(ride => `
         <div class="activity-item driver-item">
             <div>
                 <strong>${ride.pickup} ➔ ${ride.dropoff}</strong>
-                <span>Passenger: ${ride.customer}</span><br>
-                <a href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(ride.pickup)}&destination=${encodeURIComponent(ride.dropoff)}" target="_blank" class="maps-link"><i class="fa-solid fa-map-location-dot"></i> Google Maps Navigation</a>
+                <span>Passenger: ${ride.customer} · ${ride.rideType || 'Economy'} · ${ride.status || 'requested'}</span><br>
+                <a href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(ride.pickup)}&destination=${encodeURIComponent(ride.dropoff)}" target="_blank" class="maps-link"><i class="fa-solid fa-map-location-dot"></i> Open route</a>
             </div>
             <div>
-                <span style="font-weight:bold; color:#10b981; margin-right:15px;">Payout: KES ${ride.fare * (1 - rate)}</span>
-                <button class="request-btn" onclick="acceptRide(${ride.id}, ${ride.fare})">Accept Request</button>
+                <span style="font-weight:bold; color:#10b981; margin-right:15px;">Est. payout: KES ${Math.round(ride.fare * (1 - rate))}</span>
+                ${ride.status && ride.status !== 'requested' ? `<button class="request-btn" onclick="advanceRide(${ride.id})">${ride.status === 'accepted' ? 'Mark arrived' : ride.status === 'arrived' ? 'Start trip' : 'Complete trip'}</button>` : `<button class="request-btn" onclick="acceptRide(${ride.id}, ${ride.fare})">Accept ride</button>`}
             </div>
         </div>
-    `).join('');
+    `).join('') || `<p style='color:#6b7280;'>No available rides.</p>`;
 }
 
 function acceptRide(id, grossFare) {
-    let rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    const rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
     const ride = rides.find(r => r.id === id);
-    rides = rides.filter(r => r.id !== id);
+    if (!ride || (ride.status && ride.status !== 'requested')) return alert('This ride is no longer available.');
+    ride.status = 'accepted';
+    ride.driver = currentUser.name;
+    ride.driverEmail = currentUser.email;
+    ride.acceptedAt = Date.now();
     localStorage.setItem("acaciaRides", JSON.stringify(rides));
+    alert('Ride accepted. Contact the rider and proceed to pickup.');
+    renderDriverDashboard();
+}
 
-    const rate = currentCommissionRate / 100;
-    const driverCut = grossFare * (1 - rate);
-    const systemCut = grossFare * rate;
-
-    currentUser.balance = (currentUser.balance || 0) + driverCut;
-    currentUser.actionsCount = (currentUser.actionsCount || 0) + 1;
-    updateUserInStorage(currentUser);
-    addRevenue(systemCut);
-
-    if (ride) {
-        addHistoryItem({
-            userEmail: ride.email,
-            title: `Completed Trip: ${ride.pickup} to ${ride.dropoff}`,
-            amount: grossFare,
-            timestamp: Date.now()
-        });
+function advanceRide(id) {
+    const rides = JSON.parse(localStorage.getItem('acaciaRides') || '[]');
+    const ride = rides.find(r => r.id === id && r.driverEmail === currentUser.email);
+    if (!ride) return alert('Ride not found for this driver.');
+    const next = { accepted: 'arrived', arrived: 'in_progress', in_progress: 'completed' };
+    const previous = ride.status;
+    ride.status = next[previous];
+    ride.updatedAt = Date.now();
+    if (ride.status === 'completed') {
+        const rate = currentCommissionRate / 100;
+        const driverCut = ride.fare * (1 - rate);
+        currentUser.balance = (currentUser.balance || 0) + driverCut;
+        currentUser.actionsCount = (currentUser.actionsCount || 0) + 1;
+        updateUserInStorage(currentUser);
+        addRevenue(ride.fare * rate);
+        addHistoryItem({ userEmail: ride.email, title: `Completed Trip: ${ride.pickup} to ${ride.dropoff}`, amount: ride.fare, timestamp: Date.now() });
+        alert(`Trip completed. KES ${Math.round(driverCut)} recorded as estimated driver earnings.`);
     }
-
-    alert(`Job Completed! KES ${driverCut} added to your earnings balance.`);
+    localStorage.setItem('acaciaRides', JSON.stringify(rides));
     renderDriverDashboard();
 }
 
@@ -801,9 +808,12 @@ function submitGuestRideRequest() {
     const dropoff = document.getElementById("heroDropoff").value.trim();
     if (!pickup || !dropoff) return alert("Please specify both pickup and destination locations.");
     let rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
-    rides.push({ id: Date.now(), customer: "Guest Rider", email: "guest@acacia.com", pickup, dropoff, fare: 450 });
+    const rideType = document.getElementById('heroRideType')?.value || 'Economy';
+    const base = { Economy: 180, Premium: 300, XL: 400, Motorbike: 100 }[rideType] || 180;
+    const fare = base; // provisional base quote; distance-based pricing requires a routing API
+    rides.push({ id: Date.now(), customer: "Guest Rider", email: "guest@acacia.com", pickup, dropoff, fare, rideType, status: 'requested', createdAt: Date.now() });
     localStorage.setItem("acaciaRides", JSON.stringify(rides));
-    alert("Ride request broadcasted to active drivers!");
+    alert(`Ride request saved. Provisional ${rideType} base quote: KES ${fare}. Driver dispatch is not live until the shared backend is configured.`);
     document.getElementById("heroPickup").value = "";
     document.getElementById("heroDropoff").value = "";
 }
