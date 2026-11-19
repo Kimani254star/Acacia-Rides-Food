@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="theme-color" content="#172554">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Acacia Bet">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acacia Bet — Games</title>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-games">
+
+<div class="demo-banner">DEMO GAMES — Aviator and Spin & Win are cosmetic simulations only · no real money, no licensed RNG</div>
+
+<header class="nav">
+  <div class="nav-inner wrap">
+    <div class="logo"><span>Acacia</span><span class="dot">•</span><span>Bet</span></div>
+    <nav class="links">
+      <a href="index.html">Home</a>
+      <a href="markets.html">Markets</a>
+      <a href="games.html" class="nav-active">Games</a>
+      <a href="wallet.html">Wallet</a>
+      <a href="how.html">How it works</a>
+      <a href="trading.html">Trading</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+      <div class="logged-out-actions" id="loggedOutActions">
+        <button class="btn" id="loginBtn">Log in</button>
+        <button class="btn btn-gold" id="signupBtn">Sign up</button>
+      </div>
+      <div class="account-menu" id="accountMenu" style="display:none;">
+        <button class="account-chip" id="accountChip">
+          <span class="avatar" id="accountAvatar">D</span>
+          <span id="accountName">Guest</span>
+        </button>
+        <div class="account-dropdown" id="accountDropdown">
+          <button class="ad-item" id="logoutBtn">Log out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="spin">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Spin &amp; Win</h2>
+      <div class="section-note">Demo bonus wheel — no real prizes or funds</div>
+    </div>
+    <div class="spin-wrap">
+      <div class="wheel-outer">
+        <div class="wheel-pointer"></div>
+        <svg id="spinWheel" viewBox="0 0 200 200">
+          <g id="wheelSegments"></g>
+          <circle cx="100" cy="100" r="98" fill="none" stroke="var(--line)" stroke-width="2"/>
+        </svg>
+        <button class="spin-btn" id="spinBtn">SPIN</button>
+      </div>
+      <div class="spin-info">
+        <h3>Free daily spin</h3>
+        <p>One demo spin per visit — land on a bonus, a free bet token, or try again. Purely cosmetic; nothing here is a real prize or real money.</p>
+        <div class="spin-result" id="spinResult"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="aviator">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Aviator — crash game</h2>
+      <div class="section-note">Simulated round, sample data only — not a real money game</div>
+    </div>
+
+    <div class="aviator-wrap">
+      <div class="aviator-history" id="avHistory"></div>
+
+      <div class="aviator-stage">
+        <svg id="curveSvg" viewBox="0 0 600 280" preserveAspectRatio="none">
+          <path id="curvePath" d="M 0 280 L 0 280" stroke="#F2A93B" stroke-width="3" fill="none"/>
+          <path id="curveFill" d="M 0 280 L 0 280 L 0 280 Z" fill="url(#curveGrad)" opacity="0.35"/>
+          <defs>
+            <linearGradient id="curveGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F2A93B"/>
+              <stop offset="100%" stop-color="#F2A93B" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="plane-emoji" id="planeEmoji" style="left:0%; bottom:0%;">✈️</div>
+        <div class="multiplier-display">
+          <div class="mult" id="multVal">1.00x</div>
+          <div class="status" id="multStatus">Round starting…</div>
+        </div>
+        <div class="round-caption" id="roundCaption">Round #4821 · demo simulation</div>
+      </div>
+
+      <div class="aviator-panels">
+        <div class="bet-panel">
+          <div class="bet-panel-head">
+            <span>Bet 1</span>
+            <span class="gg-badge">GG WIN</span>
+          </div>
+          <div class="stake-row">
+            <input class="stake-input" type="text" value="100" id="stake1">
+          </div>
+          <div class="stake-btns">
+            <button class="stake-chip" data-target="stake1" data-val="50">+50</button>
+            <button class="stake-chip" data-target="stake1" data-val="100">+100</button>
+            <button class="stake-chip" data-target="stake1" data-val="500">+500</button>
+            <button class="stake-chip" data-target="stake1" data-val="0" data-reset="1">Clear</button>
+          </div>
+          <div class="auto-row">
+            <span>Auto cash out at</span>
+            <input type="text" value="2.00x" id="auto1">
+          </div>
+          <button class="bet-action" id="betBtn1">
+            Place bet
+            <span class="sub">Stake locks in when round starts</span>
+          </button>
+        </div>
+
+        <div class="bet-panel">
+          <div class="bet-panel-head">
+            <span>Bet 2 — All Bet</span>
+            <span class="gg-badge">GG WIN</span>
+          </div>
+          <div class="stake-row">
+            <input class="stake-input" type="text" value="200" id="stake2">
+          </div>
+          <div class="stake-btns">
+            <button class="stake-chip" data-target="stake2" data-val="50">+50</button>
+            <button class="stake-chip" data-target="stake2" data-val="100">+100</button>
+            <button class="stake-chip" data-target="stake2" data-val="500">+500</button>
+            <button class="stake-chip" data-target="stake2" data-val="0" data-reset="1">Clear</button>
+          </div>
+          <div class="auto-row">
+            <span>Auto cash out at</span>
+            <input type="text" value="3.00x" id="auto2">
+          </div>
+          <button class="bet-action" id="allBetBtn">
+            All Bet — max stake
+            <span class="sub">Uses your full demo balance</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="aviator-footer">
+        <span>Demo balance: KES 0.00</span>
+        <span>Round results are generated locally in your browser for preview purposes</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo"><span>Acacia</span><span class="dot">•</span><span>Bet</span></div>
+        <p>A visual demo of a sports-betting product experience. No real wagering, deposits, or withdrawals happen on this page.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="X / Twitter">𝕏</a>
+          <a href="#" aria-label="Instagram">◎</a>
+          <a href="#" aria-label="YouTube">▶</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="markets.html">Markets</a>
+        <a href="games.html">Games</a>
+        <a href="wallet.html">Wallet</a>
+        <a href="trading.html">Trading</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="how.html#responsible">Play safe</a>
+        <a href="#">Help centre</a>
+        <a href="#">Contact us</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Terms of use</a>
+        <a href="#">Privacy policy</a>
+        <a href="#">Licensing status</a>
+      </div>
+      <div class="footer-col footer-newsletter">
+        <h4>Stay updated</h4>
+        <p>Product news and odds-format tips, no spam. Demo form — doesn't send anywhere.</p>
+        <div class="footer-newsletter-row">
+          <input type="text" placeholder="you@example.com" id="footerEmail">
+          <button id="footerSubscribe">Join</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>© 2026 Acacia Bet — demo prototype, not a licensed operator</span>
+      <span>Gambling can be addictive. Play responsibly. 18+</span>
+      <button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">Welcome back</h3>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-form="loginForm">Log in</button>
+      <button class="modal-tab" data-form="signupForm">Sign up</button>
+    </div>
+
+    <form class="modal-form active" id="loginForm" novalidate>
+      <div class="field" id="loginEmailField">
+        <label>Email</label>
+        <input type="text" id="loginEmail" placeholder="you@example.com" autocomplete="email">
+        <div class="field-error">Enter a valid email address.</div>
+      </div>
+      <div class="field" id="loginPasswordField">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+        <div class="field-error">Password must be at least 6 characters.</div>
+      </div>
+      <button type="submit" class="btn btn-gold btn-lg" style="width:100%; margin-top:6px;">Log in</button>
+      <p class="modal-note">This is a cosmetic demo form — no account is created and no data is sent anywhere.</p>
+    </form>
+
+    <form class="modal-form" id="signupForm" novalidate>
+      <div class="field" id="signupNameField">
+        <label>Full name</label>
+        <input type="text" id="signupName" placeholder="Jane Wanjiru" autocomplete="name">
+        <div class="field-error">Enter your name.</div>
+      </div>
+      <div class="field" id="signupEmailField">
+        <label>Email</label>
+        <input type="text" id="signupEmail" placeholder="you@example.com" autocomplete="email">
+        <div class="field-error">Enter a valid email address.</div>
+      </div>
+      <div class="field" id="signupPasswordField">
+        <label>Password</label>
+        <input type="password" id="signupPassword" placeholder="••••••••" autocomplete="new-password">
+        <div class="field-error">Password must be at least 6 characters.</div>
+      </div>
+      <div class="field" id="signupConfirmField">
+        <label>Confirm password</label>
+        <input type="password" id="signupConfirm" placeholder="••••••••" autocomplete="new-password">
+        <div class="field-error">Passwords don't match.</div>
+      </div>
+      <button type="submit" class="btn btn-gold btn-lg" style="width:100%; margin-top:6px;">Create demo account</button>
+      <p class="modal-note">This is a cosmetic demo form — no account is created and no data is sent anywhere.</p>
+    </form>
+  </div>
+</div>
+
+<div class="slip-toast" id="slipToast" role="status" aria-live="polite" aria-atomic="true">Added to bet slip (demo only)</div>
+
+<script src="audit-log.js"></script>
+<script src="scripts.js"></script>
+  <script type="module" src="supabase-auth.js"></script>
+<script src="pwa-register.js" defer></script>
+  <script src="production-data-guard.js"></script>
+</body>
+</html>

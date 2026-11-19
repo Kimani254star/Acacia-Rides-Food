@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="theme-color" content="#172554">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Acacia Bet">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saccaia Trading — Demo Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-saccaia-trading-demo">
+
+<div class="demo-banner">LIVE MARKET SNAPSHOT, DEMO PLATFORM — real prices captured Aug 21, 2026 · no accounts, deposits, or trades are executed on this page</div>
+
+<header class="nav">
+  <div class="nav-inner wrap">
+    <div class="logo"><span>Saccaia</span><span class="dot">•</span><span>Bet</span></div>
+    <nav class="links">
+      <a href="index.html">Bet</a>
+      <a href="saccaia-trading-demo.html" class="nav-active">Trading</a>
+      <a href="#wallet">Wallet</a>
+      <a href="#markets">Markets</a>
+      <a href="#how">How it works</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+      <div class="logged-out-actions" id="loggedOutActions">
+        <button class="btn" id="loginBtn">Log in</button>
+        <button class="btn btn-gold" id="signupBtn">Sign up</button>
+      </div>
+      <div class="account-menu" id="accountMenu" style="display:none;">
+        <button class="account-chip" id="accountChip">
+          <span class="avatar" id="accountAvatar">D</span>
+          <span id="accountName">Guest</span>
+        </button>
+        <div class="account-dropdown" id="accountDropdown">
+          <button class="ad-item" id="logoutBtn">Log out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner wrap">
+    <div>
+      <div class="eyebrow"><span class="live-pip"></span> Market snapshot · captured 21 Aug 2026</div>
+      <h1>Read the market.<br>Trade your <span class="accent">position</span>.</h1>
+      <p class="hero-sub">Saccaia Trading is a simple view onto forex, metals, and crypto prices — real snapshot data, one clean ticket to size a position. This page is a visual prototype: prices are real, order execution is not.</p>
+      <div class="hero-cta">
+        <button class="btn btn-gold btn-lg" id="heroSignup">Create demo account</button>
+        <a href="#markets" class="btn btn-lg">See live prices</a>
+      </div>
+    </div>
+
+    <div class="snapshot-card">
+      <div class="snapshot-head"><span>Snapshot — majors</span><span>21 Aug 2026</span></div>
+      <div class="snap-row">
+        <div class="snap-pair">EUR/USD<span class="full">Euro / US Dollar</span></div>
+        <div>
+          <div class="snap-price">1.1697</div>
+          <div class="snap-change up">+0.07%</div>
+        </div>
+      </div>
+      <div class="snap-row">
+        <div class="snap-pair">USD/KES<span class="full">US Dollar / Kenyan Shilling</span></div>
+        <div>
+          <div class="snap-price">129.50</div>
+          <div class="snap-change up">+0.08%</div>
+        </div>
+      </div>
+      <div class="snap-row">
+        <div class="snap-pair">XAU/USD<span class="full">Gold Spot</span></div>
+        <div>
+          <div class="snap-price">4,590.40</div>
+          <div class="snap-change up">+0.29%</div>
+        </div>
+      </div>
+      <div class="snap-row">
+        <div class="snap-pair">BTC/USD<span class="full">Bitcoin</span></div>
+        <div>
+          <div class="snap-price">73,104.30</div>
+          <div class="snap-change up">+5.49%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="wallet">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Wallet</h2>
+      <div class="section-note">Switch between your wallet and your open orders — demo balance, no real funds</div>
+    </div>
+
+    <div class="wallet-card">
+      <div class="wallet-tabs">
+        <button class="wallet-tab active" data-pane="walletPane">Wallet</button>
+        <button class="wallet-tab" data-pane="ordersPane">Open Orders</button>
+      </div>
+      <div class="wallet-pane active" id="walletPane">
+        <div class="wallet-balance-lbl">Demo balance</div>
+        <div class="wallet-balance">KES 10,000.00</div>
+        <div class="wallet-actions">
+          <button class="btn btn-gold" id="depositBtn">Deposit</button>
+          <button class="btn" id="withdrawBtn">Withdraw</button>
+        </div>
+      </div>
+      <div class="wallet-pane" id="ordersPane">
+        <div class="wallet-balance-lbl">Open orders</div>
+        <div class="slip-empty" id="ordersEmptyMsg">No open orders yet — tap Buy or Sell on any instrument to add it here (demo only).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="markets">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Live-priced instruments</h2>
+      <div class="section-note">Base prices are a real snapshot, 21 Aug 2026 · toggle live ticks to see simulated movement</div>
+    </div>
+
+    <div class="live-toggle-row">
+      <label class="live-toggle">
+        <span class="lt-switch" id="liveToggle"></span>
+        <span id="liveToggleLabel">Live ticks: off</span>
+      </label>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active">Forex</button>
+      <button class="tab">Metals</button>
+      <button class="tab">Crypto</button>
+      <button class="tab">Indices</button>
+    </div>
+
+    <div class="market-table" id="marketTable">
+      <div class="mt-head">
+        <div>Instrument</div><div>Price</div><div>24h change</div><div>Spread</div><div>Trade</div>
+      </div>
+      <div class="mt-row" data-name="EUR/USD" data-price="1.1697">
+        <div class="mt-instr">EUR/USD<span class="sub">Euro vs US Dollar</span></div>
+        <div class="mt-val">1.1697</div>
+        <div class="mt-val mt-change up">+0.07%</div>
+        <div class="mt-val">0.8 pips</div>
+        <div class="mt-actions">
+          <button class="trade-btn buy">Buy</button>
+          <button class="trade-btn sell">Sell</button>
+        </div>
+      </div>
+      <div class="mt-row" data-name="USD/KES" data-price="129.50">
+        <div class="mt-instr">USD/KES<span class="sub">US Dollar vs Kenyan Shilling</span></div>
+        <div class="mt-val">129.50</div>
+        <div class="mt-val mt-change up">+0.08%</div>
+        <div class="mt-val">30 pips</div>
+        <div class="mt-actions">
+          <button class="trade-btn buy">Buy</button>
+          <button class="trade-btn sell">Sell</button>
+        </div>
+      </div>
+      <div class="mt-row" data-name="GBP/USD" data-price="1.3600">
+        <div class="mt-instr">GBP/USD<span class="sub">British Pound vs US Dollar</span></div>
+        <div class="mt-val">1.3600</div>
+        <div class="mt-val mt-change up">+0.13%</div>
+        <div class="mt-val">1.1 pips</div>
+        <div class="mt-actions">
+          <button class="trade-btn buy">Buy</button>
+          <button class="trade-btn sell">Sell</button>
+        </div>
+      </div>
+      <div class="mt-row" data-name="XAU/USD" data-price="4590.40">
+        <div class="mt-instr">XAU/USD<span class="sub">Gold Spot</span></div>
+        <div class="mt-val">4,590.40</div>
+        <div class="mt-val mt-change up">+0.29%</div>
+        <div class="mt-val">$0.35</div>
+        <div class="mt-actions">
+          <button class="trade-btn buy">Buy</button>
+          <button class="trade-btn sell">Sell</button>
+        </div>
+      </div>
+      <div class="mt-row" data-name="Crude Oil" data-price="86.31">
+        <div class="mt-instr">CL (Crude Oil)<span class="sub">WTI, Sep 26 contract</span></div>
+        <div class="mt-val">86.31</div>
+        <div class="mt-val mt-change down">-0.60%</div>
+        <div class="mt-val">$0.03</div>
+        <div class="mt-actions">
+          <button class="trade-btn buy">Buy</button>
+          <button class="trade-btn sell">Sell</button>
+        </div>
+      </div>
+      <div class="mt-row" data-name="BTC/USD" data-price="73104.30">
+        <div class="mt-instr">BTC/USD<span class="sub">Bitcoin</span></div>
+        <div class="mt-val">73,104.30</div>
+        <div class="mt-val mt-change up">+5.49%</div>
+        <div class="mt-val">$12.00</div>
+        <div class="mt-actions">
+          <button class="trade-btn buy">Buy</button>
+          <button class="trade-btn sell">Sell</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-head">
+        <div>
+          <div class="chart-title">EUR/USD</div>
+          <div style="font-family:var(--mono); font-size:11.5px; color:rgba(var(--text-rgb),0.45); margin-top:4px;">Snapshot chart — illustrative path to today's price, not tick-level history</div>
+        </div>
+        <div class="chart-price">1.1697</div>
+      </div>
+      <div class="chart-svg-wrap">
+        <svg viewBox="0 0 600 180" width="100%" height="100%" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#4FD1A5" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#4FD1A5" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <polyline points="0,120 40,128 80,110 120,118 160,95 200,102 240,80 280,88 320,70 360,78 400,55 440,62 480,45 520,50 560,30 600,38"
+            fill="none" stroke="#4FD1A5" stroke-width="2.5"/>
+          <polygon points="0,120 40,128 80,110 120,118 160,95 200,102 240,80 280,88 320,70 360,78 400,55 440,62 480,45 520,50 560,30 600,38 600,180 0,180"
+            fill="url(#chartGrad)"/>
+        </svg>
+      </div>
+      <div class="chart-timeframes">
+        <button class="tf-chip">1H</button>
+        <button class="tf-chip">4H</button>
+        <button class="tf-chip active">1D</button>
+        <button class="tf-chip">1W</button>
+        <button class="tf-chip">1M</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head"><h2>How Saccaia Trading works</h2></div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Verify your account</h3>
+        <p>Sign up with ID verification, as required before any real-money trading account can be activated.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Fund your wallet</h3>
+        <p>Add money through supported mobile-money and bank channels, with limits you control.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Size your position</h3>
+        <p>Pick an instrument, set your size, and see your exposure before you confirm an order.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>Track & close</h3>
+        <p>Follow open positions live and close out straight back to your wallet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="responsible">
+  <div class="wrap">
+    <div class="rg">
+      <div>
+        <h2>Trade within your limits</h2>
+        <p>Leveraged trading carries a high risk of losing money quickly, and most retail accounts lose money trading CFDs and leveraged products. Saccaia Trading is built for adults 18+ only, with tools to keep exposure in check.</p>
+        <div class="rg-tags">
+          <span class="rg-tag">Position limits</span>
+          <span class="rg-tag">Self-exclusion</span>
+          <span class="rg-tag">Risk warnings</span>
+          <span class="rg-tag">Cool-off periods</span>
+          <span class="rg-tag">18+ verification</span>
+        </div>
+      </div>
+      <div class="rg-card">
+        <div class="rg-num">18+</div>
+        <div class="rg-lbl">Minimum age, verified at signup</div>
+        <div class="rg-divider"></div>
+        <div class="rg-num">24/7</div>
+        <div class="rg-lbl">Access to support resources</div>
+        <div class="rg-divider"></div>
+        <div class="rg-num">1</div>
+        <div class="rg-lbl">Tap to pause or self-exclude</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span>Saccaia</span><span class="dot">•</span><span>Bet</span></div>
+        <p>A visual demo of a sports-betting and trading product experience. No real accounts, deposits, wagers, or trades happen on this page.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="index.html">Bet</a>
+        <a href="#markets">Trading markets</a>
+        <a href="#how">How it works</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#responsible">Trade safe</a>
+        <a href="#">Help centre</a>
+        <a href="#">Contact us</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Terms of use</a>
+        <a href="#">Privacy policy</a>
+        <a href="#">Licensing status</a>
+      </div>
+    </div>
+    <div class="footer-bottom wrap" style="padding:0;">
+      <span>© 2026 Saccaia Bet — demo prototype, not a licensed operator</span>
+      <span>Leveraged trading carries a high risk of loss. 18+</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="orderModalBackdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="orderModalTitle">Buy EUR/USD</h3>
+      <button class="modal-close" id="orderModalClose">&times;</button>
+    </div>
+    <div class="modal-price-row">
+      <span style="font-size:13px; color:rgba(var(--text-rgb),0.6);">Reference price</span>
+      <span class="mp" id="modalPrice">1.1697</span>
+    </div>
+    <div class="field">
+      <label>Position size (units)</label>
+      <input type="text" value="1000" id="orderSize">
+    </div>
+    <div class="field">
+      <label>Stop loss (optional)</label>
+      <input type="text" placeholder="e.g. 1.1600">
+    </div>
+    <button class="btn btn-gold btn-lg" style="width:100%; margin-top:6px;" id="orderModalSubmit">Review order</button>
+    <p class="modal-note">This is a cosmetic demo ticket — no order is sent and no real position is opened.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">Welcome back</h3>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-form="loginForm">Log in</button>
+      <button class="modal-tab" data-form="signupForm">Sign up</button>
+    </div>
+
+    <form class="modal-form active" id="loginForm" novalidate>
+      <div class="field" id="loginEmailField">
+        <label>Email</label>
+        <input type="text" id="loginEmail" placeholder="you@example.com" autocomplete="email">
+        <div class="field-error">Enter a valid email address.</div>
+      </div>
+      <div class="field" id="loginPasswordField">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+        <div class="field-error">Password must be at least 6 characters.</div>
+      </div>
+      <button type="submit" class="btn btn-gold btn-lg" style="width:100%; margin-top:6px;">Log in</button>
+      <p class="modal-note">This is a cosmetic demo form — no account is created and no data is sent anywhere.</p>
+    </form>
+
+    <form class="modal-form" id="signupForm" novalidate>
+      <div class="field" id="signupNameField">
+        <label>Full name</label>
+        <input type="text" id="signupName" placeholder="Jane Wanjiru" autocomplete="name">
+        <div class="field-error">Enter your name.</div>
+      </div>
+      <div class="field" id="signupEmailField">
+        <label>Email</label>
+        <input type="text" id="signupEmail" placeholder="you@example.com" autocomplete="email">
+        <div class="field-error">Enter a valid email address.</div>
+      </div>
+      <div class="field" id="signupPasswordField">
+        <label>Password</label>
+        <input type="password" id="signupPassword" placeholder="••••••••" autocomplete="new-password">
+        <div class="field-error">Password must be at least 6 characters.</div>
+      </div>
+      <div class="field" id="signupConfirmField">
+        <label>Confirm password</label>
+        <input type="password" id="signupConfirm" placeholder="••••••••" autocomplete="new-password">
+        <div class="field-error">Passwords don't match.</div>
+      </div>
+      <button type="submit" class="btn btn-gold btn-lg" style="width:100%; margin-top:6px;">Create demo account</button>
+      <p class="modal-note">This is a cosmetic demo form — no account is created and no data is sent anywhere.</p>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast">Order preview only — demo</div>
+
+<script src="audit-log.js"></script>
+<script src="scripts.js"></script>
+  <script type="module" src="supabase-auth.js"></script>
+<script src="pwa-register.js" defer></script>
+  <script src="production-data-guard.js"></script>
+</body>
+</html>

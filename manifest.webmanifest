@@ -1,14 +1,14 @@
 {
   "id": "./",
-  "name": "Acacia Rides & Food",
-  "short_name": "Acacia Rides",
-  "description": "Book rides, order food and send parcels with Acacia Rides & Food.",
+  "name": "Acacia Bets",
+  "short_name": "Acacia Bet",
+  "description": "Acacia Bets sports and trading demo.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#ffffff",
-  "theme_color": "#087f5b",
+  "theme_color": "#172554",
   "icons": [
     {
       "src": "icon-192.png",
