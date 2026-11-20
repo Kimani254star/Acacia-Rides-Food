@@ -1,4 +1,4 @@
-const CACHE = 'acacia-rides-shell-v2';
+const CACHE = 'acacia-rides-shell-v3';
 const SHELL = ["./", "./index.html", "./styles.css", "./acacia-appearance.js", "./scripts.js", "./pwa-register.js", "./manifest.webmanifest", "./sw.js", "./logs.html", "./audit-log.js", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png", "./favicon-32.png"];
 self.addEventListener('install', event => event.waitUntil((async()=>{const c=await caches.open(CACHE); await Promise.all(SHELL.map(x=>c.add(x).catch(()=>{}))); await self.skipWaiting();})()));
 self.addEventListener('activate', event => event.waitUntil((async()=>{for(const k of await caches.keys()) if(k!==CACHE) await caches.delete(k); await self.clients.claim();})()));

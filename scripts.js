@@ -65,7 +65,7 @@ function selectStarRating(score) {
     } else {
         highForm.style.display = "none";
         lowForm.style.display = "grid";
-        if(currentUser) document.getElementById("privateFeedbackEmail").value = currentUser.email;
+        if(currentUser) document.getElementById("privateFeedbackEmail").value = String(currentUser.email).includes("@") ? currentUser.email : "";
     }
 }
 
@@ -252,18 +252,28 @@ function togglePasswordVisibility(id, btn) {
 
 document.getElementById("authOverlay").onclick = function(e) { if (e.target === this) closeAuth(); };
 
+/* Phone + password sign-in (like Bolt/Betika). The account id is the number as 2547XXXXXXXX;
+   an older account made with an email still logs in with that email. */
+function acaciaPhoneId(raw) {
+    const v = String(raw || "").trim().toLowerCase();
+    if (v.includes("@")) return v;
+    let d = v.replace(/[^\d]/g, "");
+    if (d.startsWith("254")) d = d.slice(3); else if (d.startsWith("0")) d = d.slice(1);
+    return /^[17]\d{8}$/.test(d) ? "254" + d : null;
+}
+
 function handleRegister(e) {
     e.preventDefault();
     const name = document.getElementById("regName").value.trim();
-    const email = document.getElementById("regEmail").value.trim().toLowerCase();
+    const email = acaciaPhoneId(document.getElementById("regEmail").value);
     const role = document.getElementById("regRole").value;
     const password = document.getElementById("regPassword").value;
-    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("Enter your name and a valid email address."); return; }
+    if (!name || !email || email.includes("@")) { alert("Enter your name and a valid Kenyan phone number, e.g. 0712 345 678."); return; }
     if (password.length < 8) { alert("Use a password with at least 8 characters."); return; }
 
     let users = getUsers();
     if (users.find(u => u.email === email)) {
-        alert("An account with this email address already exists.");
+        alert("An account with this phone number already exists. Please log in.");
         return;
     }
 
@@ -275,13 +285,13 @@ function handleRegister(e) {
 
 function handleLogin(e) {
     e.preventDefault();
-    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+    const email = acaciaPhoneId(document.getElementById("loginEmail").value);
     const password = document.getElementById("loginPassword").value;
 
     const users = getUsers();
     const match = users.find(u => u.email === email && u.password === password);
     if (!match) {
-        alert("Invalid email credentials or wrong password.");
+        alert("Wrong phone number or password.");
         return;
     }
 
@@ -914,5 +924,8 @@ function updateUserInStorage(userObj) {
         localStorage.setItem("acaciaActiveSession", JSON.stringify(userObj));
     }
 }
+
+/* Make the page's inline onclick/onsubmit handlers able to reach these functions. */
+Object.assign(window, {acaciaPhoneId, acceptFood, acceptRide, addHistoryItem, addRevenue, advanceRide, askAIGuide, cancelRide, checkAutoLogin, closeAuth, closeRideModal, confirmRideRequest, deleteFeedbackItem, detectUserLocation, fetchDevLocation, getFeedback, getHistory, getRevenue, getUsers, handleFeedbackSubmit, handleLogin, handleRegister, logout, openAuth, openFoodModal, openParcelModal, openRideModal, renderCustomerDashboard, renderCustomerHistory, renderDriverDashboard, renderPublicTestimonials, renderRestaurantDashboard, resolveComplaint, rideModalEscape, saveCommissionRate, saveFeedback, saveUsers, selectStarRating, selectedRideType, sendAIMessage, showAuth, showRideToast, showSection, submitComplaint, submitGuestRideRequest, switchAdminTab, switchCustomerTab, switchDriverTab, switchRestaurantTab, toggleAIChat, toggleDriverStatus, togglePasswordVisibility, toggleTestimonialApproval, topUpWallet, updateGoogleMapIframe, updateRideQuote, updateUserInStorage, useCurrentLocationForRide});
 
 })();
