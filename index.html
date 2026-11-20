@@ -18,6 +18,8 @@
 
 <link rel="stylesheet" href="styles.css">
 <script src="acacia-appearance.js" data-app="rides"></script>
+<link rel="stylesheet" href="acacia-stock-skin.css">
+<script src="acacia-stock-shell.js" data-app="rides" data-icon="icon-192.png" defer></script>
 </head>
 <body onload="checkAutoLogin()" class="page-index">
 
@@ -257,7 +259,7 @@
 <div>
 <h3>Admin Panel</h3>
 <p style="margin-bottom:10px;">Developer Portal Access:</p>
-<button class="request-btn" onclick="openAuth('login'); document.getElementById('loginEmail').value='developeracaciabooks@gmail.com'; document.getElementById('loginPassword').value='admin123';">Admin Autofill</button>
+<button class="request-btn" onclick="openAuth('login')">Staff Login</button>
 </div>
 </div>
 <div class="footer-bottom">
@@ -530,6 +532,7 @@
 <li id="adminRestaurantsTab" onclick="switchAdminTab('restaurants')"><i class="fa-solid fa-utensils"></i>Restaurants</li>
 <li id="adminFeedbackTab" onclick="switchAdminTab('feedback')"><i class="fa-solid fa-star"></i>Feedback Moderation</li>
 <li id="adminSupportTab" onclick="switchAdminTab('support')"><i class="fa-solid fa-headset"></i>Support & Developer</li>
+<li id="adminStaffTab" onclick="switchAdminTab('staff')"><i class="fa-solid fa-user-shield"></i>Staff & Access</li>
 <li id="adminSettingsTab" onclick="switchAdminTab('settings')"><i class="fa-solid fa-gear"></i>Settings</li>
 <li onclick="AcaciaAppearance.open()"><i class="fa-solid fa-palette"></i>Appearance</li>
 <li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
@@ -612,6 +615,24 @@
 <div class="dashboard-panel">
 <h2>Active Support Complaints Inbox</h2>
 <div class="activity-list" id="adminComplaintsList"></div>
+</div>
+</div>
+
+<div id="adminStaffPanel" style="display:none;">
+<div class="dashboard-header"><h1>Staff &amp; Access</h1></div>
+<div class="dashboard-panel">
+<h2>Add a back-end user</h2>
+<p style="line-height:1.6;">People added here can log in and see this Admin Console. They log in with the phone number or email and password you set.</p>
+<form onsubmit="addStaffUser(event)" class="auth-form" style="padding:0;max-width:420px;">
+<div class="input-box"><label>Full name</label><input type="text" id="staffName" placeholder="Full name" required></div>
+<div class="input-box"><label>Phone number or email</label><input type="text" id="staffLogin" placeholder="07XX XXX XXX or name@email.com" required></div>
+<div class="input-box"><label>Password (at least 8 characters)</label><input type="text" id="staffPassword" placeholder="Password" required minlength="8"></div>
+<button type="submit" class="auth-button">Add user</button>
+</form>
+</div>
+<div class="dashboard-panel">
+<h2>People with back-end access</h2>
+<div class="activity-list" id="adminStaffList"></div>
 </div>
 </div>
 

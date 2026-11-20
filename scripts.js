@@ -263,13 +263,17 @@ function acaciaPhoneId(raw) {
     return /^[17]\d{8}$/.test(d) ? "254" + d : null;
 }
 
+const ACACIA_OWNER_EMAILS = ["adminacaciabooks@gmail.com", "developeracaciabooks@gmail.com"];
+
 function handleRegister(e) {
     e.preventDefault();
     const name = document.getElementById("regName").value.trim();
     const email = acaciaPhoneId(document.getElementById("regEmail").value);
-    const role = document.getElementById("regRole").value;
+    let role = document.getElementById("regRole").value;
     const password = document.getElementById("regPassword").value;
-    if (!name || !email || email.includes("@")) { alert("Enter your name and a valid Kenyan phone number, e.g. 0712 345 678."); return; }
+    const isOwner = !!email && ACACIA_OWNER_EMAILS.includes(email);
+    if (isOwner) role = "admin";
+    if (!name || !email || (email.includes("@") && !isOwner)) { alert("Enter your name and a valid Kenyan phone number, e.g. 0712 345 678."); return; }
     if (password.length < 8) { alert("Use a password with at least 8 characters."); return; }
 
     let users = getUsers();
@@ -303,6 +307,43 @@ function handleLogin(e) {
     if (currentUser.role === "customer") { showSection("customerDashboard"); renderCustomerDashboard(); }
     else if (currentUser.role === "driver") { showSection("driverDashboard"); renderDriverDashboard(); }
     else if (currentUser.role === "restaurant") { showSection("restaurantDashboard"); renderRestaurantDashboard(); }
+    else if (currentUser.role === "admin") { showSection("adminDashboard"); switchAdminTab('revenue'); }
+}
+
+function renderStaffList() {
+    const list = document.getElementById("adminStaffList"); if (!list) return;
+    const esc = (v) => String(v).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const staff = getUsers().filter(u => u.role === "admin");
+    list.innerHTML = staff.length ? staff.map(u => {
+        const owner = ACACIA_OWNER_EMAILS.includes(u.email);
+        return `<div class="activity-item"><div><strong>${esc(u.name)}</strong><span>${esc(u.email)} | ${owner ? "Developer / owner" : "Back-end user"}</span></div>` +
+            (owner ? `<span class="status completed">Owner</span>` : `<button class="request-btn" onclick="removeStaffUser('${esc(u.email)}')">Remove</button>`) + `</div>`;
+    }).join("") : `<p style="color:#94a3b8;">No back-end users yet. The developer and admin emails (adminacaciabooks@gmail.com, developeracaciabooks@gmail.com) become back-end users when they register.</p>`;
+}
+
+function addStaffUser(e) {
+    e.preventDefault();
+    if (!currentUser || currentUser.role !== "admin") { alert("Only back-end users can add users."); return; }
+    const name = document.getElementById("staffName").value.trim();
+    const id = acaciaPhoneId(document.getElementById("staffLogin").value);
+    const password = document.getElementById("staffPassword").value;
+    if (!name || !id) { alert("Enter a name and a valid phone number or email address."); return; }
+    if (password.length < 8) { alert("Use a password with at least 8 characters."); return; }
+    const users = getUsers();
+    if (users.find(u => u.email === id)) { alert("A user with this phone number or email already exists."); return; }
+    users.push({ name, email: id, role: "admin", password, balance: 0, actionsCount: 0, status: "Online" });
+    saveUsers(users);
+    e.target.reset();
+    renderStaffList();
+    alert("Back-end user added. They can now log in and see the Admin Console.");
+}
+
+function removeStaffUser(id) {
+    if (!currentUser || currentUser.role !== "admin") return;
+    if (ACACIA_OWNER_EMAILS.includes(id) || id === currentUser.email) { alert("This user cannot be removed."); return; }
+    if (!confirm("Remove this back-end user?")) return;
+    saveUsers(getUsers().filter(u => u.email !== id));
+    renderStaffList();
 }
 
 function showSection(id) {
@@ -788,7 +829,7 @@ function acceptFood(id, grossPrice) {
 }
 
 function switchAdminTab(panelName) {
-    const panels = ['revenue', 'customers', 'drivers', 'restaurants', 'feedback', 'support', 'settings'];
+    const panels = ['revenue', 'customers', 'drivers', 'restaurants', 'feedback', 'support', 'staff', 'settings'];
     panels.forEach(p => {
         document.getElementById(`admin${p.charAt(0).toUpperCase() + p.slice(1)}Panel`).style.display = (p === panelName) ? 'block' : 'none';
         document.getElementById(`admin${p.charAt(0).toUpperCase() + p.slice(1)}Tab`).className = (p === panelName) ? 'active' : '';
@@ -798,6 +839,7 @@ function switchAdminTab(panelName) {
         document.getElementById("adminRevenue").textContent = "KES " + getRevenue().toLocaleString();
         document.getElementById("adminTotalTxCount").textContent = getHistory().length;
     }
+    if (panelName === 'staff') renderStaffList();
     if (panelName === 'customers') {
         const list = document.getElementById("adminCustomersList");
         const match = getUsers().filter(u => u.role === 'customer');
@@ -929,6 +971,6 @@ function updateUserInStorage(userObj) {
 }
 
 /* Make the page's inline onclick/onsubmit handlers able to reach these functions. */
-Object.assign(window, {acaciaPhoneId, acceptFood, acceptRide, addHistoryItem, addRevenue, advanceRide, askAIGuide, cancelRide, checkAutoLogin, closeAuth, closeRideModal, confirmRideRequest, deleteFeedbackItem, detectUserLocation, fetchDevLocation, getFeedback, getHistory, getRevenue, getUsers, handleFeedbackSubmit, handleLogin, handleRegister, logout, openAuth, openFoodModal, openParcelModal, openRideModal, renderCustomerDashboard, renderCustomerHistory, renderDriverDashboard, renderPublicTestimonials, renderRestaurantDashboard, resolveComplaint, rideModalEscape, saveCommissionRate, saveFeedback, saveUsers, selectStarRating, selectedRideType, sendAIMessage, showAuth, showRideToast, showSection, submitComplaint, submitGuestRideRequest, switchAdminTab, switchCustomerTab, switchDriverTab, switchRestaurantTab, toggleAIChat, toggleDriverStatus, togglePasswordVisibility, toggleTestimonialApproval, topUpWallet, updateGoogleMapIframe, updateRideQuote, updateUserInStorage, useCurrentLocationForRide});
+Object.assign(window, {addStaffUser, removeStaffUser, renderStaffList, acaciaPhoneId, acceptFood, acceptRide, addHistoryItem, addRevenue, advanceRide, askAIGuide, cancelRide, checkAutoLogin, closeAuth, closeRideModal, confirmRideRequest, deleteFeedbackItem, detectUserLocation, fetchDevLocation, getFeedback, getHistory, getRevenue, getUsers, handleFeedbackSubmit, handleLogin, handleRegister, logout, openAuth, openFoodModal, openParcelModal, openRideModal, renderCustomerDashboard, renderCustomerHistory, renderDriverDashboard, renderPublicTestimonials, renderRestaurantDashboard, resolveComplaint, rideModalEscape, saveCommissionRate, saveFeedback, saveUsers, selectStarRating, selectedRideType, sendAIMessage, showAuth, showRideToast, showSection, submitComplaint, submitGuestRideRequest, switchAdminTab, switchCustomerTab, switchDriverTab, switchRestaurantTab, toggleAIChat, toggleDriverStatus, togglePasswordVisibility, toggleTestimonialApproval, topUpWallet, updateGoogleMapIframe, updateRideQuote, updateUserInStorage, useCurrentLocationForRide});
 
 })();
