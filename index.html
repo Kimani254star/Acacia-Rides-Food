@@ -1,820 +1,658 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="theme-color" content="#172554">
+<meta name="theme-color" content="#087f5b">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Acacia Bet">
+<meta name="apple-mobile-web-app-title" content="Acacia Rides">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Acacia Bet — Sportsbook</title>
+<title>Acacia Rides & Food - Advanced Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <link rel="stylesheet" href="styles.css">
+<script src="acacia-appearance.js" data-app="rides"></script>
 </head>
-<body class="page-index">
+<body onload="checkAutoLogin()" class="page-index">
 
+<div id="mainWebsite">
 <header>
-  <div class="header-inner">
-    <div class="wordmark">ACACIA<span> BET</span></div>
-    <nav class="primary-nav">
-      <a href="logs.html">Activity logs</a>
-      <a href="build-log.html">Build Log</a>
-      <a href="#" class="active">Home</a>
-      <a href="#fixtures">Sports</a>
-      <a href="markets.html">Live &amp; upcoming</a>
-      <a href="#jackpot">Jackpot</a>
-      <a href="#promotions">Promotions</a>
-    </nav>
-    <div class="header-actions">
-      <button class="btn btn-ghost icon-btn" id="theme-toggle" aria-label="Switch to light mode" title="Switch appearance">
-        <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
-        <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="17" height="17" style="display:none;"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
-      </button>
-
-      <div class="guest-actions" id="guest-actions">
-        <button class="btn btn-ghost" id="open-login">Log in</button>
-        <button class="btn btn-gold" id="open-register">Register</button>
-      </div>
-
-      <div class="user-actions" id="user-actions">
-        <div class="balance-pill">Balance <b id="header-balance">KSh 5,000</b></div>
-        <button class="btn btn-ghost btn-sm">Deposit</button>
-        <div class="account-wrap">
-          <button class="btn btn-ghost account-btn" id="account-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.5-4 4.5-6 7-6s5.5 2 7 6"/></svg>
-            Account
-          </button>
-          <div class="account-dropdown" id="account-dropdown">
-            <a href="#" id="menu-mybets">My bets</a>
-            <a href="#" id="menu-withdraw">Withdraw</a>
-            <a href="#" id="menu-rg">Responsible gambling</a>
-            <a href="#">Profile</a>
-            <hr>
-            <button id="logout-btn">Log out</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="container">
+<nav>
+<div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+<i class="fa-solid fa-car-side"></i>
+<span>Acacia Rides & Food</span>
+</div>
+<ul class="menu">
+<li><a onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Home</a></li>
+<li><a onclick="document.getElementById('services-section').scrollIntoView()">Ride</a></li>
+<li><a onclick="document.getElementById('food-categories').scrollIntoView()">Food</a></li>
+<li><a onclick="document.getElementById('reviews-section').scrollIntoView()">Reviews</a></li>
+<li><a onclick="openAuth('register', 'driver')">Drivers</a></li>
+<li><a onclick="openAuth('register', 'restaurant')">Restaurants</a></li>
+<li><a onclick="document.getElementById('faq-section').scrollIntoView()">Support</a></li>
+<li><a href="logs.html">Activity Logs</a></li>
+</ul>
+<div class="nav-buttons">
+<button class="btn-login theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch appearance">☾</button>
+<button class="btn-login" onclick="openAuth('login')">Login</button>
+<button class="btn-register" onclick="openAuth('register')">Register</button>
+</div>
+</nav>
+</div>
 </header>
 
-<div class="shell">
-  <main>
+<section class="hero">
+<div class="container">
+<div class="hero-grid">
+<div>
+<h1>Ride, Eat & Deliver Across Kenya With One App</h1>
+<p>Book affordable rides, order delicious meals from your favourite restaurants, send parcels, and manage business deliveries using Acacia Rides & Food.</p>
+<div class="hero-buttons">
+<a class="primary-btn" onclick="openAuth('login')"><i class="fa-solid fa-car"></i>Book a Ride</a>
+<a class="secondary-btn" onclick="openAuth('login')"><i class="fa-solid fa-utensils"></i>Order Food</a>
+<a class="secondary-btn" onclick="openAuth('register', 'driver')"><i class="fa-solid fa-motorcycle"></i>Become a Driver</a>
+</div>
+</div>
+<div>
+<div class="booking-card">
+<div class="tabs">
+<div class="tab active">Ride</div>
+<div class="tab" onclick="openAuth('login')">Food</div>
+<div class="tab" onclick="openAuth('login')">Parcel</div>
+</div>
+<div class="input-group">
+<label>Pickup Location</label>
+<input type="text" id="heroPickup" placeholder="Enter pickup location or use location button">
+<button type="button" class="location-btn" onclick="detectUserLocation('heroPickup')"><i class="fa-solid fa-location-crosshairs"></i> Use GPS</button>
+</div>
+<div class="input-group">
+<label>Destination</label>
+<input type="text" id="heroDropoff" placeholder="Where are you going?" onchange="updateGoogleMapIframe(this.value)">
+</div>
+<div class="input-group">
+<label>Ride Type</label>
+<select id="heroRideType">
+<option value="Economy">Economy</option>
+<option value="Premium">Premium</option>
+<option value="XL">XL</option>
+<option value="Motorbike">Motorbike</option>
+</select>
+</div>
+<div class="map-box">
+<iframe id="googleMapPreview" width="100%" height="100%" frameborder="0" style="border:0" src="https://maps.google.com/maps?q=Nairobi&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
+</div>
+<button class="find-btn" onclick="submitGuestRideRequest()">Find Driver</button>
+</div>
+</div>
+</div>
+</div>
+</section>
 
-    <section class="hero">
-      <div>
-        <h1>Odds that move with the match.</h1>
-        <p>Football, basketball, rugby and more — live markets settled fast and paid out straight to M-Pesa.</p>
-        <div class="hero-ctas guest-only" id="hero-cta-guest">
-          <button class="btn btn-gold" id="hero-register">Create free account</button>
-          <button class="btn btn-ghost">See today's fixtures</button>
-        </div>
-        <div class="hero-ctas auth-only" id="hero-cta-auth" style="display:none;">
-          <button class="btn btn-gold">Deposit funds</button>
-          <button class="btn btn-ghost">View my bets</button>
-        </div>
-      </div>
+<section class="services" id="services-section">
+<div class="container">
+<div class="section-title">
+<h2>Everything You Need in One Platform</h2>
+<p>Whether you need a ride, your favourite meal delivered, or a parcel sent across town, Acacia Rides & Food has you covered.</p>
+</div>
+<div class="service-grid">
+<div class="service-card">
+<div class="service-icon"><i class="fa-solid fa-car-side"></i></div>
+<h3>Ride</h3>
+<p>Book safe and affordable rides with professional drivers anytime.</p>
+<a onclick="openAuth('login')">Book Now <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+<div class="service-card">
+<div class="service-icon"><i class="fa-solid fa-burger"></i></div>
+<h3>Food Delivery</h3>
+<p>Order delicious meals from restaurants near you.</p>
+<a onclick="openAuth('login')">Order Food <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+<div class="service-card">
+<div class="service-icon"><i class="fa-solid fa-box"></i></div>
+<h3>Parcel Delivery</h3>
+<p>Fast and secure package delivery across Kenya.</p>
+<a onclick="openAuth('login')">Send Parcel <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+<div class="service-card">
+<div class="service-icon"><i class="fa-solid fa-building"></i></div>
+<h3>Business</h3>
+<p>Corporate transport and logistics solutions for companies.</p>
+<a onclick="openAuth('login')">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+</div>
+</div>
+</section>
 
-            <div class="empty-card guest-only" id="hero-guest">
-        <div class="skel skel-line" style="width:90px; height:10px;"></div>
-        <div class="skel skel-line" style="width:100%; height:20px; margin-top:12px;"></div>
-        <div class="skel skel-line" style="width:70%; height:20px;"></div>
-        <div class="empty-caption">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-          Live matches will appear here once connected to your odds feed.
-        </div>
-      </div>
+<section class="food-section" id="food-categories">
+<div class="container">
+<div class="section-title">
+<h2>Popular Food Categories</h2>
+<p>Discover your favourite meals from hundreds of restaurants.</p>
+</div>
+<div class="food-grid">
+<div class="food-card"><i class="fa-solid fa-pizza-slice"></i><h3>Pizza</h3></div>
+<div class="food-card"><i class="fa-solid fa-drumstick-bite"></i><h3>Chicken</h3></div>
+<div class="food-card"><i class="fa-solid fa-burger"></i><h3>Burgers</h3></div>
+<div class="food-card"><i class="fa-solid fa-mug-hot"></i><h3>Coffee</h3></div>
+<div class="food-card"><i class="fa-solid fa-fish"></i><h3>Sea Food</h3></div>
+<div class="food-card"><i class="fa-solid fa-bowl-rice"></i><h3>African</h3></div>
+</div>
+</div>
+</section>
 
-            <div class="live-card auth-only" id="hero-auth" style="display:none;">
-        <span class="live-tag" style="color:var(--gold)">UPCOMING · PREMIER LEAGUE</span>
-        <div class="teams">
-          <div class="team-row"><span>Manchester United</span></div>
-          <div class="team-row"><span>Manchester City</span></div>
-        </div>
-        <div class="clock">Sun, 13 Sep · 6:30 PM EAT</div>
-        <div class="odds-row" data-match="Manchester United vs Manchester City">
-          <button class="odds-btn" data-pick="1" data-odds="3.21"><span class="label">Man Utd</span><span class="price">3.21</span></button>
-          <button class="odds-btn" data-pick="X" data-odds="3.97"><span class="label">Draw</span><span class="price">3.97</span></button>
-          <button class="odds-btn" data-pick="2" data-odds="2.29"><span class="label">Man City</span><span class="price">2.29</span></button>
-        </div>
-        <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-        <div class="extra-markets">
-          <div class="market-group"><span class="market-label">Double chance</span>
-            <div class="odds-row compact" data-match="Manchester United vs Manchester City - Double Chance">
-              <button class="odds-btn" data-pick="1X" data-odds="1.78"><span class="label">1X</span><span class="price">1.78</span></button>
-              <button class="odds-btn" data-pick="12" data-odds="1.34"><span class="label">12</span><span class="price">1.34</span></button>
-              <button class="odds-btn" data-pick="X2" data-odds="1.45"><span class="label">X2</span><span class="price">1.45</span></button>
-            </div>
-          </div>
-          <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-            <div class="odds-row compact" data-match="Manchester United vs Manchester City - O/U 2.5">
-              <button class="odds-btn" data-pick="Over 2.5" data-odds="1.80"><span class="label">Over</span><span class="price">1.80</span></button>
-              <button class="odds-btn" data-pick="Under 2.5" data-odds="2.00"><span class="label">Under</span><span class="price">2.00</span></button>
-            </div>
-          </div>
-          <div class="market-group"><span class="market-label">Both teams to score</span>
-            <div class="odds-row compact" data-match="Manchester United vs Manchester City - GG/NG">
-              <button class="odds-btn" data-pick="GG" data-odds="1.70"><span class="label">Yes</span><span class="price">1.70</span></button>
-              <button class="odds-btn" data-pick="NG" data-odds="2.10"><span class="label">No</span><span class="price">2.10</span></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="promo-band" id="promotions">
-      <div class="promo-track" id="promo-track">
-        <div class="promo-card">
-          <div><div class="tag">Welcome offer</div><h3>100% deposit match up to KSh 5,000</h3><p>New accounts get a matched bonus on their first deposit.</p></div>
-          <button class="btn btn-gold btn-sm">Claim</button>
-        </div>
-        <div class="promo-card">
-          <div><div class="tag">Multibet boost</div><h3>+10% on 5-fold accumulators</h3><p>Add a bonus payout when all five selections land.</p></div>
-          <button class="btn btn-gold btn-sm">Learn more</button>
-        </div>
-        <div class="promo-card">
-          <div><div class="tag">Midweek jackpot</div><h3>KSh 15,000,000 up for grabs</h3><p>Predict 13 fixtures correctly to win the jackpot.</p></div>
-          <button class="btn btn-gold btn-sm">Play now</button>
-        </div>
-      </div>
-      <div class="promo-dots" id="promo-dots">
-        <span class="active" data-i="0"></span><span data-i="1"></span><span data-i="2"></span>
-      </div>
-    </section>
-
-    <section class="acacia-sports-shortcuts" aria-label="Sports shortcuts">
-      <a href="#fixtures" class="sport-shortcut active"><span>⚽</span> Football</a>
-      <a href="#fixtures" class="sport-shortcut"><span>🏀</span> Basketball</a>
-      <a href="#fixtures" class="sport-shortcut"><span>🏉</span> Rugby</a>
-      <a href="#fixtures" class="sport-shortcut"><span>🎾</span> Tennis</a>
-      <a href="markets.html" class="sport-shortcut"><span>🔥</span> All markets</a>
-    </section>
-
-    <section class="section" id="fixtures">
-      <div class="section-head"><h2>Today's fixtures</h2></div>
-
-      <div class="fixture-search-row auth-only" id="fixture-search-wrap" style="display:none;">
-        <input type="text" id="fixture-search" placeholder="Search team or league…">
-      </div>
-
-      <div class="tabs">
-        <button class="tab active" data-sport="football">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 4.5h-5L8 10z"/></svg>
-          Football
-        </button>
-        <button class="tab" data-sport="basketball">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M5.5 5.5c3.5 3.5 3.5 9.5 0 13M18.5 5.5c-3.5 3.5-3.5 9.5 0 13"/></svg>
-          Basketball
-        </button>
-        <button class="tab" data-sport="rugby">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="12" rx="9" ry="6"/><path d="M8 9l8 6M16 9l-8 6"/></svg>
-          Rugby
-        </button>
-        <button class="tab" data-sport="tennis">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M4.5 7c4 1.5 4 8.5 0 10M19.5 7c-4 1.5-4 8.5 0 10"/></svg>
-          Tennis
-        </button>
-      </div>
-
-            <div id="fixture-empty" class="guest-only">
-        <div class="fixture-skel"><div><div class="skel skel-league"></div><div class="skel skel-teams"></div></div><div class="skel-odds"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div>
-        <div class="fixture-skel"><div><div class="skel skel-league"></div><div class="skel skel-teams"></div></div><div class="skel-odds"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div>
-        <div class="fixture-skel"><div><div class="skel skel-league"></div><div class="skel skel-teams"></div></div><div class="skel-odds"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div>
-        <div class="empty-caption">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-          This list populates from your sports and odds service — log in to see current Premier League and La Liga fixtures.
-        </div>
-      </div>
-
-            <div id="fixture-live" class="auth-only" style="display:none;">
-        <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:14px;">Main 1X2 odds are estimated from match win-probability data; double chance, over/under and both-teams-to-score odds are illustrative examples — none are live bookmaker prices.</p>
-
-        <div class="league-filter" id="league-filter">
-          <button class="league-chip active" data-league="all">All leagues</button>
-          <button class="league-chip" data-league="English Premier League"><span class="flag">🏴</span> England — Premier League</button>
-          <button class="league-chip" data-league="La Liga"><span class="flag">🇪🇸</span> Spain — La Liga</button>
-          <button class="league-chip" data-league="Serie A"><span class="flag">🇮🇹</span> Italy — Serie A</button>
-          <button class="league-chip" data-league="Bundesliga"><span class="flag">🇩🇪</span> Germany — Bundesliga</button>
-        </div>
-
-        <div id="fixture-list-football">
-          <div class="fixture">
-            <div class="fixture-info"><div class="league">English Premier League</div><div class="matchup">Aston Villa vs Nottingham Forest</div><div class="meta">Sat 12 Sep · 5:00 PM EAT</div></div>
-            <div class="odds-row" data-match="Aston Villa vs Nottingham Forest">
-              <button class="odds-btn" data-pick="1" data-odds="2.19"><span class="label">1</span><span class="price">2.19</span></button>
-              <button class="odds-btn" data-pick="X" data-odds="3.66"><span class="label">X</span><span class="price">3.66</span></button>
-              <button class="odds-btn" data-pick="2" data-odds="3.69"><span class="label">2</span><span class="price">3.69</span></button>
-            </div>
-            <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-            <div class="extra-markets">
-              <div class="market-group"><span class="market-label">Double chance</span>
-                <div class="odds-row compact" data-match="Aston Villa vs Nottingham Forest - Double Chance">
-                  <button class="odds-btn" data-pick="1X" data-odds="1.37"><span class="label">1X</span><span class="price">1.37</span></button>
-                  <button class="odds-btn" data-pick="12" data-odds="1.37"><span class="label">12</span><span class="price">1.37</span></button>
-                  <button class="odds-btn" data-pick="X2" data-odds="1.84"><span class="label">X2</span><span class="price">1.84</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-                <div class="odds-row compact" data-match="Aston Villa vs Nottingham Forest - O/U 2.5">
-                  <button class="odds-btn" data-pick="Over 2.5" data-odds="2.05"><span class="label">Over</span><span class="price">2.05</span></button>
-                  <button class="odds-btn" data-pick="Under 2.5" data-odds="1.75"><span class="label">Under</span><span class="price">1.75</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Both teams to score</span>
-                <div class="odds-row compact" data-match="Aston Villa vs Nottingham Forest - GG/NG">
-                  <button class="odds-btn" data-pick="GG" data-odds="1.95"><span class="label">Yes</span><span class="price">1.95</span></button>
-                  <button class="odds-btn" data-pick="NG" data-odds="1.85"><span class="label">No</span><span class="price">1.85</span></button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fixture">
-            <div class="fixture-info"><div class="league">English Premier League</div><div class="matchup">Chelsea vs Hull City</div><div class="meta">Sat 12 Sep · 5:00 PM EAT</div></div>
-            <div class="odds-row" data-match="Chelsea vs Hull City">
-              <button class="odds-btn" data-pick="1" data-odds="1.25"><span class="label">1</span><span class="price">1.25</span></button>
-              <button class="odds-btn" data-pick="X" data-odds="7.75"><span class="label">X</span><span class="price">7.75</span></button>
-              <button class="odds-btn" data-pick="2" data-odds="13.70"><span class="label">2</span><span class="price">13.70</span></button>
-            </div>
-            <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-            <div class="extra-markets">
-              <div class="market-group"><span class="market-label">Double chance</span>
-                <div class="odds-row compact" data-match="Chelsea vs Hull City - Double Chance">
-                  <button class="odds-btn" data-pick="1X" data-odds="1.08"><span class="label">1X</span><span class="price">1.08</span></button>
-                  <button class="odds-btn" data-pick="12" data-odds="1.15"><span class="label">12</span><span class="price">1.15</span></button>
-                  <button class="odds-btn" data-pick="X2" data-odds="4.95"><span class="label">X2</span><span class="price">4.95</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-                <div class="odds-row compact" data-match="Chelsea vs Hull City - O/U 2.5">
-                  <button class="odds-btn" data-pick="Over 2.5" data-odds="1.55"><span class="label">Over</span><span class="price">1.55</span></button>
-                  <button class="odds-btn" data-pick="Under 2.5" data-odds="2.45"><span class="label">Under</span><span class="price">2.45</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Both teams to score</span>
-                <div class="odds-row compact" data-match="Chelsea vs Hull City - GG/NG">
-                  <button class="odds-btn" data-pick="GG" data-odds="2.30"><span class="label">Yes</span><span class="price">2.30</span></button>
-                  <button class="odds-btn" data-pick="NG" data-odds="1.60"><span class="label">No</span><span class="price">1.60</span></button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fixture">
-            <div class="fixture-info"><div class="league">English Premier League</div><div class="matchup">Liverpool vs Fulham</div><div class="meta">Sat 12 Sep · 5:00 PM EAT</div></div>
-            <div class="odds-row" data-match="Liverpool vs Fulham">
-              <button class="odds-btn" data-pick="1" data-odds="1.50"><span class="label">1</span><span class="price">1.50</span></button>
-              <button class="odds-btn" data-pick="X" data-odds="5.49"><span class="label">X</span><span class="price">5.49</span></button>
-              <button class="odds-btn" data-pick="2" data-odds="6.58"><span class="label">2</span><span class="price">6.58</span></button>
-            </div>
-            <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-            <div class="extra-markets">
-              <div class="market-group"><span class="market-label">Double chance</span>
-                <div class="odds-row compact" data-match="Liverpool vs Fulham - Double Chance">
-                  <button class="odds-btn" data-pick="1X" data-odds="1.18"><span class="label">1X</span><span class="price">1.18</span></button>
-                  <button class="odds-btn" data-pick="12" data-odds="1.22"><span class="label">12</span><span class="price">1.22</span></button>
-                  <button class="odds-btn" data-pick="X2" data-odds="2.99"><span class="label">X2</span><span class="price">2.99</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-                <div class="odds-row compact" data-match="Liverpool vs Fulham - O/U 2.5">
-                  <button class="odds-btn" data-pick="Over 2.5" data-odds="1.65"><span class="label">Over</span><span class="price">1.65</span></button>
-                  <button class="odds-btn" data-pick="Under 2.5" data-odds="2.20"><span class="label">Under</span><span class="price">2.20</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Both teams to score</span>
-                <div class="odds-row compact" data-match="Liverpool vs Fulham - GG/NG">
-                  <button class="odds-btn" data-pick="GG" data-odds="2.05"><span class="label">Yes</span><span class="price">2.05</span></button>
-                  <button class="odds-btn" data-pick="NG" data-odds="1.72"><span class="label">No</span><span class="price">1.72</span></button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fixture">
-            <div class="fixture-info"><div class="league">English Premier League</div><div class="matchup">Sunderland vs Arsenal</div><div class="meta">Sat 12 Sep · 10:00 PM EAT</div></div>
-            <div class="odds-row" data-match="Sunderland vs Arsenal">
-              <button class="odds-btn" data-pick="1" data-odds="7.41"><span class="label">1</span><span class="price">7.41</span></button>
-              <button class="odds-btn" data-pick="X" data-odds="4.61"><span class="label">X</span><span class="price">4.61</span></button>
-              <button class="odds-btn" data-pick="2" data-odds="1.54"><span class="label">2</span><span class="price">1.54</span></button>
-            </div>
-            <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-            <div class="extra-markets">
-              <div class="market-group"><span class="market-label">Double chance</span>
-                <div class="odds-row compact" data-match="Sunderland vs Arsenal - Double Chance">
-                  <button class="odds-btn" data-pick="1X" data-odds="2.84"><span class="label">1X</span><span class="price">2.84</span></button>
-                  <button class="odds-btn" data-pick="12" data-odds="1.28"><span class="label">12</span><span class="price">1.28</span></button>
-                  <button class="odds-btn" data-pick="X2" data-odds="1.15"><span class="label">X2</span><span class="price">1.15</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-                <div class="odds-row compact" data-match="Sunderland vs Arsenal - O/U 2.5">
-                  <button class="odds-btn" data-pick="Over 2.5" data-odds="1.90"><span class="label">Over</span><span class="price">1.90</span></button>
-                  <button class="odds-btn" data-pick="Under 2.5" data-odds="1.90"><span class="label">Under</span><span class="price">1.90</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Both teams to score</span>
-                <div class="odds-row compact" data-match="Sunderland vs Arsenal - GG/NG">
-                  <button class="odds-btn" data-pick="GG" data-odds="1.95"><span class="label">Yes</span><span class="price">1.95</span></button>
-                  <button class="odds-btn" data-pick="NG" data-odds="1.85"><span class="label">No</span><span class="price">1.85</span></button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fixture">
-            <div class="fixture-info"><div class="league">La Liga</div><div class="matchup">Getafe vs Celta Vigo</div><div class="meta">Mon 7 Sep · 8:00 PM EAT</div></div>
-            <div class="odds-row" data-match="Getafe vs Celta Vigo">
-              <button class="odds-btn" data-pick="1" data-odds="2.67"><span class="label">1</span><span class="price">2.67</span></button>
-              <button class="odds-btn" data-pick="X" data-odds="2.99"><span class="label">X</span><span class="price">2.99</span></button>
-              <button class="odds-btn" data-pick="2" data-odds="3.44"><span class="label">2</span><span class="price">3.44</span></button>
-            </div>
-            <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-            <div class="extra-markets">
-              <div class="market-group"><span class="market-label">Double chance</span>
-                <div class="odds-row compact" data-match="Getafe vs Celta Vigo - Double Chance">
-                  <button class="odds-btn" data-pick="1X" data-odds="1.41"><span class="label">1X</span><span class="price">1.41</span></button>
-                  <button class="odds-btn" data-pick="12" data-odds="1.50"><span class="label">12</span><span class="price">1.50</span></button>
-                  <button class="odds-btn" data-pick="X2" data-odds="1.60"><span class="label">X2</span><span class="price">1.60</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-                <div class="odds-row compact" data-match="Getafe vs Celta Vigo - O/U 2.5">
-                  <button class="odds-btn" data-pick="Over 2.5" data-odds="2.10"><span class="label">Over</span><span class="price">2.10</span></button>
-                  <button class="odds-btn" data-pick="Under 2.5" data-odds="1.70"><span class="label">Under</span><span class="price">1.70</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Both teams to score</span>
-                <div class="odds-row compact" data-match="Getafe vs Celta Vigo - GG/NG">
-                  <button class="odds-btn" data-pick="GG" data-odds="1.85"><span class="label">Yes</span><span class="price">1.85</span></button>
-                  <button class="odds-btn" data-pick="NG" data-odds="1.95"><span class="label">No</span><span class="price">1.95</span></button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fixture">
-            <div class="fixture-info"><div class="league">La Liga</div><div class="matchup">Sevilla vs Valencia</div><div class="meta">Fri 11 Sep · 10:00 PM EAT</div></div>
-            <div class="odds-row" data-match="Sevilla vs Valencia">
-              <button class="odds-btn" data-pick="1" data-odds="2.39"><span class="label">1</span><span class="price">2.39</span></button>
-              <button class="odds-btn" data-pick="X" data-odds="3.34"><span class="label">X</span><span class="price">3.34</span></button>
-              <button class="odds-btn" data-pick="2" data-odds="3.55"><span class="label">2</span><span class="price">3.55</span></button>
-            </div>
-            <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-            <div class="extra-markets">
-              <div class="market-group"><span class="market-label">Double chance</span>
-                <div class="odds-row compact" data-match="Sevilla vs Valencia - Double Chance">
-                  <button class="odds-btn" data-pick="1X" data-odds="1.39"><span class="label">1X</span><span class="price">1.39</span></button>
-                  <button class="odds-btn" data-pick="12" data-odds="1.43"><span class="label">12</span><span class="price">1.43</span></button>
-                  <button class="odds-btn" data-pick="X2" data-odds="1.72"><span class="label">X2</span><span class="price">1.72</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-                <div class="odds-row compact" data-match="Sevilla vs Valencia - O/U 2.5">
-                  <button class="odds-btn" data-pick="Over 2.5" data-odds="1.95"><span class="label">Over</span><span class="price">1.95</span></button>
-                  <button class="odds-btn" data-pick="Under 2.5" data-odds="1.85"><span class="label">Under</span><span class="price">1.85</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Both teams to score</span>
-                <div class="odds-row compact" data-match="Sevilla vs Valencia - GG/NG">
-                  <button class="odds-btn" data-pick="GG" data-odds="1.80"><span class="label">Yes</span><span class="price">1.80</span></button>
-                  <button class="odds-btn" data-pick="NG" data-odds="2.00"><span class="label">No</span><span class="price">2.00</span></button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fixture">
-            <div class="fixture-info"><div class="league">La Liga</div><div class="matchup">Real Madrid vs Rayo Vallecano</div><div class="meta">Sat 12 Sep · 10:00 PM EAT</div></div>
-            <div class="odds-row" data-match="Real Madrid vs Rayo Vallecano">
-              <button class="odds-btn" data-pick="1" data-odds="1.17"><span class="label">1</span><span class="price">1.17</span></button>
-              <button class="odds-btn" data-pick="X" data-odds="10.64"><span class="label">X</span><span class="price">10.64</span></button>
-              <button class="odds-btn" data-pick="2" data-odds="20.83"><span class="label">2</span><span class="price">20.83</span></button>
-            </div>
-            <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-            <div class="extra-markets">
-              <div class="market-group"><span class="market-label">Double chance</span>
-                <div class="odds-row compact" data-match="Real Madrid vs Rayo Vallecano - Double Chance">
-                  <button class="odds-btn" data-pick="1X" data-odds="1.05"><span class="label">1X</span><span class="price">1.05</span></button>
-                  <button class="odds-btn" data-pick="12" data-odds="1.11"><span class="label">12</span><span class="price">1.11</span></button>
-                  <button class="odds-btn" data-pick="X2" data-odds="7.04"><span class="label">X2</span><span class="price">7.04</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-                <div class="odds-row compact" data-match="Real Madrid vs Rayo Vallecano - O/U 2.5">
-                  <button class="odds-btn" data-pick="Over 2.5" data-odds="1.45"><span class="label">Over</span><span class="price">1.45</span></button>
-                  <button class="odds-btn" data-pick="Under 2.5" data-odds="2.70"><span class="label">Under</span><span class="price">2.70</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Both teams to score</span>
-                <div class="odds-row compact" data-match="Real Madrid vs Rayo Vallecano - GG/NG">
-                  <button class="odds-btn" data-pick="GG" data-odds="2.20"><span class="label">Yes</span><span class="price">2.20</span></button>
-                  <button class="odds-btn" data-pick="NG" data-odds="1.62"><span class="label">No</span><span class="price">1.62</span></button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fixture">
-            <div class="fixture-info"><div class="league">Serie A</div><div class="matchup">Cagliari vs Lecce</div><div class="meta">Mon 7 Sep · 10:30 PM EAT</div></div>
-            <div class="odds-row" data-match="Cagliari vs Lecce">
-              <button class="odds-btn" data-pick="1" data-odds="2.18"><span class="label">1</span><span class="price">2.18</span></button>
-              <button class="odds-btn" data-pick="X" data-odds="3.33"><span class="label">X</span><span class="price">3.33</span></button>
-              <button class="odds-btn" data-pick="2" data-odds="4.15"><span class="label">2</span><span class="price">4.15</span></button>
-            </div>
-            <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-            <div class="extra-markets">
-              <div class="market-group"><span class="market-label">Double chance</span>
-                <div class="odds-row compact" data-match="Cagliari vs Lecce - Double Chance">
-                  <button class="odds-btn" data-pick="1X" data-odds="1.32"><span class="label">1X</span><span class="price">1.32</span></button>
-                  <button class="odds-btn" data-pick="12" data-odds="1.43"><span class="label">12</span><span class="price">1.43</span></button>
-                  <button class="odds-btn" data-pick="X2" data-odds="1.85"><span class="label">X2</span><span class="price">1.85</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-                <div class="odds-row compact" data-match="Cagliari vs Lecce - O/U 2.5">
-                  <button class="odds-btn" data-pick="Over 2.5" data-odds="2.00"><span class="label">Over</span><span class="price">2.00</span></button>
-                  <button class="odds-btn" data-pick="Under 2.5" data-odds="1.80"><span class="label">Under</span><span class="price">1.80</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Both teams to score</span>
-                <div class="odds-row compact" data-match="Cagliari vs Lecce - GG/NG">
-                  <button class="odds-btn" data-pick="GG" data-odds="2.10"><span class="label">Yes</span><span class="price">2.10</span></button>
-                  <button class="odds-btn" data-pick="NG" data-odds="1.75"><span class="label">No</span><span class="price">1.75</span></button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fixture">
-            <div class="fixture-info"><div class="league">Serie A</div><div class="matchup">Lazio vs AC Milan</div><div class="meta">Sat 12 Sep · 7:00 PM EAT</div></div>
-            <div class="odds-row" data-match="Lazio vs AC Milan">
-              <button class="odds-btn" data-pick="1" data-odds="3.47"><span class="label">1</span><span class="price">3.47</span></button>
-              <button class="odds-btn" data-pick="X" data-odds="3.37"><span class="label">X</span><span class="price">3.37</span></button>
-              <button class="odds-btn" data-pick="2" data-odds="2.41"><span class="label">2</span><span class="price">2.41</span></button>
-            </div>
-            <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-            <div class="extra-markets">
-              <div class="market-group"><span class="market-label">Double chance</span>
-                <div class="odds-row compact" data-match="Lazio vs AC Milan - Double Chance">
-                  <button class="odds-btn" data-pick="1X" data-odds="1.71"><span class="label">1X</span><span class="price">1.71</span></button>
-                  <button class="odds-btn" data-pick="12" data-odds="1.42"><span class="label">12</span><span class="price">1.42</span></button>
-                  <button class="odds-btn" data-pick="X2" data-odds="1.41"><span class="label">X2</span><span class="price">1.41</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-                <div class="odds-row compact" data-match="Lazio vs AC Milan - O/U 2.5">
-                  <button class="odds-btn" data-pick="Over 2.5" data-odds="1.75"><span class="label">Over</span><span class="price">1.75</span></button>
-                  <button class="odds-btn" data-pick="Under 2.5" data-odds="2.05"><span class="label">Under</span><span class="price">2.05</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Both teams to score</span>
-                <div class="odds-row compact" data-match="Lazio vs AC Milan - GG/NG">
-                  <button class="odds-btn" data-pick="GG" data-odds="1.85"><span class="label">Yes</span><span class="price">1.85</span></button>
-                  <button class="odds-btn" data-pick="NG" data-odds="1.95"><span class="label">No</span><span class="price">1.95</span></button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fixture">
-            <div class="fixture-info"><div class="league">Bundesliga</div><div class="matchup">Borussia Dortmund vs Paderborn</div><div class="meta">Sat 12 Sep · 4:30 PM EAT</div></div>
-            <div class="odds-row" data-match="Borussia Dortmund vs Paderborn">
-              <button class="odds-btn" data-pick="1" data-odds="1.29"><span class="label">1</span><span class="price">1.29</span></button>
-              <button class="odds-btn" data-pick="X" data-odds="7.52"><span class="label">X</span><span class="price">7.52</span></button>
-              <button class="odds-btn" data-pick="2" data-odds="10.99"><span class="label">2</span><span class="price">10.99</span></button>
-            </div>
-            <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-            <div class="extra-markets">
-              <div class="market-group"><span class="market-label">Double chance</span>
-                <div class="odds-row compact" data-match="Borussia Dortmund vs Paderborn - Double Chance">
-                  <button class="odds-btn" data-pick="1X" data-odds="1.10"><span class="label">1X</span><span class="price">1.10</span></button>
-                  <button class="odds-btn" data-pick="12" data-odds="1.15"><span class="label">12</span><span class="price">1.15</span></button>
-                  <button class="odds-btn" data-pick="X2" data-odds="4.46"><span class="label">X2</span><span class="price">4.46</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-                <div class="odds-row compact" data-match="Borussia Dortmund vs Paderborn - O/U 2.5">
-                  <button class="odds-btn" data-pick="Over 2.5" data-odds="1.50"><span class="label">Over</span><span class="price">1.50</span></button>
-                  <button class="odds-btn" data-pick="Under 2.5" data-odds="2.55"><span class="label">Under</span><span class="price">2.55</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Both teams to score</span>
-                <div class="odds-row compact" data-match="Borussia Dortmund vs Paderborn - GG/NG">
-                  <button class="odds-btn" data-pick="GG" data-odds="2.15"><span class="label">Yes</span><span class="price">2.15</span></button>
-                  <button class="odds-btn" data-pick="NG" data-odds="1.68"><span class="label">No</span><span class="price">1.68</span></button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fixture">
-            <div class="fixture-info"><div class="league">Bundesliga</div><div class="matchup">Bayern Munich vs Union Berlin</div><div class="meta">Fri 18 Sep · 9:30 PM EAT</div></div>
-            <div class="odds-row" data-match="Bayern Munich vs Union Berlin">
-              <button class="odds-btn" data-pick="1" data-odds="1.17"><span class="label">1</span><span class="price">1.17</span></button>
-              <button class="odds-btn" data-pick="X" data-odds="10.99"><span class="label">X</span><span class="price">10.99</span></button>
-              <button class="odds-btn" data-pick="2" data-odds="17.54"><span class="label">2</span><span class="price">17.54</span></button>
-            </div>
-            <button class="market-toggle">+ more markets <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
-            <div class="extra-markets">
-              <div class="market-group"><span class="market-label">Double chance</span>
-                <div class="odds-row compact" data-match="Bayern Munich vs Union Berlin - Double Chance">
-                  <button class="odds-btn" data-pick="1X" data-odds="1.06"><span class="label">1X</span><span class="price">1.06</span></button>
-                  <button class="odds-btn" data-pick="12" data-odds="1.10"><span class="label">12</span><span class="price">1.10</span></button>
-                  <button class="odds-btn" data-pick="X2" data-odds="6.76"><span class="label">X2</span><span class="price">6.76</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Over/Under 2.5 goals</span>
-                <div class="odds-row compact" data-match="Bayern Munich vs Union Berlin - O/U 2.5">
-                  <button class="odds-btn" data-pick="Over 2.5" data-odds="1.40"><span class="label">Over</span><span class="price">1.40</span></button>
-                  <button class="odds-btn" data-pick="Under 2.5" data-odds="2.85"><span class="label">Under</span><span class="price">2.85</span></button>
-                </div>
-              </div>
-              <div class="market-group"><span class="market-label">Both teams to score</span>
-                <div class="odds-row compact" data-match="Bayern Munich vs Union Berlin - GG/NG">
-                  <button class="odds-btn" data-pick="GG" data-odds="2.30"><span class="label">Yes</span><span class="price">2.30</span></button>
-                  <button class="odds-btn" data-pick="NG" data-odds="1.58"><span class="label">No</span><span class="price">1.58</span></button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="fixture-list-basketball" style="display:none">
-          <div class="empty-caption" style="padding:24px 0;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-            No fixtures are currently available from the connected feed for this sport.
-          </div>
-        </div>
-
-        <div id="fixture-list-rugby" style="display:none">
-          <div class="empty-caption" style="padding:24px 0;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-            No fixtures are currently available from the connected feed for this sport.
-          </div>
-        </div>
-
-        <div id="fixture-list-tennis" style="display:none">
-          <div class="empty-caption" style="padding:24px 0;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-            No fixtures are currently available from the connected feed for this sport.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="jackpot" style="border-bottom:none;">
-      <div class="jackpot">
-        <div>
-          <div class="eyebrow">Midweek jackpot</div>
-          <div class="skel skel-amount guest-only"></div>
-          <div class="amount auth-only" style="display:none;">KSh 15,000,000</div>
-          <div class="sub">Predict 13 fixtures correctly to win.</div>
-        </div>
-        <button class="btn btn-gold">Play the jackpot</button>
-      </div>
-    </section>
-
-  </main>
-
-    <aside class="slip-panel" id="desktop-slip">
-    <div class="slip-head">
-      <h3>Bet slip</h3>
-      <span class="slip-count" id="desktop-count" style="display:none">0</span>
-    </div>
-
-    <div class="slip-empty guest-only" id="slip-guest-empty">Log in to start building a bet slip.</div>
-
-    <div class="auth-only" id="slip-auth-wrap" style="display:none; flex-direction:column; flex:1; min-height:0;">
-      <div class="slip-empty" id="desktop-empty">Tap any odds to add a selection.</div>
-      <div class="slip-items" id="desktop-items"></div>
-      <div class="slip-footer" id="desktop-footer" style="display:none">
-        <div class="stake-row">
-          <label for="desktop-stake">Stake (KSh)</label>
-          <input type="number" id="desktop-stake" min="20" step="10" value="100">
-        </div>
-        <div class="quick-stakes">
-          <button data-add="50">+50</button>
-          <button data-add="100">+100</button>
-          <button data-add="500">+500</button>
-          <button data-max="desktop">Max</button>
-        </div>
-        <div class="summary-row"><span>Total odds</span><b id="desktop-total-odds">0.00</b></div>
-        <div class="summary-row"><span>Potential win</span><b id="desktop-potential">KSh 0</b></div>
-        <div class="insufficient" id="desktop-insufficient">Stake exceeds your available balance.</div>
-        <button class="btn btn-gold place-bet" id="desktop-place">Place bet</button>
-      </div>
-    </div>
-  </aside>
+<section class="testimonials-section" id="reviews-section">
+<div class="container">
+<div class="section-title">
+<h2>Customer Experiences & Feedback</h2>
+<p>See what our users are saying or leave your own rating to help us improve.</p>
 </div>
 
-<div class="mobile-slip-bar hidden force-hidden" id="mobile-bar">
-  <span id="mobile-bar-text">0 selections</span>
-  <span id="mobile-bar-odds">View slip →</span>
+<div class="testimonials-grid" id="publicTestimonialsContainer">
 </div>
 
-<div class="slip-overlay" id="slip-overlay">
-  <div class="slip-panel">
-    <div class="slip-head"><h3>Bet slip</h3><button class="slip-close" id="slip-close">✕</button></div>
-    <div class="slip-items" id="mobile-items"></div>
-    <div class="slip-footer" id="mobile-footer">
-      <div class="stake-row"><label for="mobile-stake">Stake (KSh)</label><input type="number" id="mobile-stake" min="20" step="10" value="100"></div>
-      <div class="quick-stakes">
-        <button data-add="50">+50</button>
-        <button data-add="100">+100</button>
-        <button data-add="500">+500</button>
-        <button data-max="mobile">Max</button>
-      </div>
-      <div class="summary-row"><span>Total odds</span><b id="mobile-total-odds">0.00</b></div>
-      <div class="summary-row"><span>Potential win</span><b id="mobile-potential">KSh 0</b></div>
-      <div class="insufficient" id="mobile-insufficient">Stake exceeds your available balance.</div>
-      <button class="btn btn-gold place-bet" id="mobile-place">Place bet</button>
-    </div>
-  </div>
+<br><br>
+
+<div class="feedback-box">
+<h3 style="text-align: center; font-size: 22px; color: #0f172a;">Rate Your Acacia Experience</h3>
+<p style="text-align: center; color: #64748b; font-size: 14px; margin-top: 5px;">Select a rating score to share feedback</p>
+
+<div class="star-rating-container" id="starRatingSelector">
+<i class="fa-solid fa-star" data-value="1" onclick="selectStarRating(1)"></i>
+<i class="fa-solid fa-star" data-value="2" onclick="selectStarRating(2)"></i>
+<i class="fa-solid fa-star" data-value="3" onclick="selectStarRating(3)"></i>
+<i class="fa-solid fa-star" data-value="4" onclick="selectStarRating(4)"></i>
+<i class="fa-solid fa-star" data-value="5" onclick="selectStarRating(5)"></i>
 </div>
+
+<form id="highRatingForm" class="generic-form" style="display:none;" onsubmit="handleFeedbackSubmit(event)">
+<div class="input-box">
+<label>Your Name / Author Name</label>
+<input type="text" id="feedbackAuthor" placeholder="e.g. Jane Doe" required>
+</div>
+<div class="input-box">
+<label>Company / Location (Optional)</label>
+<input type="text" id="feedbackCompany" placeholder="e.g. CEO at TechHub or Nairobi Rider">
+</div>
+<div class="input-box">
+<label>Public Testimonial</label>
+<textarea id="feedbackComment" placeholder="Tell us what you loved about our services..." required></textarea>
+</div>
+<button type="submit" class="find-btn">Submit Public Testimonial</button>
+</form>
+
+<form id="lowRatingForm" class="generic-form" style="display:none;" onsubmit="handleFeedbackSubmit(event)">
+<div style="background: #fef2f2; border: 1px solid #fecaca; padding: 12px; border-radius: 10px; color: #991b1b; font-size: 13px; margin-bottom: 10px;">
+<i class="fa-solid fa-circle-info"></i> We are sorry your experience wasn't perfect. Your feedback will be sent privately to our service team to resolve issues directly.
+</div>
+<div class="input-box">
+<label>Email Address (For follow-up support)</label>
+<input type="email" id="privateFeedbackEmail" placeholder="yourname@domain.com" required>
+</div>
+<div class="input-box">
+<label>How can we improve customer service or support?</label>
+<textarea id="privateFeedbackText" placeholder="Please share details on what went wrong with your ride, food order, or delivery..." required></textarea>
+</div>
+<button type="submit" class="find-btn" style="background: #e11d48;">Send Private Feedback</button>
+</form>
+</div>
+</div>
+</section>
+
+<section class="faq" id="faq-section">
+<div class="container">
+<div class="section-title">
+<h2>Frequently Asked Questions</h2>
+<p>Find answers to common questions about Acacia Rides & Food.</p>
+</div>
+<div class="faq-container">
+<div class="faq-item">
+<div class="faq-question"><span>How do I book a ride?</span><i class="fa-solid fa-plus"></i></div>
+<div class="faq-answer"><p>Enter your pickup and destination, choose your ride type, and confirm your booking.</p></div>
+</div>
+<div class="faq-item">
+<div class="faq-question"><span>Which payment methods are accepted?</span><i class="fa-solid fa-plus"></i></div>
+<div class="faq-answer"><p>We support M-Pesa, Airtel Money, Visa, Mastercard and wallet payments.</p></div>
+</div>
+</div>
+</div>
+</section>
 
 <footer>
-  <div class="rg-notice">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-    <div>You must be 18 or older to bet. Gambling can be addictive — set deposit and loss limits in your account, and self-exclude at any time from the Responsible Gambling page. Minimum online bet KSh 20.</div>
-  </div>
-  <div class="footer-links">
-    <a href="#">Terms &amp; conditions</a>
-    <a href="#">Privacy policy</a>
-    <a href="#">Responsible gambling</a>
-    <a href="#">Help &amp; support</a>
-    <a href="#">About Acacia Bets</a>
-    <a href="build-log.html">Build Log</a>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 Acacia Bets. Licensed by the Betting Control and Licensing Board (licence pending).</span>
-    <span>Fixtures as of 7 Sep 2026 · Deposits via M-Pesa</span>
-  </div>
+<div class="container">
+<div class="footer-grid">
+<div>
+<div class="logo" style="color: #fff; margin-bottom: 20px;">
+<i class="fa-solid fa-car-side" style="color: var(--acx-pri-lt,#22c55e);"></i>
+<span>Acacia</span>
+</div>
+<p>Providing seamless, modern rides and rapid item deliveries across Kenya.</p>
+<div class="socials">
+<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+<a href="#"><i class="fa-brands fa-twitter"></i></a>
+<a href="#"><i class="fa-brands fa-instagram"></i></a>
+</div>
+</div>
+<div>
+<h3>Services</h3>
+<ul>
+<li><a onclick="openAuth('login')">Book a Ride</a></li>
+<li><a onclick="openAuth('login')">Order Food</a></li>
+<li><a onclick="openAuth('login')">Parcel Delivery</a></li>
+</ul>
+</div>
+<div>
+<h3>Partnerships</h3>
+<ul>
+<li><a onclick="openAuth('register', 'driver')">Sign Up as Driver</a></li>
+<li><a onclick="openAuth('register', 'restaurant')">Partner Restaurant</a></li>
+</ul>
+</div>
+<div>
+<h3>Admin Panel</h3>
+<p style="margin-bottom:10px;">Developer Portal Access:</p>
+<button class="request-btn" onclick="openAuth('login'); document.getElementById('loginEmail').value='developeracaciabooks@gmail.com'; document.getElementById('loginPassword').value='admin123';">Admin Autofill</button>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Acacia Rides & Food. All Rights Reserved.</p>
+</div>
+</div>
 </footer>
-
-<div class="modal-overlay" id="auth-overlay">
-  <div class="modal">
-    <div class="modal-head"><h2 id="modal-title">Log in</h2><button class="modal-close" id="modal-close">✕</button></div>
-
-    <div class="modal-tabs">
-      <button class="modal-tab active" data-mode="login">Log in</button>
-      <button class="modal-tab" data-mode="register">Register</button>
-    </div>
-
-    <form id="login-form" class="form-fields">
-      <div class="form-group"><label for="login-phone">Phone number</label><input type="tel" id="login-phone" placeholder="07XX XXX XXX" required></div>
-      <div class="form-group"><label for="login-password">Password</label><input type="password" id="login-password" placeholder="••••••••" required minlength="6"></div>
-      <button type="submit" class="btn btn-gold form-submit">Log in</button>
-      <p class="form-hint">Don't have an account? <a href="#" data-switch-to="register" style="color:var(--gold)">Register</a></p>
-    </form>
-
-    <form id="register-form" class="form-fields" style="display:none">
-      <div class="form-group"><label for="reg-phone">Phone number</label><input type="tel" id="reg-phone" placeholder="07XX XXX XXX" required></div>
-      <div class="form-row-split">
-        <div class="form-group"><label for="reg-password">Password</label><input type="password" id="reg-password" placeholder="••••••••" required minlength="6"></div>
-        <div class="form-group"><label for="reg-dob">Date of birth</label><input type="date" id="reg-dob" required></div>
-      </div>
-      <div class="checkbox-row"><input type="checkbox" id="reg-age" required><label for="reg-age">I confirm I am 18 years or older and I've read the terms &amp; responsible gambling policy.</label></div>
-      <button type="submit" class="btn btn-gold form-submit">Create account</button>
-      <p class="form-hint">Already registered? <a href="#" data-switch-to="login" style="color:var(--gold)">Log in</a></p>
-    </form>
-
-    <div class="form-confirm" id="form-confirm">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 5-5"/></svg>
-      <div style="font-weight:700;">You're logged in</div>
-      <p>This is a design mockup — no real account exists. A sample balance and bet slip are now shown so you can try the flow.</p>
-      <button class="btn btn-ghost form-submit" id="confirm-close" style="margin-top:16px;">Continue</button>
-    </div>
-  </div>
 </div>
 
-<div class="modal-overlay" id="mybets-overlay">
-  <div class="modal" style="max-width:460px;">
-    <div class="modal-head"><h2>My bets</h2><button class="modal-close" id="mybets-close">✕</button></div>
-    <div class="mybets-list" id="mybets-list"></div>
-  </div>
+<div id="authOverlay" class="auth-overlay">
+<div class="auth-container">
+<div class="auth-left">
+<div class="auth-brand">
+<i class="fa-solid fa-car-side"></i>
+<h2>Acacia Platform</h2>
+<p>Multi-Module Ecosystem for Rides, Food, and Commerce.</p>
+</div>
+<div class="auth-features">
+<div><i class="fa-solid fa-circle-check"></i> Integrated E-Wallet</div>
+<div><i class="fa-solid fa-circle-check"></i> Multi-Role Portals</div>
+<div><i class="fa-solid fa-circle-check"></i> Instant Commission Distribution</div>
+</div>
+</div>
+<div class="auth-right">
+<div class="auth-tabs">
+<button id="loginTab" class="auth-tab active" onclick="showAuth('login')">Login</button>
+<button id="registerTab" class="auth-tab" onclick="showAuth('register')">Register</button>
 </div>
 
-<div class="modal-overlay" id="rg-overlay">
-  <div class="modal">
-    <div class="modal-head"><h2>Responsible gambling</h2><button class="modal-close" id="rg-close">✕</button></div>
-    <div class="form-group">
-      <label for="rg-deposit-limit">Daily deposit limit (KSh)</label>
-      <input type="number" id="rg-deposit-limit" placeholder="e.g. 2000" min="0" step="100">
-    </div>
-    <button class="btn btn-gold form-submit" id="rg-save">Save limit</button>
-    <p class="form-hint">Need a break? <a href="#" id="rg-selfexclude" style="color:var(--gold)">Self-exclude for 24 hours</a></p>
-  </div>
+<form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+<h2>Welcome Back</h2>
+<div class="input-box">
+<label>Email Address</label>
+<input type="email" id="loginEmail" placeholder="e.g. user@acacia.com" required>
+</div>
+<div class="input-box">
+<label>Password</label>
+<div class="password-box">
+<input type="password" id="loginPassword" placeholder="Password" required>
+<button type="button" onclick="togglePasswordVisibility('loginPassword', this)"><i class="fa-solid fa-eye"></i></button>
+</div>
+</div>
+<button type="submit" class="auth-button">Login to Portal</button>
+</form>
+
+<form id="registerForm" class="auth-form" style="display:none;" onsubmit="handleRegister(event)">
+<h2>Create Account</h2>
+<div class="input-box">
+<label>Full Name / Business Name</label>
+<input type="text" id="regName" placeholder="Full Name" required>
+</div>
+<div class="input-box">
+<label>Email Address</label>
+<input type="email" id="regEmail" placeholder="Email Address" required>
+</div>
+<div class="input-box">
+<label>Account Role</label>
+<select id="regRole" required>
+<option value="customer">Customer / User</option>
+<option value="driver">Driver (Logistics Partner)</option>
+<option value="restaurant">Restaurant / Merchant</option>
+</select>
+</div>
+<div class="input-box">
+<label>Password</label>
+<div class="password-box">
+<input type="password" id="regPassword" placeholder="Password" required>
+<button type="button" onclick="togglePasswordVisibility('regPassword', this)"><i class="fa-solid fa-eye"></i></button>
+</div>
+</div>
+<button type="submit" class="auth-button">Register Account</button>
+</form>
+</div>
+</div>
 </div>
 
-<div class="modal-overlay" id="deposit-overlay">
-  <div class="modal">
-    <div class="modal-head"><h2>Deposit</h2><button class="modal-close" id="deposit-close">✕</button></div>
-
-    <div id="deposit-form-wrap">
-      <div class="form-group">
-        <label for="deposit-phone">M-Pesa phone number</label>
-        <input type="tel" id="deposit-phone" placeholder="07XX XXX XXX">
-      </div>
-      <div class="amount-chips" id="amount-chips">
-        <button data-amount="100">KSh 100</button>
-        <button data-amount="500">KSh 500</button>
-        <button data-amount="1000">KSh 1,000</button>
-        <button data-amount="2000">KSh 2,000</button>
-        <button data-amount="5000">KSh 5,000</button>
-      </div>
-      <div class="form-group">
-        <label for="deposit-amount">Amount (KSh)</label>
-        <input type="number" id="deposit-amount" min="20" step="10" placeholder="Enter amount">
-      </div>
-      <button class="btn btn-gold form-submit" id="deposit-submit">Deposit via M-Pesa</button>
-    </div>
-
-    <div class="deposit-processing" id="deposit-processing">
-      <div class="spinner"></div>
-      <span id="deposit-processing-text">Sending payment request to your phone…</span>
-    </div>
-
-    <div class="stk-phone" id="deposit-stk">
-      <div class="stk-bezel">
-        <div class="stk-notch"></div>
-        <div class="stk-screen">
-          <div class="stk-carrier">SAFARICOM</div>
-          <div class="stk-logo">M-PESA</div>
-          <div class="stk-msg">Pay <b id="stk-amount">KSh 0</b><br>to <b>Acacia Bets Ltd</b></div>
-          <div class="pin-dots" id="pin-dots">
-            <span class="dot" data-i="0"></span>
-            <span class="dot" data-i="1"></span>
-            <span class="dot" data-i="2"></span>
-            <span class="dot" data-i="3"></span>
-          </div>
-          <div class="stk-hint">Enter M-Pesa PIN to confirm</div>
-          <div class="keypad">
-            <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button>
-            <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button>
-            <button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button>
-            <button class="key-cancel" id="stk-cancel">CANCEL</button>
-            <button data-key="0">0</button>
-            <button class="key-del" id="stk-del">DEL</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-confirm" id="deposit-confirm">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 5-5"/></svg>
-      <div style="font-weight:700;" id="deposit-confirm-title">Deposit successful</div>
-      <p>This is a design mockup — no real M-Pesa transaction is made or money moved.</p>
-      <button class="btn btn-ghost form-submit" id="deposit-confirm-close" style="margin-top:16px;">Done</button>
-    </div>
-  </div>
+<section id="customerDashboard" style="display:none; padding:0;">
+<div class="dashboard-wrapper">
+<aside class="dashboard-sidebar">
+<div class="dashboard-logo"><i class="fa-solid fa-car-side"></i><span>Customer</span></div>
+<ul>
+<li id="custMainTab" class="active" onclick="switchCustomerTab('main')"><i class="fa-solid fa-house"></i>Overview</li>
+<li id="custWalletTab" onclick="switchCustomerTab('wallet')"><i class="fa-solid fa-wallet"></i>Wallet & Topup</li>
+<li id="custHistoryTab" onclick="switchCustomerTab('history')"><i class="fa-solid fa-clock-rotate-left"></i>Order History</li>
+<li id="custSupportTab" onclick="switchCustomerTab('complaints')"><i class="fa-solid fa-headset"></i>Support Tickets</li>
+<li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
+</ul>
+</aside>
+<div class="dashboard-content">
+<div id="customerMainPanel">
+<div class="dashboard-header"><h1>Welcome, <span id="customerName">Customer</span></h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>Wallet Balance</h3><h2 id="custWallet" style="color:var(--acx-pri,#16a34a);">KES 0</h2></div>
+<div class="dashboard-card"><h3>Trips / Orders Completed</h3><h2 id="custTrips">0</h2></div>
+<div class="dashboard-card"><h3>Pending Requests</h3><h2 id="custPending">0</h2></div>
 </div>
 
-<div class="modal-overlay" id="withdraw-overlay">
-  <div class="modal">
-    <div class="modal-head"><h2>Withdraw</h2><button class="modal-close" id="withdraw-close">✕</button></div>
-
-    <div id="withdraw-form-wrap">
-      <div class="balance-pill" style="margin-bottom:16px; width:fit-content;">Available <b id="withdraw-available">KSh 5,000</b></div>
-      <div class="form-group">
-        <label for="withdraw-phone">M-Pesa phone number</label>
-        <input type="tel" id="withdraw-phone" placeholder="07XX XXX XXX">
-      </div>
-      <div class="amount-chips" id="withdraw-chips">
-        <button data-pct="25">25%</button>
-        <button data-pct="50">50%</button>
-        <button data-pct="100">Max</button>
-      </div>
-      <div class="form-group">
-        <label for="withdraw-amount">Amount (KSh)</label>
-        <input type="number" id="withdraw-amount" min="50" step="10" placeholder="Enter amount">
-      </div>
-      <div class="insufficient" id="withdraw-insufficient">Amount exceeds your available balance.</div>
-      <button class="btn btn-gold form-submit" id="withdraw-submit" style="margin-top:6px;">Withdraw to M-Pesa</button>
-    </div>
-
-    <div class="deposit-processing" id="withdraw-processing">
-      <div class="spinner"></div>
-      Processing your withdrawal…
-    </div>
-
-    <div class="form-confirm" id="withdraw-confirm">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 5-5"/></svg>
-      <div style="font-weight:700;" id="withdraw-confirm-title">Withdrawal successful</div>
-      <p>This is a design mockup — no real M-Pesa transaction is made or money moved. In production, first withdrawals are also gated behind KYC verification.</p>
-      <button class="btn btn-ghost form-submit" id="withdraw-confirm-close" style="margin-top:16px;">Done</button>
-    </div>
-  </div>
+<div class="dashboard-panel">
+<h2>Book a Service</h2>
+<div class="quick-actions">
+<button class="quick-btn" onclick="openRideModal()"><i class="fa-solid fa-car"></i> Request Custom Ride</button>
+<button class="quick-btn" style="background:#f59e0b;" onclick="openFoodModal()"><i class="fa-solid fa-utensils"></i> Order Food</button>
+<button class="quick-btn" style="background:#3b82f6;" onclick="openParcelModal()"><i class="fa-solid fa-box"></i> Send Parcel</button>
+</div>
 </div>
 
-<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<div class="dashboard-panel">
+<h2>Active / Recent Activity</h2>
+<div class="activity-list" id="custRecentActivity"></div>
+</div>
+</div>
+
+<div id="customerWalletPanel" style="display:none;">
+<div class="dashboard-header"><h1>Wallet Management</h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>Current Balance</h3><h2 id="custWalletDisplay" style="color:var(--acx-pri,#16a34a);">KES 0</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Add Funds via M-Pesa / Card</h2>
+<div class="generic-form" style="max-width: 400px;">
+<div class="input-box">
+<label>Amount (KES)</label>
+<input type="number" id="topupAmount" placeholder="e.g. 1000" min="100">
+</div>
+<button class="quick-btn" onclick="topUpWallet()">Deposit Funds</button>
+</div>
+</div>
+</div>
+
+<div id="customerHistoryPanel" style="display:none;">
+<div class="dashboard-header"><h1>Order & Trip History</h1></div>
+<div class="dashboard-panel">
+<div class="activity-list" id="custFullHistory"></div>
+</div>
+</div>
+
+<div id="customerComplaintsPanel" style="display:none;">
+<div class="dashboard-header"><h1>Support Center</h1></div>
+<div class="dashboard-panel">
+<h2>File a Ticket</h2>
+<div class="complaint-form">
+<textarea id="complaintText" placeholder="Describe issue with a trip, food delivery, or driver..."></textarea>
+<button class="quick-btn" onclick="submitComplaint()">Submit Incident Ticket</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="driverDashboard" style="display:none; padding:0;">
+<div class="dashboard-wrapper">
+<aside class="dashboard-sidebar">
+<div class="dashboard-logo"><i class="fa-solid fa-motorcycle"></i><span>Driver Portal</span></div>
+<ul>
+<li id="drvJobsTab" class="active" onclick="switchDriverTab('jobs')"><i class="fa-solid fa-route"></i>Available Jobs</li>
+<li id="drvVehicleTab" onclick="switchDriverTab('vehicle')"><i class="fa-solid fa-id-card"></i>Vehicle Status</li>
+<li id="drvEarningsTab" onclick="switchDriverTab('earnings')"><i class="fa-solid fa-money-bill-wave"></i>Payouts & Earnings</li>
+<li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
+</ul>
+</aside>
+<div class="dashboard-content">
+<div id="driverJobsPanel">
+<div class="dashboard-header">
+<h1>Driver Portal: <span id="driverName">Driver</span></h1>
+<div>
+<strong>Status: </strong>
+<select id="driverStatusToggle" onchange="toggleDriverStatus(this.value)" style="padding:6px 12px; border-radius:8px;">
+<option value="Online">Online / Available</option>
+<option value="Offline">Offline</option>
+</select>
+</div>
+</div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>My Take-Home (80%)</h3><h2 id="driverEarnings" style="color:#10b981;">KES 0</h2></div>
+<div class="dashboard-card"><h3>Rides Completed</h3><h2 id="driverCount">0</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Live Ride & Parcel Requests</h2>
+<div class="activity-list" id="rideRequestsContainer"></div>
+</div>
+</div>
+
+<div id="driverVehiclePanel" style="display:none;">
+<div class="dashboard-header"><h1>Vehicle & Driver Verification</h1></div>
+<div class="dashboard-panel">
+<h2>Vehicle Information</h2>
+<div class="generic-form" style="max-width:500px;">
+<div class="input-box"><label>Vehicle Model / Type</label><input type="text" id="drvVehicleModel" value="Toyota Vitz / Motorbike"></div>
+<div class="input-box"><label>License Plate</label><input type="text" id="drvPlate" value="KDA 123X"></div>
+<button class="quick-btn" onclick="alert('Vehicle info updated!')">Update Details</button>
+</div>
+</div>
+</div>
+
+<div id="driverEarningsPanel" style="display:none;">
+<div class="dashboard-header"><h1>Payouts & Financial Breakdown</h1></div>
+<div class="dashboard-panel">
+<p style="margin-bottom:15px; color:#475569;">80% of every ride fare is credited directly to your net balance. The 20% platform commission is automatically routed to Acacia Systems.</p>
+<button class="quick-btn" onclick="alert('Payout request sent to M-Pesa!')">Request Withdrawal to M-Pesa</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="restaurantDashboard" style="display:none; padding:0;">
+<div class="dashboard-wrapper">
+<aside class="dashboard-sidebar">
+<div class="dashboard-logo"><i class="fa-solid fa-store"></i><span>Merchant Portal</span></div>
+<ul>
+<li id="rstOrdersTab" class="active" onclick="switchRestaurantTab('orders')"><i class="fa-solid fa-utensils"></i>Orders</li>
+<li id="rstMenuTab" onclick="switchRestaurantTab('menu')"><i class="fa-solid fa-book-open"></i>Manage Menu</li>
+<li id="rstEarningsTab" onclick="switchRestaurantTab('earnings')"><i class="fa-solid fa-chart-line"></i>Revenue</li>
+<li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
+</ul>
+</aside>
+<div class="dashboard-content">
+<div id="rstOrdersPanel">
+<div class="dashboard-header"><h1>Merchant: <span id="restaurantName">Store</span></h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>Net Sales (80%)</h3><h2 id="restEarnings" style="color:#f59e0b;">KES 0</h2></div>
+<div class="dashboard-card"><h3>Orders Fulfilled</h3><h2 id="restCount">0</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Incoming Food Preparation Orders</h2>
+<div class="activity-list" id="foodRequestsContainer"></div>
+</div>
+</div>
+
+<div id="rstMenuPanel" style="display:none;">
+<div class="dashboard-header"><h1>Menu & Inventory Items</h1></div>
+<div class="dashboard-panel">
+<h2>Active Menu Catalog</h2>
+<div id="restaurantMenuItems">
+<div class="activity-item">
+<div><strong>Deluxe Pizza Deal</strong><span>KES 1,000</span></div>
+<span class="status completed">In Stock</span>
+</div>
+<div class="activity-item">
+<div><strong>Swahili Biryani Special</strong><span>KES 750</span></div>
+<span class="status completed">In Stock</span>
+</div>
+</div>
+</div>
+</div>
+
+<div id="rstEarningsPanel" style="display:none;">
+<div class="dashboard-header"><h1>Merchant Revenue</h1></div>
+<div class="dashboard-panel">
+<p style="margin-bottom:15px; color:#475569;">Track your kitchen sales performance. System commission (20%) is deducted automatically per order fulfilled.</p>
+<button class="quick-btn" style="background:#f59e0b;" onclick="alert('Merchant payout dispatched!')">Withdraw Earnings</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="adminDashboard" style="display:none; padding:0;">
+<div class="dashboard-wrapper">
+<aside class="dashboard-sidebar">
+<div class="dashboard-logo"><i class="fa-solid fa-user-gear"></i><span>Admin Console</span></div>
+<ul>
+<li id="adminRevenueTab" class="active" onclick="switchAdminTab('revenue')"><i class="fa-solid fa-wallet"></i>Revenue</li>
+<li id="adminCustomersTab" onclick="switchAdminTab('customers')"><i class="fa-solid fa-users"></i>Customers</li>
+<li id="adminDriversTab" onclick="switchAdminTab('drivers')"><i class="fa-solid fa-car"></i>Drivers</li>
+<li id="adminRestaurantsTab" onclick="switchAdminTab('restaurants')"><i class="fa-solid fa-utensils"></i>Restaurants</li>
+<li id="adminFeedbackTab" onclick="switchAdminTab('feedback')"><i class="fa-solid fa-star"></i>Feedback Moderation</li>
+<li id="adminSupportTab" onclick="switchAdminTab('support')"><i class="fa-solid fa-headset"></i>Support & Developer</li>
+<li id="adminSettingsTab" onclick="switchAdminTab('settings')"><i class="fa-solid fa-gear"></i>Settings</li>
+<li onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</li>
+</ul>
+</aside>
+<div class="dashboard-content">
+<div id="adminRevenuePanel">
+<div class="dashboard-header"><h1>System Financials</h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card">
+<h3>Platform Revenue (20% Cut)</h3>
+<h2 id="adminRevenue" style="color:var(--acx-pri,#16a34a);">KES 0</h2>
+</div>
+<div class="dashboard-card">
+<h3>Total System Transactions</h3>
+<h2 id="adminTotalTxCount">0</h2>
+</div>
+</div>
+<div class="dashboard-panel">
+<h2>Commission Engine</h2>
+<p style="color:#475569; line-height: 1.6;">The Acacia automated split engine retains a 20% platform management fee on every ride, food, or parcel transaction executed across local drivers and merchants.</p>
+</div>
+</div>
+
+<div id="adminCustomersPanel" style="display:none;">
+<div class="dashboard-header"><h1>Customer Management</h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>Total Customers</h3><h2 id="adminTotalCustomersCount">0</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Registered Customers</h2>
+<div class="activity-list" id="adminCustomersList"></div>
+</div>
+</div>
+
+<div id="adminDriversPanel" style="display:none;">
+<div class="dashboard-header"><h1>Driver Logistics Module</h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>Active Fleet Partners</h3><h2 id="adminTotalDriversCount">0</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Driver Registry</h2>
+<div class="activity-list" id="adminDriversList"></div>
+</div>
+</div>
+
+<div id="adminRestaurantsPanel" style="display:none;">
+<div class="dashboard-header"><h1>Restaurant Merchant Module</h1></div>
+<div class="dashboard-cards">
+<div class="dashboard-card"><h3>Registered Merchants</h3><h2 id="adminTotalRestaurantsCount">0</h2></div>
+</div>
+<div class="dashboard-panel">
+<h2>Merchant Registry</h2>
+<div class="activity-list" id="adminRestaurantsList"></div>
+</div>
+</div>
+
+<div id="adminFeedbackPanel" style="display:none;">
+<div class="dashboard-header"><h1>Feedback & Moderation Desk</h1></div>
+<div class="dashboard-panel">
+<h2>Public Testimonials Moderation (High Ratings 4-5★)</h2>
+<div class="activity-list" id="adminTestimonialsModerationList"></div>
+</div>
+<div class="dashboard-panel">
+<h2>Private Customer Improvement Feedback (Low Ratings 1-3★)</h2>
+<div class="activity-list" id="adminPrivateFeedbackList"></div>
+</div>
+</div>
+
+<div id="adminSupportPanel" style="display:none;">
+<div class="dashboard-header"><h1>Support Desk & Developer Tools</h1></div>
+
+<div class="dashboard-panel">
+<h2>Developer GPS Location Access</h2>
+<p style="color:#6b7280; margin-bottom:12px; font-size:14px;">Retrieve live high-accuracy location coordinates for developer debugging and geo-fencing diagnostics.</p>
+<button class="quick-btn" style="max-width:280px; margin-bottom:15px;" onclick="fetchDevLocation()"><i class="fa-solid fa-location-crosshairs"></i> Fetch Developer GPS Location</button>
+<div id="devLocationDisplay" style="padding:12px; background:#f1f5f9; border-radius:10px; font-weight:600; font-size:14px; color:#1e293b; display:none;"></div>
+</div>
+
+<div class="dashboard-panel">
+<h2>Active Support Complaints Inbox</h2>
+<div class="activity-list" id="adminComplaintsList"></div>
+</div>
+</div>
+
+<div id="adminSettingsPanel" style="display:none;">
+<div class="dashboard-header"><h1>Platform Settings</h1></div>
+<div class="dashboard-panel">
+<h2>Commission Settings</h2>
+<div style="padding:15px; background:#f8fafc; border-radius:12px; max-width: 500px;">
+<div class="input-box">
+<label>Platform Fee Percentage (%)</label>
+<input type="number" id="commissionRate" value="20" min="0" max="50">
+</div>
+<button class="quick-btn" onclick="saveCommissionRate()">Save Configuration</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<div id="aiAssistantWidget">
+<button class="ai-toggle-btn" onclick="toggleAIChat()"><i class="fa-solid fa-robot"></i> AI Guide</button>
+<div class="ai-chat-box" id="aiChatBox">
+<div class="ai-chat-header">
+<h4><i class="fa-solid fa-robot" style="color:var(--acx-pri-lt,#22c55e);"></i> Acacia AI Assistant</h4>
+<i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleAIChat()"></i>
+</div>
+<div class="ai-chat-body" id="aiChatBody">
+<div class="ai-msg bot">Hello! I am your Acacia AI Guide. How can I assist you with set up today?</div>
+<div class="ai-options">
+<div class="ai-chip" onclick="askAIGuide('driver_setup')">Driver Account Guide</div>
+<div class="ai-chip" onclick="askAIGuide('restaurant_setup')">Restaurant Account Guide</div>
+<div class="ai-chip" onclick="askAIGuide('customer_setup')">Customer Ride/Food Guide</div>
+</div>
+</div>
+<div class="ai-chat-footer">
+<input type="text" id="aiInput" placeholder="Ask AI how to setup account..." onkeydown="if(event.key==='Enter') sendAIMessage()">
+<button onclick="sendAIMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+</div>
+</div>
+</div>
 
 <script src="audit-log.js"></script>
 <script src="scripts.js"></script>
-  <script type="module" src="supabase-auth.js"></script>
 <script src="pwa-register.js" defer></script>
-
-<section class="flashscore-feed-section" aria-live="polite">
-  <h2>Sports fixtures &amp; results</h2>
-  <p data-flashscore-status>Connecting to Flashscore-sourced data…</p>
-  <div data-flashscore-events></div>
-</section>
-<script src="flashscore-config.js"></script>
-<script src="flashscore-feed.js"></script>
-<script src="production-data-guard.js"></script>
 <script src="ui-fixes.js" defer></script>
 </body>
 </html>

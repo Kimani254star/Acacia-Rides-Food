@@ -1,3430 +1,918 @@
 (function(){
-  if (!document.body.classList.contains('page-games')) return;
-
-  const backdrop = document.getElementById('modalBackdrop');
-  const modalTitle = document.getElementById('modalTitle');
-
-  function switchModalTab(formId){
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.form === formId));
-    document.querySelectorAll('.modal-form').forEach(f => f.classList.toggle('active', f.id === formId));
-    modalTitle.textContent = formId === 'signupForm' ? 'Create demo account' : 'Welcome back';
-  }
-  document.querySelectorAll('.modal-tab').forEach(tab => {
-    tab.addEventListener('click', () => switchModalTab(tab.dataset.form));
-  });
-
-  const openModal = (formId) => { switchModalTab(formId || 'loginForm'); backdrop.classList.add('open'); };
-  document.getElementById('loginBtn').addEventListener('click', () => openModal('loginForm'));
-  document.getElementById('signupBtn').addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('heroSignup')?.addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('modalClose').addEventListener('click', () => backdrop.classList.remove('open'));
-  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.classList.remove('open'); });
-
-  function setError(fieldId, show){
-    document.getElementById(fieldId).classList.toggle('has-error', show);
-  }
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-
-  function applySessionUI(name){
-    document.getElementById('loggedOutActions').style.display = 'none';
-    document.getElementById('accountMenu').style.display = 'block';
-    document.getElementById('accountName').textContent = name;
-    document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
-  }
-
-  function clearSessionUI(){
-    document.getElementById('loggedOutActions').style.display = 'flex';
-    document.getElementById('accountMenu').style.display = 'none';
-    document.getElementById('accountDropdown').classList.remove('open');
-  }
-
-  document.getElementById('accountChip').addEventListener('click', () => {
-    document.getElementById('accountDropdown').classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    const menu = document.getElementById('accountMenu');
-    if(menu.style.display !== 'none' && !menu.contains(e.target)){
-      document.getElementById('accountDropdown').classList.remove('open');
-    }
-  });
-
-  function renderSlip(){
-    const selected = document.querySelectorAll('.odd-btn.selected');
-    const pane = document.getElementById('slipPane');
-    if(!pane) return;
-    if(selected.length === 0){
-      pane.innerHTML = '<div class="wallet-balance-lbl">Bet slip</div><div class="slip-empty" id="slipEmptyMsg">No selections yet — tap any odds button to add it here (demo only).</div>';
-      return;
-    }
-    let rows = '';
-    selected.forEach(btn => {
-      const match = btn.closest('.match');
-      const liveCard = btn.closest('.live-card');
-      let teams = 'Selection';
-      if(match) teams = match.querySelector('.match-teams').textContent.trim();
-      else if(liveCard) teams = liveCard.querySelector('.live-fixture').textContent.trim();
-      const lbl = btn.querySelector('.lbl').textContent;
-      const val = btn.querySelector('.val').textContent;
-      rows += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:13.5px;">
-        <span>${teams} <span style="color:rgba(var(--text-rgb),0.5);">(${lbl})</span></span>
-        <span style="font-family:var(--mono); font-weight:600; color:var(--gold-dim);">${val}</span>
-      </div>`;
-    });
-    pane.innerHTML = '<div class="wallet-balance-lbl">Bet slip (' + selected.length + ')</div>' + rows +
-      '<button class="btn btn-gold" style="width:100%; margin-top:16px;" id="placeSlipBtn">Place bet (demo)</button>';
-    const placeBtn = document.getElementById('placeSlipBtn');
-    if(placeBtn) placeBtn.addEventListener('click', () => showToast('This is a demo — no real bet was placed'));
-  }
-
-  document.querySelectorAll('.odd-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('selected');
-      if (btn.classList.contains('selected')) showToast('Added to bet slip (demo only)');
-      renderSlip();
-    });
-  });
-
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.wallet-tab').forEach(tabBtn => {
-    tabBtn.addEventListener('click', () => {
-      document.querySelectorAll('.wallet-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.wallet-pane').forEach(p => p.classList.remove('active'));
-      tabBtn.classList.add('active');
-      document.getElementById(tabBtn.dataset.pane).classList.add('active');
-    });
-  });
-  document.getElementById('depositBtn')?.addEventListener('click', () => showToast('This is a demo — no real deposit was made'));
-  document.getElementById('withdrawBtn')?.addEventListener('click', () => showToast('This is a demo — no real withdrawal was made'));
-
-  (function(){
-    const prizes = [
-      { label: '2x Odds', color: '#F2A93B' },
-      { label: 'Try Again', color: '#1B211F' },
-      { label: 'Free Bet', color: '#D6472E' },
-      { label: 'No Win', color: '#1B211F' },
-      { label: '5x Odds', color: '#C98A2C' },
-      { label: 'Try Again', color: '#1B211F' },
-      { label: 'Cashback', color: '#D6472E' },
-      { label: 'No Win', color: '#1B211F' }
-    ];
-    const seg = 360 / prizes.length;
-    const g = document.getElementById('wheelSegments');
-    if(!g) return;
-    prizes.forEach((p, i) => {
-      const start = i * seg;
-      const end = start + seg;
-      const x1 = 100 + 98 * Math.cos(Math.PI * (start - 90) / 180);
-      const y1 = 100 + 98 * Math.sin(Math.PI * (start - 90) / 180);
-      const x2 = 100 + 98 * Math.cos(Math.PI * (end - 90) / 180);
-      const y2 = 100 + 98 * Math.sin(Math.PI * (end - 90) / 180);
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', `M100,100 L${x1},${y1} A98,98 0 0,1 ${x2},${y2} Z`);
-      path.setAttribute('fill', p.color);
-      path.setAttribute('stroke', 'var(--surface)');
-      path.setAttribute('stroke-width', '1');
-      g.appendChild(path);
-
-      const mid = start + seg / 2;
-      const tx = 100 + 62 * Math.cos(Math.PI * (mid - 90) / 180);
-      const ty = 100 + 62 * Math.sin(Math.PI * (mid - 90) / 180);
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('x', tx);
-      text.setAttribute('y', ty);
-      text.setAttribute('fill', '#F4EFE2');
-      text.setAttribute('font-size', '9');
-      text.setAttribute('font-family', 'IBM Plex Mono, monospace');
-      text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('transform', `rotate(${mid}, ${tx}, ${ty})`);
-      text.textContent = p.label;
-      g.appendChild(text);
-    });
-
-    const wheel = document.getElementById('spinWheel');
-    const spinBtn = document.getElementById('spinBtn');
-    const resultEl = document.getElementById('spinResult');
-    let currentRotation = 0;
-    let spun = false;
-
-    spinBtn.addEventListener('click', () => {
-      if(spun) return;
-      spun = true;
-      spinBtn.disabled = true;
-      resultEl.textContent = 'Spinning…';
-
-      const winIndex = Math.floor(Math.random() * prizes.length);
-      const targetMid = winIndex * seg + seg / 2;
-      const extraSpins = 5 * 360;
-      const rotation = currentRotation + extraSpins + (360 - targetMid);
-      currentRotation = rotation;
-      wheel.style.transform = `rotate(${rotation}deg)`;
-
-      setTimeout(() => {
-        const prize = prizes[winIndex];
-        resultEl.textContent = 'Landed on: ' + prize.label + ' (demo only — no real bonus applied)';
-        showToast('Spin result: ' + prize.label + ' (demo)');
-      }, 4600);
-    });
-  })();
-
-  (function(){
-    const card = document.getElementById('liveCard');
-    if(!card) return;
-    const badge = document.getElementById('liveBadge');
-    const badgeText = document.getElementById('liveBadgeText');
-    const kickoff = new Date(card.dataset.kickoff);
-    function updateLiveState(){
-      const now = new Date();
-      if(now >= kickoff){
-        badge.classList.add('is-live');
-        badgeText.textContent = 'Live';
-      } else {
-        badge.classList.remove('is-live');
-        badgeText.textContent = 'Pre-match';
-      }
-    }
-    updateLiveState();
-    setInterval(updateLiveState, 30000);
-  })();
-
-  const themeToggle = document.getElementById('themeToggle');
-  function applyTheme(theme){
-    if(theme === 'dark'){
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeToggle.textContent = '☀️';
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      themeToggle.textContent = '🌙';
-    }
-  }
-  const savedTheme = localStorage.getItem('saccaia-theme') || 'light';
-  applyTheme(savedTheme);
-  themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('saccaia-theme', next);
-  });
-
-  let toastTimer;
-  document.getElementById('footerSubscribe')?.addEventListener('click', () => {
-    const val = document.getElementById('footerEmail').value.trim();
-    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){
-      document.getElementById('footerEmail').value = '';
-      showToast('Demo only — no email was sent or stored');
-    } else {
-      showToast('Enter a valid email to try the demo signup');
-    }
-  });
-
-  function showToast(msg){
-    const toast = document.getElementById('slipToast');
-    if(!toast) return;
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
-  }
-
-  (function(){
-    const multVal = document.getElementById('multVal');
-    const multStatus = document.getElementById('multStatus');
-    const roundCaption = document.getElementById('roundCaption');
-    const plane = document.getElementById('planeEmoji');
-    const curvePath = document.getElementById('curvePath');
-    const curveFill = document.getElementById('curveFill');
-    const historyRow = document.getElementById('avHistory');
-    const betBtn1 = document.getElementById('betBtn1');
-    const allBetBtn = document.getElementById('allBetBtn');
-    if(!multVal || !betBtn1 || !allBetBtn) return;
-
-    let roundNum = 4821;
-    let multiplier = 1.00;
-    let crashPoint = 1.0;
-    let phase = 'waiting'; // waiting | flying | crashed
-    let bet1Placed = false, bet2Placed = false;
-    let rafId;
-
-    const seedHistory = [1.24, 2.87, 1.05, 6.42, 1.98, 1.11, 3.30, 1.67, 12.05, 1.02];
-    seedHistory.forEach(v => addHistoryPill(v));
-
-    function addHistoryPill(v){
-      const pill = document.createElement('div');
-      pill.className = 'hist-pill' + (v >= 10 ? ' big' : v >= 2 ? ' win' : '');
-      pill.textContent = v.toFixed(2) + 'x';
-      historyRow.appendChild(pill);
-      historyRow.scrollLeft = historyRow.scrollWidth;
-    }
-
-    function randomCrashPoint(){
-      const r = Math.random();
-      const val = 0.98 / (1 - r * 0.97);
-      return Math.max(1.00, Math.min(val, 40));
-    }
-
-    function resetStage(){
-      curvePath.setAttribute('d', 'M 0 280 L 0 280');
-      curveFill.setAttribute('d', 'M 0 280 L 0 280 L 0 280 Z');
-      plane.style.left = '0%';
-      plane.style.bottom = '0%';
-      multVal.textContent = '1.00x';
-      multVal.classList.remove('flying','crashed');
-    }
-
-    function startWaiting(){
-      phase = 'waiting';
-      bet1Placed = false; bet2Placed = false;
-      betBtn1.textContent = '';
-      betBtn1.innerHTML = 'Place bet<span class="sub">Stake locks in when round starts</span>';
-      allBetBtn.innerHTML = 'All Bet — max stake<span class="sub">Uses your full demo balance</span>';
-      betBtn1.classList.remove('placed');
-      allBetBtn.classList.remove('placed');
-      resetStage();
-      multStatus.textContent = 'Round starting…';
-      roundCaption.textContent = 'Round #' + roundNum + ' · waiting for next round';
-      let count = 3;
-      const waitTimer = setInterval(() => {
-        multStatus.textContent = 'Starts in ' + count + '…';
-        count--;
-        if(count < 0){
-          clearInterval(waitTimer);
-          startFlight();
-        }
-      }, 700);
-    }
-
-    function startFlight(){
-      phase = 'flying';
-      roundNum++;
-      multiplier = 1.00;
-      crashPoint = randomCrashPoint();
-      multStatus.textContent = 'Flying…';
-      multVal.classList.add('flying');
-      roundCaption.textContent = 'Round #' + roundNum + ' · demo simulation';
-      const startTime = performance.now();
-
-      function tick(now){
-        const t = (now - startTime) / 1000;
-        multiplier = 1 + 0.06 * t * t + 0.15 * t;
-
-        if(multiplier >= crashPoint){
-          crashNow();
-          return;
-        }
-
-        multVal.textContent = multiplier.toFixed(2) + 'x';
-
-        const progress = Math.min(t / 6, 1); // visual progress cap
-        const w = 600, h = 280;
-        const x = progress * w;
-        const y = h - Math.min(progress * progress * h * 1.4, h - 20);
-        curvePath.setAttribute('d', `M 0 ${h} Q ${x*0.5} ${h}, ${x} ${y}`);
-        curveFill.setAttribute('d', `M 0 ${h} Q ${x*0.5} ${h}, ${x} ${y} L ${x} ${h} Z`);
-        plane.style.left = Math.min((x/w)*100, 92) + '%';
-        plane.style.bottom = Math.min(((h-y)/h)*82, 78) + '%';
-
-        checkAutoCashout('auto1', bet1Placed, betBtn1, (v)=>bet1Placed=v);
-        checkAutoCashout('auto2', bet2Placed, allBetBtn, (v)=>bet2Placed=v);
-
-        rafId = requestAnimationFrame(tick);
-      }
-      rafId = requestAnimationFrame(tick);
-    }
-
-    function checkAutoCashout(inputId, placed, btn, setter){
-      if(!placed) return;
-      const raw = document.getElementById(inputId).value.replace('x','').trim();
-      const target = parseFloat(raw);
-      if(!isNaN(target) && multiplier >= target){
-        setter(false);
-        btn.classList.remove('placed');
-        btn.innerHTML = 'Cashed out at ' + multiplier.toFixed(2) + 'x<span class="sub">Demo winnings credited</span>';
-        showToast('Cashed out at ' + multiplier.toFixed(2) + 'x (demo)');
-      }
-    }
-
-    function crashNow(){
-      phase = 'crashed';
-      cancelAnimationFrame(rafId);
-      multVal.textContent = crashPoint.toFixed(2) + 'x';
-      multVal.classList.remove('flying');
-      multVal.classList.add('crashed');
-      multStatus.textContent = 'Flew away!';
-      addHistoryPill(crashPoint);
-
-      if(bet1Placed){
-        betBtn1.innerHTML = 'Round crashed — lost stake<span class="sub">Demo balance adjusted</span>';
-      }
-      if(bet2Placed){
-        allBetBtn.innerHTML = 'Round crashed — lost stake<span class="sub">Demo balance adjusted</span>';
-      }
-
-      setTimeout(startWaiting, 2200);
-    }
-
-    document.querySelectorAll('.stake-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const target = document.getElementById(chip.dataset.target);
-        if(chip.dataset.reset){
-          target.value = '0';
-        } else {
-          const cur = parseInt(target.value) || 0;
-          target.value = cur + parseInt(chip.dataset.val);
-        }
-      });
-    });
-
-    betBtn1.addEventListener('click', () => {
-      if(phase !== 'waiting'){ showToast('Wait for the next round to place a bet'); return; }
-      bet1Placed = !bet1Placed;
-      betBtn1.classList.toggle('placed', bet1Placed);
-      betBtn1.innerHTML = bet1Placed
-        ? 'Cancel bet<span class="sub">Stake: KES ' + (document.getElementById('stake1').value || 0) + '</span>'
-        : 'Place bet<span class="sub">Stake locks in when round starts</span>';
-      if(bet1Placed) showToast('Bet placed for next round (demo)');
-    });
-
-    allBetBtn.addEventListener('click', () => {
-      if(phase !== 'waiting'){ showToast('Wait for the next round to place a bet'); return; }
-      document.getElementById('stake2').value = '10000';
-      bet2Placed = !bet2Placed;
-      allBetBtn.classList.toggle('placed', bet2Placed);
-      allBetBtn.innerHTML = bet2Placed
-        ? 'Cancel All Bet<span class="sub">Full demo balance staked</span>'
-        : 'All Bet — max stake<span class="sub">Uses your full demo balance</span>';
-      if(bet2Placed) showToast('All Bet placed — full demo balance staked');
-    });
-
-    startWaiting();
-  })();
-
-})();
-
-(function(){
-  if (!document.body.classList.contains('page-how')) return;
-
-  const backdrop = document.getElementById('modalBackdrop');
-  const modalTitle = document.getElementById('modalTitle');
-
-  function switchModalTab(formId){
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.form === formId));
-    document.querySelectorAll('.modal-form').forEach(f => f.classList.toggle('active', f.id === formId));
-    modalTitle.textContent = formId === 'signupForm' ? 'Create demo account' : 'Welcome back';
-  }
-  document.querySelectorAll('.modal-tab').forEach(tab => {
-    tab.addEventListener('click', () => switchModalTab(tab.dataset.form));
-  });
-
-  const openModal = (formId) => { switchModalTab(formId || 'loginForm'); backdrop.classList.add('open'); };
-  document.getElementById('loginBtn').addEventListener('click', () => openModal('loginForm'));
-  document.getElementById('signupBtn').addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('heroSignup')?.addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('modalClose').addEventListener('click', () => backdrop.classList.remove('open'));
-  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.classList.remove('open'); });
-
-  function setError(fieldId, show){
-    document.getElementById(fieldId).classList.toggle('has-error', show);
-  }
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    setError('loginEmailField', !emailOk);
-    setError('loginPasswordField', !passOk);
-    if(!emailOk || !passOk) return;
-    startFakeSession(email.split('@')[0]);
-  });
-
-  document.getElementById('signupForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value.trim();
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('signupConfirm').value;
-    const nameOk = name.length > 0;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    const confirmOk = passOk && password === confirm;
-    setError('signupNameField', !nameOk);
-    setError('signupEmailField', !emailOk);
-    setError('signupPasswordField', !passOk);
-    setError('signupConfirmField', !confirmOk);
-    if(!nameOk || !emailOk || !passOk || !confirmOk) return;
-    startFakeSession(name);
-  });
-
-  function startFakeSession(name){
-    sessionStorage.setItem('saccaia-demo-user', name);
-    backdrop.classList.remove('open');
-    applySessionUI(name);
-    showToast('Signed in as ' + name + ' — demo session only, nothing was sent to a server');
-  }
-
-  function applySessionUI(name){
-    document.getElementById('loggedOutActions').style.display = 'none';
-    document.getElementById('accountMenu').style.display = 'block';
-    document.getElementById('accountName').textContent = name;
-    document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
-  }
-
-  function clearSessionUI(){
-    document.getElementById('loggedOutActions').style.display = 'flex';
-    document.getElementById('accountMenu').style.display = 'none';
-    document.getElementById('accountDropdown').classList.remove('open');
-  }
-
-  document.getElementById('accountChip').addEventListener('click', () => {
-    document.getElementById('accountDropdown').classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    const menu = document.getElementById('accountMenu');
-    if(menu.style.display !== 'none' && !menu.contains(e.target)){
-      document.getElementById('accountDropdown').classList.remove('open');
-    }
-  });
-
-  function renderSlip(){
-    const selected = document.querySelectorAll('.odd-btn.selected');
-    const pane = document.getElementById('slipPane');
-    if(!pane) return;
-    if(selected.length === 0){
-      pane.innerHTML = '<div class="wallet-balance-lbl">Bet slip</div><div class="slip-empty" id="slipEmptyMsg">No selections yet — tap any odds button to add it here (demo only).</div>';
-      return;
-    }
-    let rows = '';
-    selected.forEach(btn => {
-      const match = btn.closest('.match');
-      const liveCard = btn.closest('.live-card');
-      let teams = 'Selection';
-      if(match) teams = match.querySelector('.match-teams').textContent.trim();
-      else if(liveCard) teams = liveCard.querySelector('.live-fixture').textContent.trim();
-      const lbl = btn.querySelector('.lbl').textContent;
-      const val = btn.querySelector('.val').textContent;
-      rows += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:13.5px;">
-        <span>${teams} <span style="color:rgba(var(--text-rgb),0.5);">(${lbl})</span></span>
-        <span style="font-family:var(--mono); font-weight:600; color:var(--gold-dim);">${val}</span>
-      </div>`;
-    });
-    pane.innerHTML = '<div class="wallet-balance-lbl">Bet slip (' + selected.length + ')</div>' + rows +
-      '<button class="btn btn-gold" style="width:100%; margin-top:16px;" id="placeSlipBtn">Place bet (demo)</button>';
-    const placeBtn = document.getElementById('placeSlipBtn');
-    if(placeBtn) placeBtn.addEventListener('click', () => showToast('This is a demo — no real bet was placed'));
-  }
-
-  document.querySelectorAll('.odd-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('selected');
-      if (btn.classList.contains('selected')) showToast('Added to bet slip (demo only)');
-      renderSlip();
-    });
-  });
-
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.wallet-tab').forEach(tabBtn => {
-    tabBtn.addEventListener('click', () => {
-      document.querySelectorAll('.wallet-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.wallet-pane').forEach(p => p.classList.remove('active'));
-      tabBtn.classList.add('active');
-      document.getElementById(tabBtn.dataset.pane).classList.add('active');
-    });
-  });
-  document.getElementById('depositBtn')?.addEventListener('click', () => showToast('This is a demo — no real deposit was made'));
-  document.getElementById('withdrawBtn')?.addEventListener('click', () => showToast('This is a demo — no real withdrawal was made'));
-
-  (function(){
-    const prizes = [
-      { label: '2x Odds', color: '#F2A93B' },
-      { label: 'Try Again', color: '#1B211F' },
-      { label: 'Free Bet', color: '#D6472E' },
-      { label: 'No Win', color: '#1B211F' },
-      { label: '5x Odds', color: '#C98A2C' },
-      { label: 'Try Again', color: '#1B211F' },
-      { label: 'Cashback', color: '#D6472E' },
-      { label: 'No Win', color: '#1B211F' }
-    ];
-    const seg = 360 / prizes.length;
-    const g = document.getElementById('wheelSegments');
-    if(!g) return;
-    prizes.forEach((p, i) => {
-      const start = i * seg;
-      const end = start + seg;
-      const x1 = 100 + 98 * Math.cos(Math.PI * (start - 90) / 180);
-      const y1 = 100 + 98 * Math.sin(Math.PI * (start - 90) / 180);
-      const x2 = 100 + 98 * Math.cos(Math.PI * (end - 90) / 180);
-      const y2 = 100 + 98 * Math.sin(Math.PI * (end - 90) / 180);
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', `M100,100 L${x1},${y1} A98,98 0 0,1 ${x2},${y2} Z`);
-      path.setAttribute('fill', p.color);
-      path.setAttribute('stroke', 'var(--surface)');
-      path.setAttribute('stroke-width', '1');
-      g.appendChild(path);
-
-      const mid = start + seg / 2;
-      const tx = 100 + 62 * Math.cos(Math.PI * (mid - 90) / 180);
-      const ty = 100 + 62 * Math.sin(Math.PI * (mid - 90) / 180);
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('x', tx);
-      text.setAttribute('y', ty);
-      text.setAttribute('fill', '#F4EFE2');
-      text.setAttribute('font-size', '9');
-      text.setAttribute('font-family', 'IBM Plex Mono, monospace');
-      text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('transform', `rotate(${mid}, ${tx}, ${ty})`);
-      text.textContent = p.label;
-      g.appendChild(text);
-    });
-
-    const wheel = document.getElementById('spinWheel');
-    const spinBtn = document.getElementById('spinBtn');
-    const resultEl = document.getElementById('spinResult');
-    let currentRotation = 0;
-    let spun = false;
-
-    spinBtn.addEventListener('click', () => {
-      if(spun) return;
-      spun = true;
-      spinBtn.disabled = true;
-      resultEl.textContent = 'Spinning…';
-
-      const winIndex = Math.floor(Math.random() * prizes.length);
-      const targetMid = winIndex * seg + seg / 2;
-      const extraSpins = 5 * 360;
-      const rotation = currentRotation + extraSpins + (360 - targetMid);
-      currentRotation = rotation;
-      wheel.style.transform = `rotate(${rotation}deg)`;
-
-      setTimeout(() => {
-        const prize = prizes[winIndex];
-        resultEl.textContent = 'Landed on: ' + prize.label + ' (demo only — no real bonus applied)';
-        showToast('Spin result: ' + prize.label + ' (demo)');
-      }, 4600);
-    });
-  })();
-
-  (function(){
-    const card = document.getElementById('liveCard');
-    if(!card) return;
-    const badge = document.getElementById('liveBadge');
-    const badgeText = document.getElementById('liveBadgeText');
-    const kickoff = new Date(card.dataset.kickoff);
-    function updateLiveState(){
-      const now = new Date();
-      if(now >= kickoff){
-        badge.classList.add('is-live');
-        badgeText.textContent = 'Live';
-      } else {
-        badge.classList.remove('is-live');
-        badgeText.textContent = 'Pre-match';
-      }
-    }
-    updateLiveState();
-    setInterval(updateLiveState, 30000);
-  })();
-
-  const themeToggle = document.getElementById('themeToggle');
-  function applyTheme(theme){
-    if(theme === 'dark'){
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeToggle.textContent = '☀️';
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      themeToggle.textContent = '🌙';
-    }
-  }
-  const savedTheme = localStorage.getItem('saccaia-theme') || 'light';
-  applyTheme(savedTheme);
-  themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('saccaia-theme', next);
-  });
-
-  let toastTimer;
-  document.getElementById('footerSubscribe')?.addEventListener('click', () => {
-    const val = document.getElementById('footerEmail').value.trim();
-    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){
-      document.getElementById('footerEmail').value = '';
-      showToast('Demo only — no email was sent or stored');
-    } else {
-      showToast('Enter a valid email to try the demo signup');
-    }
-  });
-
-  function showToast(msg){
-    const toast = document.getElementById('slipToast');
-    if(!toast) return;
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
-  }
-
-  (function(){
-    const multVal = document.getElementById('multVal');
-    const multStatus = document.getElementById('multStatus');
-    const roundCaption = document.getElementById('roundCaption');
-    const plane = document.getElementById('planeEmoji');
-    const curvePath = document.getElementById('curvePath');
-    const curveFill = document.getElementById('curveFill');
-    const historyRow = document.getElementById('avHistory');
-    const betBtn1 = document.getElementById('betBtn1');
-    const allBetBtn = document.getElementById('allBetBtn');
-    if(!multVal || !betBtn1 || !allBetBtn) return;
-
-    let roundNum = 4821;
-    let multiplier = 1.00;
-    let crashPoint = 1.0;
-    let phase = 'waiting'; // waiting | flying | crashed
-    let bet1Placed = false, bet2Placed = false;
-    let rafId;
-
-    const seedHistory = [1.24, 2.87, 1.05, 6.42, 1.98, 1.11, 3.30, 1.67, 12.05, 1.02];
-    seedHistory.forEach(v => addHistoryPill(v));
-
-    function addHistoryPill(v){
-      const pill = document.createElement('div');
-      pill.className = 'hist-pill' + (v >= 10 ? ' big' : v >= 2 ? ' win' : '');
-      pill.textContent = v.toFixed(2) + 'x';
-      historyRow.appendChild(pill);
-      historyRow.scrollLeft = historyRow.scrollWidth;
-    }
-
-    function randomCrashPoint(){
-      const r = Math.random();
-      const val = 0.98 / (1 - r * 0.97);
-      return Math.max(1.00, Math.min(val, 40));
-    }
-
-    function resetStage(){
-      curvePath.setAttribute('d', 'M 0 280 L 0 280');
-      curveFill.setAttribute('d', 'M 0 280 L 0 280 L 0 280 Z');
-      plane.style.left = '0%';
-      plane.style.bottom = '0%';
-      multVal.textContent = '1.00x';
-      multVal.classList.remove('flying','crashed');
-    }
-
-    function startWaiting(){
-      phase = 'waiting';
-      bet1Placed = false; bet2Placed = false;
-      betBtn1.textContent = '';
-      betBtn1.innerHTML = 'Place bet<span class="sub">Stake locks in when round starts</span>';
-      allBetBtn.innerHTML = 'All Bet — max stake<span class="sub">Uses your full demo balance</span>';
-      betBtn1.classList.remove('placed');
-      allBetBtn.classList.remove('placed');
-      resetStage();
-      multStatus.textContent = 'Round starting…';
-      roundCaption.textContent = 'Round #' + roundNum + ' · waiting for next round';
-      let count = 3;
-      const waitTimer = setInterval(() => {
-        multStatus.textContent = 'Starts in ' + count + '…';
-        count--;
-        if(count < 0){
-          clearInterval(waitTimer);
-          startFlight();
-        }
-      }, 700);
-    }
-
-    function startFlight(){
-      phase = 'flying';
-      roundNum++;
-      multiplier = 1.00;
-      crashPoint = randomCrashPoint();
-      multStatus.textContent = 'Flying…';
-      multVal.classList.add('flying');
-      roundCaption.textContent = 'Round #' + roundNum + ' · demo simulation';
-      const startTime = performance.now();
-
-      function tick(now){
-        const t = (now - startTime) / 1000;
-        multiplier = 1 + 0.06 * t * t + 0.15 * t;
-
-        if(multiplier >= crashPoint){
-          crashNow();
-          return;
-        }
-
-        multVal.textContent = multiplier.toFixed(2) + 'x';
-
-        const progress = Math.min(t / 6, 1); // visual progress cap
-        const w = 600, h = 280;
-        const x = progress * w;
-        const y = h - Math.min(progress * progress * h * 1.4, h - 20);
-        curvePath.setAttribute('d', `M 0 ${h} Q ${x*0.5} ${h}, ${x} ${y}`);
-        curveFill.setAttribute('d', `M 0 ${h} Q ${x*0.5} ${h}, ${x} ${y} L ${x} ${h} Z`);
-        plane.style.left = Math.min((x/w)*100, 92) + '%';
-        plane.style.bottom = Math.min(((h-y)/h)*82, 78) + '%';
-
-        checkAutoCashout('auto1', bet1Placed, betBtn1, (v)=>bet1Placed=v);
-        checkAutoCashout('auto2', bet2Placed, allBetBtn, (v)=>bet2Placed=v);
-
-        rafId = requestAnimationFrame(tick);
-      }
-      rafId = requestAnimationFrame(tick);
-    }
-
-    function checkAutoCashout(inputId, placed, btn, setter){
-      if(!placed) return;
-      const raw = document.getElementById(inputId).value.replace('x','').trim();
-      const target = parseFloat(raw);
-      if(!isNaN(target) && multiplier >= target){
-        setter(false);
-        btn.classList.remove('placed');
-        btn.innerHTML = 'Cashed out at ' + multiplier.toFixed(2) + 'x<span class="sub">Demo winnings credited</span>';
-        showToast('Cashed out at ' + multiplier.toFixed(2) + 'x (demo)');
-      }
-    }
-
-    function crashNow(){
-      phase = 'crashed';
-      cancelAnimationFrame(rafId);
-      multVal.textContent = crashPoint.toFixed(2) + 'x';
-      multVal.classList.remove('flying');
-      multVal.classList.add('crashed');
-      multStatus.textContent = 'Flew away!';
-      addHistoryPill(crashPoint);
-
-      if(bet1Placed){
-        betBtn1.innerHTML = 'Round crashed — lost stake<span class="sub">Demo balance adjusted</span>';
-      }
-      if(bet2Placed){
-        allBetBtn.innerHTML = 'Round crashed — lost stake<span class="sub">Demo balance adjusted</span>';
-      }
-
-      setTimeout(startWaiting, 2200);
-    }
-
-    document.querySelectorAll('.stake-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const target = document.getElementById(chip.dataset.target);
-        if(chip.dataset.reset){
-          target.value = '0';
-        } else {
-          const cur = parseInt(target.value) || 0;
-          target.value = cur + parseInt(chip.dataset.val);
-        }
-      });
-    });
-
-    betBtn1.addEventListener('click', () => {
-      if(phase !== 'waiting'){ showToast('Wait for the next round to place a bet'); return; }
-      bet1Placed = !bet1Placed;
-      betBtn1.classList.toggle('placed', bet1Placed);
-      betBtn1.innerHTML = bet1Placed
-        ? 'Cancel bet<span class="sub">Stake: KES ' + (document.getElementById('stake1').value || 0) + '</span>'
-        : 'Place bet<span class="sub">Stake locks in when round starts</span>';
-      if(bet1Placed) showToast('Bet placed for next round (demo)');
-    });
-
-    allBetBtn.addEventListener('click', () => {
-      if(phase !== 'waiting'){ showToast('Wait for the next round to place a bet'); return; }
-      document.getElementById('stake2').value = '10000';
-      bet2Placed = !bet2Placed;
-      allBetBtn.classList.toggle('placed', bet2Placed);
-      allBetBtn.innerHTML = bet2Placed
-        ? 'Cancel All Bet<span class="sub">Full demo balance staked</span>'
-        : 'All Bet — max stake<span class="sub">Uses your full demo balance</span>';
-      if(bet2Placed) showToast('All Bet placed — full demo balance staked');
-    });
-
-    startWaiting();
-  })();
-
-})();
-
-(function(){
-  if (!document.body.classList.contains('page-markets')) return;
-
-  const backdrop = document.getElementById('modalBackdrop');
-  const modalTitle = document.getElementById('modalTitle');
-
-  function switchModalTab(formId){
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.form === formId));
-    document.querySelectorAll('.modal-form').forEach(f => f.classList.toggle('active', f.id === formId));
-    modalTitle.textContent = formId === 'signupForm' ? 'Create demo account' : 'Welcome back';
-  }
-  document.querySelectorAll('.modal-tab').forEach(tab => {
-    tab.addEventListener('click', () => switchModalTab(tab.dataset.form));
-  });
-
-  const openModal = (formId) => { switchModalTab(formId || 'loginForm'); backdrop.classList.add('open'); };
-  document.getElementById('loginBtn').addEventListener('click', () => openModal('loginForm'));
-  document.getElementById('signupBtn').addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('heroSignup')?.addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('modalClose').addEventListener('click', () => backdrop.classList.remove('open'));
-  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.classList.remove('open'); });
-
-  function setError(fieldId, show){
-    document.getElementById(fieldId).classList.toggle('has-error', show);
-  }
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    setError('loginEmailField', !emailOk);
-    setError('loginPasswordField', !passOk);
-    if(!emailOk || !passOk) return;
-    startFakeSession(email.split('@')[0]);
-  });
-
-  document.getElementById('signupForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value.trim();
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('signupConfirm').value;
-    const nameOk = name.length > 0;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    const confirmOk = passOk && password === confirm;
-    setError('signupNameField', !nameOk);
-    setError('signupEmailField', !emailOk);
-    setError('signupPasswordField', !passOk);
-    setError('signupConfirmField', !confirmOk);
-    if(!nameOk || !emailOk || !passOk || !confirmOk) return;
-    startFakeSession(name);
-  });
-
-  function startFakeSession(name){
-    sessionStorage.setItem('saccaia-demo-user', name);
-    backdrop.classList.remove('open');
-    applySessionUI(name);
-    showToast('Signed in as ' + name + ' — demo session only, nothing was sent to a server');
-  }
-
-  function applySessionUI(name){
-    document.getElementById('loggedOutActions').style.display = 'none';
-    document.getElementById('accountMenu').style.display = 'block';
-    document.getElementById('accountName').textContent = name;
-    document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
-  }
-
-  function clearSessionUI(){
-    document.getElementById('loggedOutActions').style.display = 'flex';
-    document.getElementById('accountMenu').style.display = 'none';
-    document.getElementById('accountDropdown').classList.remove('open');
-  }
-
-  document.getElementById('accountChip').addEventListener('click', () => {
-    document.getElementById('accountDropdown').classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    const menu = document.getElementById('accountMenu');
-    if(menu.style.display !== 'none' && !menu.contains(e.target)){
-      document.getElementById('accountDropdown').classList.remove('open');
-    }
-  });
-
-  function renderSlip(){
-    const selected = document.querySelectorAll('.odd-btn.selected');
-    const pane = document.getElementById('slipPane');
-    if(!pane) return;
-    if(selected.length === 0){
-      pane.innerHTML = '<div class="wallet-balance-lbl">Bet slip</div><div class="slip-empty" id="slipEmptyMsg">No selections yet — tap any odds button to add it here (demo only).</div>';
-      return;
-    }
-    let rows = '';
-    selected.forEach(btn => {
-      const match = btn.closest('.match');
-      const liveCard = btn.closest('.live-card');
-      let teams = 'Selection';
-      if(match) teams = match.querySelector('.match-teams').textContent.trim();
-      else if(liveCard) teams = liveCard.querySelector('.live-fixture').textContent.trim();
-      const lbl = btn.querySelector('.lbl').textContent;
-      const val = btn.querySelector('.val').textContent;
-      rows += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:13.5px;">
-        <span>${teams} <span style="color:rgba(var(--text-rgb),0.5);">(${lbl})</span></span>
-        <span style="font-family:var(--mono); font-weight:600; color:var(--gold-dim);">${val}</span>
-      </div>`;
-    });
-    pane.innerHTML = '<div class="wallet-balance-lbl">Bet slip (' + selected.length + ')</div>' + rows +
-      '<button class="btn btn-gold" style="width:100%; margin-top:16px;" id="placeSlipBtn">Place bet (demo)</button>';
-    const placeBtn = document.getElementById('placeSlipBtn');
-    if(placeBtn) placeBtn.addEventListener('click', () => showToast('This is a demo — no real bet was placed'));
-  }
-
-  document.querySelectorAll('.odd-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('selected');
-      if (btn.classList.contains('selected')) showToast('Added to bet slip (demo only)');
-      renderSlip();
-    });
-  });
-
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.wallet-tab').forEach(tabBtn => {
-    tabBtn.addEventListener('click', () => {
-      document.querySelectorAll('.wallet-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.wallet-pane').forEach(p => p.classList.remove('active'));
-      tabBtn.classList.add('active');
-      document.getElementById(tabBtn.dataset.pane).classList.add('active');
-    });
-  });
-  document.getElementById('depositBtn')?.addEventListener('click', () => showToast('This is a demo — no real deposit was made'));
-  document.getElementById('withdrawBtn')?.addEventListener('click', () => showToast('This is a demo — no real withdrawal was made'));
-
-  (function(){
-    const prizes = [
-      { label: '2x Odds', color: '#F2A93B' },
-      { label: 'Try Again', color: '#1B211F' },
-      { label: 'Free Bet', color: '#D6472E' },
-      { label: 'No Win', color: '#1B211F' },
-      { label: '5x Odds', color: '#C98A2C' },
-      { label: 'Try Again', color: '#1B211F' },
-      { label: 'Cashback', color: '#D6472E' },
-      { label: 'No Win', color: '#1B211F' }
-    ];
-    const seg = 360 / prizes.length;
-    const g = document.getElementById('wheelSegments');
-    if(!g) return;
-    prizes.forEach((p, i) => {
-      const start = i * seg;
-      const end = start + seg;
-      const x1 = 100 + 98 * Math.cos(Math.PI * (start - 90) / 180);
-      const y1 = 100 + 98 * Math.sin(Math.PI * (start - 90) / 180);
-      const x2 = 100 + 98 * Math.cos(Math.PI * (end - 90) / 180);
-      const y2 = 100 + 98 * Math.sin(Math.PI * (end - 90) / 180);
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', `M100,100 L${x1},${y1} A98,98 0 0,1 ${x2},${y2} Z`);
-      path.setAttribute('fill', p.color);
-      path.setAttribute('stroke', 'var(--surface)');
-      path.setAttribute('stroke-width', '1');
-      g.appendChild(path);
-
-      const mid = start + seg / 2;
-      const tx = 100 + 62 * Math.cos(Math.PI * (mid - 90) / 180);
-      const ty = 100 + 62 * Math.sin(Math.PI * (mid - 90) / 180);
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('x', tx);
-      text.setAttribute('y', ty);
-      text.setAttribute('fill', '#F4EFE2');
-      text.setAttribute('font-size', '9');
-      text.setAttribute('font-family', 'IBM Plex Mono, monospace');
-      text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('transform', `rotate(${mid}, ${tx}, ${ty})`);
-      text.textContent = p.label;
-      g.appendChild(text);
-    });
-
-    const wheel = document.getElementById('spinWheel');
-    const spinBtn = document.getElementById('spinBtn');
-    const resultEl = document.getElementById('spinResult');
-    let currentRotation = 0;
-    let spun = false;
-
-    spinBtn.addEventListener('click', () => {
-      if(spun) return;
-      spun = true;
-      spinBtn.disabled = true;
-      resultEl.textContent = 'Spinning…';
-
-      const winIndex = Math.floor(Math.random() * prizes.length);
-      const targetMid = winIndex * seg + seg / 2;
-      const extraSpins = 5 * 360;
-      const rotation = currentRotation + extraSpins + (360 - targetMid);
-      currentRotation = rotation;
-      wheel.style.transform = `rotate(${rotation}deg)`;
-
-      setTimeout(() => {
-        const prize = prizes[winIndex];
-        resultEl.textContent = 'Landed on: ' + prize.label + ' (demo only — no real bonus applied)';
-        showToast('Spin result: ' + prize.label + ' (demo)');
-      }, 4600);
-    });
-  })();
-
-  (function(){
-    const card = document.getElementById('liveCard');
-    if(!card) return;
-    const badge = document.getElementById('liveBadge');
-    const badgeText = document.getElementById('liveBadgeText');
-    const kickoff = new Date(card.dataset.kickoff);
-    function updateLiveState(){
-      const now = new Date();
-      if(now >= kickoff){
-        badge.classList.add('is-live');
-        badgeText.textContent = 'Live';
-      } else {
-        badge.classList.remove('is-live');
-        badgeText.textContent = 'Pre-match';
-      }
-    }
-    updateLiveState();
-    setInterval(updateLiveState, 30000);
-  })();
-
-  const themeToggle = document.getElementById('themeToggle');
-  function applyTheme(theme){
-    if(theme === 'dark'){
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeToggle.textContent = '☀️';
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      themeToggle.textContent = '🌙';
-    }
-  }
-  const savedTheme = localStorage.getItem('saccaia-theme') || 'light';
-  applyTheme(savedTheme);
-  themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('saccaia-theme', next);
-  });
-
-  let toastTimer;
-  document.getElementById('footerSubscribe')?.addEventListener('click', () => {
-    const val = document.getElementById('footerEmail').value.trim();
-    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){
-      document.getElementById('footerEmail').value = '';
-      showToast('Demo only — no email was sent or stored');
-    } else {
-      showToast('Enter a valid email to try the demo signup');
-    }
-  });
-
-  function showToast(msg){
-    const toast = document.getElementById('slipToast');
-    if(!toast) return;
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
-  }
-
-  (function(){
-    const multVal = document.getElementById('multVal');
-    const multStatus = document.getElementById('multStatus');
-    const roundCaption = document.getElementById('roundCaption');
-    const plane = document.getElementById('planeEmoji');
-    const curvePath = document.getElementById('curvePath');
-    const curveFill = document.getElementById('curveFill');
-    const historyRow = document.getElementById('avHistory');
-    const betBtn1 = document.getElementById('betBtn1');
-    const allBetBtn = document.getElementById('allBetBtn');
-    if(!multVal || !betBtn1 || !allBetBtn) return;
-
-    let roundNum = 4821;
-    let multiplier = 1.00;
-    let crashPoint = 1.0;
-    let phase = 'waiting'; // waiting | flying | crashed
-    let bet1Placed = false, bet2Placed = false;
-    let rafId;
-
-    const seedHistory = [1.24, 2.87, 1.05, 6.42, 1.98, 1.11, 3.30, 1.67, 12.05, 1.02];
-    seedHistory.forEach(v => addHistoryPill(v));
-
-    function addHistoryPill(v){
-      const pill = document.createElement('div');
-      pill.className = 'hist-pill' + (v >= 10 ? ' big' : v >= 2 ? ' win' : '');
-      pill.textContent = v.toFixed(2) + 'x';
-      historyRow.appendChild(pill);
-      historyRow.scrollLeft = historyRow.scrollWidth;
-    }
-
-    function randomCrashPoint(){
-      const r = Math.random();
-      const val = 0.98 / (1 - r * 0.97);
-      return Math.max(1.00, Math.min(val, 40));
-    }
-
-    function resetStage(){
-      curvePath.setAttribute('d', 'M 0 280 L 0 280');
-      curveFill.setAttribute('d', 'M 0 280 L 0 280 L 0 280 Z');
-      plane.style.left = '0%';
-      plane.style.bottom = '0%';
-      multVal.textContent = '1.00x';
-      multVal.classList.remove('flying','crashed');
-    }
-
-    function startWaiting(){
-      phase = 'waiting';
-      bet1Placed = false; bet2Placed = false;
-      betBtn1.textContent = '';
-      betBtn1.innerHTML = 'Place bet<span class="sub">Stake locks in when round starts</span>';
-      allBetBtn.innerHTML = 'All Bet — max stake<span class="sub">Uses your full demo balance</span>';
-      betBtn1.classList.remove('placed');
-      allBetBtn.classList.remove('placed');
-      resetStage();
-      multStatus.textContent = 'Round starting…';
-      roundCaption.textContent = 'Round #' + roundNum + ' · waiting for next round';
-      let count = 3;
-      const waitTimer = setInterval(() => {
-        multStatus.textContent = 'Starts in ' + count + '…';
-        count--;
-        if(count < 0){
-          clearInterval(waitTimer);
-          startFlight();
-        }
-      }, 700);
-    }
-
-    function startFlight(){
-      phase = 'flying';
-      roundNum++;
-      multiplier = 1.00;
-      crashPoint = randomCrashPoint();
-      multStatus.textContent = 'Flying…';
-      multVal.classList.add('flying');
-      roundCaption.textContent = 'Round #' + roundNum + ' · demo simulation';
-      const startTime = performance.now();
-
-      function tick(now){
-        const t = (now - startTime) / 1000;
-        multiplier = 1 + 0.06 * t * t + 0.15 * t;
-
-        if(multiplier >= crashPoint){
-          crashNow();
-          return;
-        }
-
-        multVal.textContent = multiplier.toFixed(2) + 'x';
-
-        const progress = Math.min(t / 6, 1); // visual progress cap
-        const w = 600, h = 280;
-        const x = progress * w;
-        const y = h - Math.min(progress * progress * h * 1.4, h - 20);
-        curvePath.setAttribute('d', `M 0 ${h} Q ${x*0.5} ${h}, ${x} ${y}`);
-        curveFill.setAttribute('d', `M 0 ${h} Q ${x*0.5} ${h}, ${x} ${y} L ${x} ${h} Z`);
-        plane.style.left = Math.min((x/w)*100, 92) + '%';
-        plane.style.bottom = Math.min(((h-y)/h)*82, 78) + '%';
-
-        checkAutoCashout('auto1', bet1Placed, betBtn1, (v)=>bet1Placed=v);
-        checkAutoCashout('auto2', bet2Placed, allBetBtn, (v)=>bet2Placed=v);
-
-        rafId = requestAnimationFrame(tick);
-      }
-      rafId = requestAnimationFrame(tick);
-    }
-
-    function checkAutoCashout(inputId, placed, btn, setter){
-      if(!placed) return;
-      const raw = document.getElementById(inputId).value.replace('x','').trim();
-      const target = parseFloat(raw);
-      if(!isNaN(target) && multiplier >= target){
-        setter(false);
-        btn.classList.remove('placed');
-        btn.innerHTML = 'Cashed out at ' + multiplier.toFixed(2) + 'x<span class="sub">Demo winnings credited</span>';
-        showToast('Cashed out at ' + multiplier.toFixed(2) + 'x (demo)');
-      }
-    }
-
-    function crashNow(){
-      phase = 'crashed';
-      cancelAnimationFrame(rafId);
-      multVal.textContent = crashPoint.toFixed(2) + 'x';
-      multVal.classList.remove('flying');
-      multVal.classList.add('crashed');
-      multStatus.textContent = 'Flew away!';
-      addHistoryPill(crashPoint);
-
-      if(bet1Placed){
-        betBtn1.innerHTML = 'Round crashed — lost stake<span class="sub">Demo balance adjusted</span>';
-      }
-      if(bet2Placed){
-        allBetBtn.innerHTML = 'Round crashed — lost stake<span class="sub">Demo balance adjusted</span>';
-      }
-
-      setTimeout(startWaiting, 2200);
-    }
-
-    document.querySelectorAll('.stake-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const target = document.getElementById(chip.dataset.target);
-        if(chip.dataset.reset){
-          target.value = '0';
-        } else {
-          const cur = parseInt(target.value) || 0;
-          target.value = cur + parseInt(chip.dataset.val);
-        }
-      });
-    });
-
-    betBtn1.addEventListener('click', () => {
-      if(phase !== 'waiting'){ showToast('Wait for the next round to place a bet'); return; }
-      bet1Placed = !bet1Placed;
-      betBtn1.classList.toggle('placed', bet1Placed);
-      betBtn1.innerHTML = bet1Placed
-        ? 'Cancel bet<span class="sub">Stake: KES ' + (document.getElementById('stake1').value || 0) + '</span>'
-        : 'Place bet<span class="sub">Stake locks in when round starts</span>';
-      if(bet1Placed) showToast('Bet placed for next round (demo)');
-    });
-
-    allBetBtn.addEventListener('click', () => {
-      if(phase !== 'waiting'){ showToast('Wait for the next round to place a bet'); return; }
-      document.getElementById('stake2').value = '10000';
-      bet2Placed = !bet2Placed;
-      allBetBtn.classList.toggle('placed', bet2Placed);
-      allBetBtn.innerHTML = bet2Placed
-        ? 'Cancel All Bet<span class="sub">Full demo balance staked</span>'
-        : 'All Bet — max stake<span class="sub">Uses your full demo balance</span>';
-      if(bet2Placed) showToast('All Bet placed — full demo balance staked');
-    });
-
-    startWaiting();
-  })();
-
-})();
-
-(function(){
-  if (!document.body.classList.contains('page-wallet')) return;
-
-  const backdrop = document.getElementById('modalBackdrop');
-  const modalTitle = document.getElementById('modalTitle');
-
-  function switchModalTab(formId){
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.form === formId));
-    document.querySelectorAll('.modal-form').forEach(f => f.classList.toggle('active', f.id === formId));
-    modalTitle.textContent = formId === 'signupForm' ? 'Create demo account' : 'Welcome back';
-  }
-  document.querySelectorAll('.modal-tab').forEach(tab => {
-    tab.addEventListener('click', () => switchModalTab(tab.dataset.form));
-  });
-
-  const openModal = (formId) => { switchModalTab(formId || 'loginForm'); backdrop.classList.add('open'); };
-  document.getElementById('loginBtn').addEventListener('click', () => openModal('loginForm'));
-  document.getElementById('signupBtn').addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('heroSignup')?.addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('modalClose').addEventListener('click', () => backdrop.classList.remove('open'));
-  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.classList.remove('open'); });
-
-  function setError(fieldId, show){
-    document.getElementById(fieldId).classList.toggle('has-error', show);
-  }
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    setError('loginEmailField', !emailOk);
-    setError('loginPasswordField', !passOk);
-    if(!emailOk || !passOk) return;
-    startFakeSession(email.split('@')[0]);
-  });
-
-  document.getElementById('signupForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value.trim();
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('signupConfirm').value;
-    const nameOk = name.length > 0;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    const confirmOk = passOk && password === confirm;
-    setError('signupNameField', !nameOk);
-    setError('signupEmailField', !emailOk);
-    setError('signupPasswordField', !passOk);
-    setError('signupConfirmField', !confirmOk);
-    if(!nameOk || !emailOk || !passOk || !confirmOk) return;
-    startFakeSession(name);
-  });
-
-  function startFakeSession(name){
-    sessionStorage.setItem('saccaia-demo-user', name);
-    backdrop.classList.remove('open');
-    applySessionUI(name);
-    showToast('Signed in as ' + name + ' — demo session only, nothing was sent to a server');
-  }
-
-  function applySessionUI(name){
-    document.getElementById('loggedOutActions').style.display = 'none';
-    document.getElementById('accountMenu').style.display = 'block';
-    document.getElementById('accountName').textContent = name;
-    document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
-  }
-
-  function clearSessionUI(){
-    document.getElementById('loggedOutActions').style.display = 'flex';
-    document.getElementById('accountMenu').style.display = 'none';
-    document.getElementById('accountDropdown').classList.remove('open');
-  }
-
-  document.getElementById('accountChip').addEventListener('click', () => {
-    document.getElementById('accountDropdown').classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    const menu = document.getElementById('accountMenu');
-    if(menu.style.display !== 'none' && !menu.contains(e.target)){
-      document.getElementById('accountDropdown').classList.remove('open');
-    }
-  });
-
-  function renderSlip(){
-    const selected = document.querySelectorAll('.odd-btn.selected');
-    const pane = document.getElementById('slipPane');
-    if(!pane) return;
-    if(selected.length === 0){
-      pane.innerHTML = '<div class="wallet-balance-lbl">Bet slip</div><div class="slip-empty" id="slipEmptyMsg">No selections yet — tap any odds button to add it here (demo only).</div>';
-      return;
-    }
-    let rows = '';
-    selected.forEach(btn => {
-      const match = btn.closest('.match');
-      const liveCard = btn.closest('.live-card');
-      let teams = 'Selection';
-      if(match) teams = match.querySelector('.match-teams').textContent.trim();
-      else if(liveCard) teams = liveCard.querySelector('.live-fixture').textContent.trim();
-      const lbl = btn.querySelector('.lbl').textContent;
-      const val = btn.querySelector('.val').textContent;
-      rows += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:13.5px;">
-        <span>${teams} <span style="color:rgba(var(--text-rgb),0.5);">(${lbl})</span></span>
-        <span style="font-family:var(--mono); font-weight:600; color:var(--gold-dim);">${val}</span>
-      </div>`;
-    });
-    pane.innerHTML = '<div class="wallet-balance-lbl">Bet slip (' + selected.length + ')</div>' + rows +
-      '<button class="btn btn-gold" style="width:100%; margin-top:16px;" id="placeSlipBtn">Place bet (demo)</button>';
-    const placeBtn = document.getElementById('placeSlipBtn');
-    if(placeBtn) placeBtn.addEventListener('click', () => showToast('This is a demo — no real bet was placed'));
-  }
-
-  document.querySelectorAll('.odd-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('selected');
-      if (btn.classList.contains('selected')) showToast('Added to bet slip (demo only)');
-      renderSlip();
-    });
-  });
-
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.wallet-tab').forEach(tabBtn => {
-    tabBtn.addEventListener('click', () => {
-      document.querySelectorAll('.wallet-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.wallet-pane').forEach(p => p.classList.remove('active'));
-      tabBtn.classList.add('active');
-      document.getElementById(tabBtn.dataset.pane).classList.add('active');
-    });
-  });
-  document.getElementById('depositBtn')?.addEventListener('click', () => showToast('This is a demo — no real deposit was made'));
-  document.getElementById('withdrawBtn')?.addEventListener('click', () => showToast('This is a demo — no real withdrawal was made'));
-
-  (function(){
-    const prizes = [
-      { label: '2x Odds', color: '#F2A93B' },
-      { label: 'Try Again', color: '#1B211F' },
-      { label: 'Free Bet', color: '#D6472E' },
-      { label: 'No Win', color: '#1B211F' },
-      { label: '5x Odds', color: '#C98A2C' },
-      { label: 'Try Again', color: '#1B211F' },
-      { label: 'Cashback', color: '#D6472E' },
-      { label: 'No Win', color: '#1B211F' }
-    ];
-    const seg = 360 / prizes.length;
-    const g = document.getElementById('wheelSegments');
-    if(!g) return;
-    prizes.forEach((p, i) => {
-      const start = i * seg;
-      const end = start + seg;
-      const x1 = 100 + 98 * Math.cos(Math.PI * (start - 90) / 180);
-      const y1 = 100 + 98 * Math.sin(Math.PI * (start - 90) / 180);
-      const x2 = 100 + 98 * Math.cos(Math.PI * (end - 90) / 180);
-      const y2 = 100 + 98 * Math.sin(Math.PI * (end - 90) / 180);
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', `M100,100 L${x1},${y1} A98,98 0 0,1 ${x2},${y2} Z`);
-      path.setAttribute('fill', p.color);
-      path.setAttribute('stroke', 'var(--surface)');
-      path.setAttribute('stroke-width', '1');
-      g.appendChild(path);
-
-      const mid = start + seg / 2;
-      const tx = 100 + 62 * Math.cos(Math.PI * (mid - 90) / 180);
-      const ty = 100 + 62 * Math.sin(Math.PI * (mid - 90) / 180);
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('x', tx);
-      text.setAttribute('y', ty);
-      text.setAttribute('fill', '#F4EFE2');
-      text.setAttribute('font-size', '9');
-      text.setAttribute('font-family', 'IBM Plex Mono, monospace');
-      text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('transform', `rotate(${mid}, ${tx}, ${ty})`);
-      text.textContent = p.label;
-      g.appendChild(text);
-    });
-
-    const wheel = document.getElementById('spinWheel');
-    const spinBtn = document.getElementById('spinBtn');
-    const resultEl = document.getElementById('spinResult');
-    let currentRotation = 0;
-    let spun = false;
-
-    spinBtn.addEventListener('click', () => {
-      if(spun) return;
-      spun = true;
-      spinBtn.disabled = true;
-      resultEl.textContent = 'Spinning…';
-
-      const winIndex = Math.floor(Math.random() * prizes.length);
-      const targetMid = winIndex * seg + seg / 2;
-      const extraSpins = 5 * 360;
-      const rotation = currentRotation + extraSpins + (360 - targetMid);
-      currentRotation = rotation;
-      wheel.style.transform = `rotate(${rotation}deg)`;
-
-      setTimeout(() => {
-        const prize = prizes[winIndex];
-        resultEl.textContent = 'Landed on: ' + prize.label + ' (demo only — no real bonus applied)';
-        showToast('Spin result: ' + prize.label + ' (demo)');
-      }, 4600);
-    });
-  })();
-
-  (function(){
-    const card = document.getElementById('liveCard');
-    if(!card) return;
-    const badge = document.getElementById('liveBadge');
-    const badgeText = document.getElementById('liveBadgeText');
-    const kickoff = new Date(card.dataset.kickoff);
-    function updateLiveState(){
-      const now = new Date();
-      if(now >= kickoff){
-        badge.classList.add('is-live');
-        badgeText.textContent = 'Live';
-      } else {
-        badge.classList.remove('is-live');
-        badgeText.textContent = 'Pre-match';
-      }
-    }
-    updateLiveState();
-    setInterval(updateLiveState, 30000);
-  })();
-
-  const themeToggle = document.getElementById('themeToggle');
-  function applyTheme(theme){
-    if(theme === 'dark'){
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeToggle.textContent = '☀️';
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      themeToggle.textContent = '🌙';
-    }
-  }
-  const savedTheme = localStorage.getItem('saccaia-theme') || 'light';
-  applyTheme(savedTheme);
-  themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('saccaia-theme', next);
-  });
-
-  let toastTimer;
-  document.getElementById('footerSubscribe')?.addEventListener('click', () => {
-    const val = document.getElementById('footerEmail').value.trim();
-    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){
-      document.getElementById('footerEmail').value = '';
-      showToast('Demo only — no email was sent or stored');
-    } else {
-      showToast('Enter a valid email to try the demo signup');
-    }
-  });
-
-  function showToast(msg){
-    const toast = document.getElementById('slipToast');
-    if(!toast) return;
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
-  }
-
-  (function(){
-    const multVal = document.getElementById('multVal');
-    const multStatus = document.getElementById('multStatus');
-    const roundCaption = document.getElementById('roundCaption');
-    const plane = document.getElementById('planeEmoji');
-    const curvePath = document.getElementById('curvePath');
-    const curveFill = document.getElementById('curveFill');
-    const historyRow = document.getElementById('avHistory');
-    const betBtn1 = document.getElementById('betBtn1');
-    const allBetBtn = document.getElementById('allBetBtn');
-    if(!multVal || !betBtn1 || !allBetBtn) return;
-
-    let roundNum = 4821;
-    let multiplier = 1.00;
-    let crashPoint = 1.0;
-    let phase = 'waiting'; // waiting | flying | crashed
-    let bet1Placed = false, bet2Placed = false;
-    let rafId;
-
-    const seedHistory = [1.24, 2.87, 1.05, 6.42, 1.98, 1.11, 3.30, 1.67, 12.05, 1.02];
-    seedHistory.forEach(v => addHistoryPill(v));
-
-    function addHistoryPill(v){
-      const pill = document.createElement('div');
-      pill.className = 'hist-pill' + (v >= 10 ? ' big' : v >= 2 ? ' win' : '');
-      pill.textContent = v.toFixed(2) + 'x';
-      historyRow.appendChild(pill);
-      historyRow.scrollLeft = historyRow.scrollWidth;
-    }
-
-    function randomCrashPoint(){
-      const r = Math.random();
-      const val = 0.98 / (1 - r * 0.97);
-      return Math.max(1.00, Math.min(val, 40));
-    }
-
-    function resetStage(){
-      curvePath.setAttribute('d', 'M 0 280 L 0 280');
-      curveFill.setAttribute('d', 'M 0 280 L 0 280 L 0 280 Z');
-      plane.style.left = '0%';
-      plane.style.bottom = '0%';
-      multVal.textContent = '1.00x';
-      multVal.classList.remove('flying','crashed');
-    }
-
-    function startWaiting(){
-      phase = 'waiting';
-      bet1Placed = false; bet2Placed = false;
-      betBtn1.textContent = '';
-      betBtn1.innerHTML = 'Place bet<span class="sub">Stake locks in when round starts</span>';
-      allBetBtn.innerHTML = 'All Bet — max stake<span class="sub">Uses your full demo balance</span>';
-      betBtn1.classList.remove('placed');
-      allBetBtn.classList.remove('placed');
-      resetStage();
-      multStatus.textContent = 'Round starting…';
-      roundCaption.textContent = 'Round #' + roundNum + ' · waiting for next round';
-      let count = 3;
-      const waitTimer = setInterval(() => {
-        multStatus.textContent = 'Starts in ' + count + '…';
-        count--;
-        if(count < 0){
-          clearInterval(waitTimer);
-          startFlight();
-        }
-      }, 700);
-    }
-
-    function startFlight(){
-      phase = 'flying';
-      roundNum++;
-      multiplier = 1.00;
-      crashPoint = randomCrashPoint();
-      multStatus.textContent = 'Flying…';
-      multVal.classList.add('flying');
-      roundCaption.textContent = 'Round #' + roundNum + ' · demo simulation';
-      const startTime = performance.now();
-
-      function tick(now){
-        const t = (now - startTime) / 1000;
-        multiplier = 1 + 0.06 * t * t + 0.15 * t;
-
-        if(multiplier >= crashPoint){
-          crashNow();
-          return;
-        }
-
-        multVal.textContent = multiplier.toFixed(2) + 'x';
-
-        const progress = Math.min(t / 6, 1); // visual progress cap
-        const w = 600, h = 280;
-        const x = progress * w;
-        const y = h - Math.min(progress * progress * h * 1.4, h - 20);
-        curvePath.setAttribute('d', `M 0 ${h} Q ${x*0.5} ${h}, ${x} ${y}`);
-        curveFill.setAttribute('d', `M 0 ${h} Q ${x*0.5} ${h}, ${x} ${y} L ${x} ${h} Z`);
-        plane.style.left = Math.min((x/w)*100, 92) + '%';
-        plane.style.bottom = Math.min(((h-y)/h)*82, 78) + '%';
-
-        checkAutoCashout('auto1', bet1Placed, betBtn1, (v)=>bet1Placed=v);
-        checkAutoCashout('auto2', bet2Placed, allBetBtn, (v)=>bet2Placed=v);
-
-        rafId = requestAnimationFrame(tick);
-      }
-      rafId = requestAnimationFrame(tick);
-    }
-
-    function checkAutoCashout(inputId, placed, btn, setter){
-      if(!placed) return;
-      const raw = document.getElementById(inputId).value.replace('x','').trim();
-      const target = parseFloat(raw);
-      if(!isNaN(target) && multiplier >= target){
-        setter(false);
-        btn.classList.remove('placed');
-        btn.innerHTML = 'Cashed out at ' + multiplier.toFixed(2) + 'x<span class="sub">Demo winnings credited</span>';
-        showToast('Cashed out at ' + multiplier.toFixed(2) + 'x (demo)');
-      }
-    }
-
-    function crashNow(){
-      phase = 'crashed';
-      cancelAnimationFrame(rafId);
-      multVal.textContent = crashPoint.toFixed(2) + 'x';
-      multVal.classList.remove('flying');
-      multVal.classList.add('crashed');
-      multStatus.textContent = 'Flew away!';
-      addHistoryPill(crashPoint);
-
-      if(bet1Placed){
-        betBtn1.innerHTML = 'Round crashed — lost stake<span class="sub">Demo balance adjusted</span>';
-      }
-      if(bet2Placed){
-        allBetBtn.innerHTML = 'Round crashed — lost stake<span class="sub">Demo balance adjusted</span>';
-      }
-
-      setTimeout(startWaiting, 2200);
-    }
-
-    document.querySelectorAll('.stake-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const target = document.getElementById(chip.dataset.target);
-        if(chip.dataset.reset){
-          target.value = '0';
-        } else {
-          const cur = parseInt(target.value) || 0;
-          target.value = cur + parseInt(chip.dataset.val);
-        }
-      });
-    });
-
-    betBtn1.addEventListener('click', () => {
-      if(phase !== 'waiting'){ showToast('Wait for the next round to place a bet'); return; }
-      bet1Placed = !bet1Placed;
-      betBtn1.classList.toggle('placed', bet1Placed);
-      betBtn1.innerHTML = bet1Placed
-        ? 'Cancel bet<span class="sub">Stake: KES ' + (document.getElementById('stake1').value || 0) + '</span>'
-        : 'Place bet<span class="sub">Stake locks in when round starts</span>';
-      if(bet1Placed) showToast('Bet placed for next round (demo)');
-    });
-
-    allBetBtn.addEventListener('click', () => {
-      if(phase !== 'waiting'){ showToast('Wait for the next round to place a bet'); return; }
-      document.getElementById('stake2').value = '10000';
-      bet2Placed = !bet2Placed;
-      allBetBtn.classList.toggle('placed', bet2Placed);
-      allBetBtn.innerHTML = bet2Placed
-        ? 'Cancel All Bet<span class="sub">Full demo balance staked</span>'
-        : 'All Bet — max stake<span class="sub">Uses your full demo balance</span>';
-      if(bet2Placed) showToast('All Bet placed — full demo balance staked');
-    });
-
-    startWaiting();
-  })();
-
-})();
-
-(function(){
   if (!document.body.classList.contains('page-index')) return;
 
-  let balance = 5000;
-  const selections = new Map();
+let currentUser = null;
+let currentCommissionRate = 20;
+let selectedStarRating = 0;
 
-  function formatKsh(n){ return 'KSh ' + Math.round(n).toLocaleString(); }
-  function updateHeaderBalance(){ document.getElementById('header-balance').textContent = formatKsh(balance); }
+if (!localStorage.getItem("acaciaRides")) localStorage.setItem("acaciaRides", JSON.stringify([]));
+if (!localStorage.getItem("acaciaFoods")) localStorage.setItem("acaciaFoods", JSON.stringify([]));
+if (!localStorage.getItem("acaciaComplaints")) localStorage.setItem("acaciaComplaints", JSON.stringify([]));
+if (!localStorage.getItem("acaciaSystemRevenue")) localStorage.setItem("acaciaSystemRevenue", "0");
+if (!localStorage.getItem("acaciaHistory")) localStorage.setItem("acaciaHistory", JSON.stringify([]));
 
-  function showToast(msg){
-    const t = document.getElementById('toast');
-    if(!t) return;
-    t.textContent = msg;
-    t.classList.remove('show');
-    void t.offsetWidth;
-    t.classList.add('show');
-    clearTimeout(showToast._timer);
-    showToast._timer = setTimeout(() => t.classList.remove('show'), 3600);
-  }
-
-  const themeToggle = document.getElementById('theme-toggle');
-  const iconMoon = document.getElementById('theme-icon-moon');
-  const iconSun = document.getElementById('theme-icon-sun');
-  themeToggle.addEventListener('click', () => {
-    const isLight = document.body.classList.toggle('light-mode');
-    iconMoon.style.display = isLight ? 'none' : 'inline';
-    iconSun.style.display = isLight ? 'inline' : 'none';
-    themeToggle.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
-  });
-
-  const promoTrack = document.getElementById('promo-track');
-  const promoDots = document.querySelectorAll('#promo-dots span');
-  let promoIndex = 0;
-  function goToPromo(i){
-    promoIndex = i;
-    const card = promoTrack.children[i];
-    if (card) promoTrack.scrollTo({ left: card.offsetLeft - 20, behavior: 'smooth' });
-    promoDots.forEach((d, idx) => d.classList.toggle('active', idx === i));
-  }
-  promoDots.forEach(dot => dot.addEventListener('click', () => goToPromo(parseInt(dot.getAttribute('data-i')))));
-  setInterval(() => { goToPromo((promoIndex + 1) % promoDots.length); }, 6000);
-
-  document.querySelectorAll('.market-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const panel = btn.nextElementSibling;
-      const isOpen = panel.classList.toggle('open');
-      btn.classList.toggle('open', isOpen);
-      btn.firstChild.textContent = isOpen ? 'Hide markets ' : '+ more markets ';
-    });
-  });
-
-  const fixtureSearch = document.getElementById('fixture-search');
-  if (fixtureSearch){
-    fixtureSearch.addEventListener('input', applyFixtureFilters);
-  }
-
-  document.querySelectorAll('.quick-stakes button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const panel = btn.closest('.slip-footer');
-      const input = panel.querySelector('input[type="number"]');
-      if (btn.hasAttribute('data-add')){
-        const add = parseFloat(btn.getAttribute('data-add'));
-        input.value = (parseFloat(input.value) || 0) + add;
-      } else if (btn.hasAttribute('data-max')){
-        input.value = Math.max(20, Math.floor(balance));
-      }
-      renderSlip();
-    });
-  });
-
-  let placedBets = [];
-  let betIdCounter = 1;
-
-  function renderMyBets(){
-    const list = document.getElementById('mybets-list');
-    if (placedBets.length === 0){
-      list.innerHTML = '<div class="mybets-empty">No bets placed yet this session.</div>';
-      return;
+try {
+    const existingFeedback = JSON.parse(localStorage.getItem("acaciaFeedback") || "[]");
+    const sampleNames = new Set(["David Kimani", "Amina Hassan", "Peter Otieno"]);
+    const genuineFeedback = existingFeedback.filter(item => !sampleNames.has(item.author));
+    if (genuineFeedback.length !== existingFeedback.length) {
+        localStorage.setItem("acaciaFeedback", JSON.stringify(genuineFeedback));
     }
-    list.innerHTML = placedBets.slice().reverse().map(bet => `
-      <div class="mybet-card">
-        <div class="row-top">
-          <span class="mybet-status ${bet.status === 'pending' ? 'pending' : 'cashed'}">${bet.status === 'pending' ? 'Pending' : 'Cashed out'}</span>
-          <span style="font-size:0.78rem; color:var(--text-muted);">#${bet.id}</span>
+} catch (_) { localStorage.setItem("acaciaFeedback", "[]"); }
+
+function getUsers() { return JSON.parse(localStorage.getItem("acaciaUsers") || "[]"); }
+function saveUsers(users) { localStorage.setItem("acaciaUsers", JSON.stringify(users)); }
+function getRevenue() { return parseFloat(localStorage.getItem("acaciaSystemRevenue") || "0"); }
+function addRevenue(amount) { localStorage.setItem("acaciaSystemRevenue", (getRevenue() + amount).toString()); }
+
+function getHistory() { return JSON.parse(localStorage.getItem("acaciaHistory") || "[]"); }
+function addHistoryItem(item) {
+    let hist = getHistory();
+    hist.unshift(item);
+    localStorage.setItem("acaciaHistory", JSON.stringify(hist));
+}
+
+function getFeedback() { return JSON.parse(localStorage.getItem("acaciaFeedback") || "[]"); }
+function saveFeedback(list) { localStorage.setItem("acaciaFeedback", JSON.stringify(list)); }
+
+function checkAutoLogin() {
+    renderPublicTestimonials();
+    const savedUser = localStorage.getItem("acaciaActiveSession");
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        if (currentUser.role === "customer") { showSection("customerDashboard"); renderCustomerDashboard(); }
+        else if (currentUser.role === "driver") { showSection("driverDashboard"); renderDriverDashboard(); }
+        else if (currentUser.role === "restaurant") { showSection("restaurantDashboard"); renderRestaurantDashboard(); }
+        else if (currentUser.role === "admin") { showSection("adminDashboard"); switchAdminTab('revenue'); }
+    }
+}
+
+function selectStarRating(score) {
+    selectedStarRating = score;
+    const stars = document.querySelectorAll("#starRatingSelector i");
+    stars.forEach((star, index) => {
+        if (index < score) star.classList.add("active");
+        else star.classList.remove("active");
+    });
+
+    const highForm = document.getElementById("highRatingForm");
+    const lowForm = document.getElementById("lowRatingForm");
+
+    if (score >= 4) {
+        highForm.style.display = "grid";
+        lowForm.style.display = "none";
+        if(currentUser) document.getElementById("feedbackAuthor").value = currentUser.name;
+    } else {
+        highForm.style.display = "none";
+        lowForm.style.display = "grid";
+        if(currentUser) document.getElementById("privateFeedbackEmail").value = currentUser.email;
+    }
+}
+
+function handleFeedbackSubmit(e) {
+    e.preventDefault();
+    if (selectedStarRating === 0) return alert("Please select a star rating between 1 and 5 stars.");
+
+    let list = getFeedback();
+    const isHigh = selectedStarRating >= 4;
+
+    if (isHigh) {
+        const author = document.getElementById("feedbackAuthor").value.trim();
+        const company = document.getElementById("feedbackCompany").value.trim() || "Verified User";
+        const text = document.getElementById("feedbackComment").value.trim();
+
+        list.push({
+            id: Date.now(),
+            stars: selectedStarRating,
+            author,
+            company,
+            text,
+            approved: true, // Auto-published (or set to false if strict admin approval is desired)
+            type: "public",
+            timestamp: Date.now()
+        });
+        saveFeedback(list);
+        alert("Thank you for your testimonial! Your review has been submitted.");
+        document.getElementById("highRatingForm").reset();
+    } else {
+        const email = document.getElementById("privateFeedbackEmail").value.trim();
+        const text = document.getElementById("privateFeedbackText").value.trim();
+
+        list.push({
+            id: Date.now(),
+            stars: selectedStarRating,
+            email,
+            text,
+            type: "private",
+            timestamp: Date.now()
+        });
+        saveFeedback(list);
+        alert("Thank you for your feedback. Our support team has received your comments and will work to improve customer service.");
+        document.getElementById("lowRatingForm").reset();
+    }
+
+    selectedStarRating = 0;
+    document.querySelectorAll("#starRatingSelector i").forEach(s => s.classList.remove("active"));
+    document.getElementById("highRatingForm").style.display = "none";
+    document.getElementById("lowRatingForm").style.display = "none";
+
+    renderPublicTestimonials();
+}
+
+function renderPublicTestimonials() {
+    const container = document.getElementById("publicTestimonialsContainer");
+    if(!container) return;
+    const publicReviews = getFeedback().filter(f => f.type === "public" && f.approved);
+
+    if(publicReviews.length === 0) {
+        container.innerHTML = `<p style="color:#64748b; text-align:center; grid-column:1/-1;">No public testimonials published yet. Be the first to leave a review!</p>`;
+        return;
+    }
+
+    container.innerHTML = publicReviews.map(r => {
+        let starsHtml = '';
+        for(let i=1; i<=5; i++) {
+            starsHtml += `<i class="fa-${i <= r.stars ? 'solid' : 'regular'} fa-star"></i>`;
+        }
+        const initial = r.author ? r.author.charAt(0).toUpperCase() : 'U';
+        return `
+            <div class="testimonial-card">
+                <div>
+                    <div class="testimonial-stars">${starsHtml}</div>
+                    <p class="testimonial-text">"${r.text}"</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">${initial}</div>
+                    <div class="testimonial-info">
+                        <h4>${r.author}</h4>
+                        <span>${r.company}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function detectUserLocation(targetInputId) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const locStr = `GPS (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+                document.getElementById(targetInputId).value = locStr;
+                updateGoogleMapIframe(locStr);
+                alert("Current GPS Location attached successfully!");
+            },
+            (error) => {
+                alert("Could not access location. Please enable location permissions in browser settings.");
+            }
+        );
+    } else {
+        alert("Geolocation is not supported by your browser.");
+    }
+}
+
+function fetchDevLocation() {
+    const display = document.getElementById("devLocationDisplay");
+    display.style.display = "block";
+    display.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Acquiring developer coordinates...';
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const accuracy = position.coords.accuracy;
+                display.innerHTML = `
+                    <strong><i class="fa-solid fa-location-dot" style="color:#16a34a;"></i> Developer Location Acquired:</strong><br>
+                    Latitude: <code>${lat}</code> | Longitude: <code>${lon}</code><br>
+                    GPS Accuracy Margin: ~${accuracy.toFixed(1)} meters<br>
+                    <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" class="maps-link" style="margin-top:8px;"><i class="fa-solid fa-map"></i> Open Developer Position in Google Maps</a>
+                `;
+            },
+            (err) => {
+                display.innerHTML = `<span style="color:#dc2626;"><i class="fa-solid fa-triangle-exclamation"></i> Location Error: ${err.message}. Please allow browser location access permissions.</span>`;
+            },
+            { enableHighAccuracy: true, timeout: 10000 }
+        );
+    } else {
+        display.innerHTML = '<span style="color:#dc2626;">Geolocation unsupported on this device.</span>';
+    }
+}
+
+function updateGoogleMapIframe(query) {
+    if (!query) return;
+    const iframe = document.getElementById("googleMapPreview");
+    if (iframe) {
+        iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+    }
+}
+
+document.querySelectorAll(".faq-question").forEach(item => {
+    item.onclick = () => {
+        const answer = item.nextElementSibling;
+        const icon = item.querySelector("i");
+        if (answer.style.display === "block") {
+            answer.style.display = "none";
+            icon.className = "fa-solid fa-plus";
+        } else {
+            document.querySelectorAll(".faq-answer").forEach(a => a.style.display = "none");
+            document.querySelectorAll(".faq-question i").forEach(i => i.className = "fa-solid fa-plus");
+            answer.style.display = "block";
+            icon.className = "fa-solid fa-minus";
+        }
+    };
+});
+
+function openAuth(mode = "login", roleDefault = "customer") {
+    document.getElementById("authOverlay").style.display = "flex";
+    showAuth(mode);
+    document.getElementById("regRole").value = roleDefault;
+}
+
+function closeAuth() { document.getElementById("authOverlay").style.display = "none"; }
+
+function showAuth(mode) {
+    document.getElementById("loginForm").style.display = mode === "login" ? "block" : "none";
+    document.getElementById("registerForm").style.display = mode === "register" ? "block" : "none";
+    document.getElementById("loginTab").className = mode === "login" ? "auth-tab active" : "auth-tab";
+    document.getElementById("registerTab").className = mode === "register" ? "auth-tab active" : "auth-tab";
+}
+
+function togglePasswordVisibility(id, btn) {
+    const input = document.getElementById(id);
+    if (input.type === "password") {
+        input.type = "text";
+        btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+    } else {
+        input.type = "password";
+        btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
+    }
+}
+
+document.getElementById("authOverlay").onclick = function(e) { if (e.target === this) closeAuth(); };
+
+function handleRegister(e) {
+    e.preventDefault();
+    const name = document.getElementById("regName").value.trim();
+    const email = document.getElementById("regEmail").value.trim().toLowerCase();
+    const role = document.getElementById("regRole").value;
+    const password = document.getElementById("regPassword").value;
+    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("Enter your name and a valid email address."); return; }
+    if (password.length < 8) { alert("Use a password with at least 8 characters."); return; }
+
+    let users = getUsers();
+    if (users.find(u => u.email === email)) {
+        alert("An account with this email address already exists.");
+        return;
+    }
+
+    users.push({ name, email, role, password, balance: 0, actionsCount: 0, status: "Online" });
+    saveUsers(users);
+    alert("Account created successfully. Your wallet starts at KES 0 until a verified payment is received.");
+    showAuth("login");
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+    const password = document.getElementById("loginPassword").value;
+
+    const users = getUsers();
+    const match = users.find(u => u.email === email && u.password === password);
+    if (!match) {
+        alert("Invalid email credentials or wrong password.");
+        return;
+    }
+
+    currentUser = match;
+    localStorage.setItem("acaciaActiveSession", JSON.stringify(currentUser));
+    closeAuth();
+    if (currentUser.role === "customer") { showSection("customerDashboard"); renderCustomerDashboard(); }
+    else if (currentUser.role === "driver") { showSection("driverDashboard"); renderDriverDashboard(); }
+    else if (currentUser.role === "restaurant") { showSection("restaurantDashboard"); renderRestaurantDashboard(); }
+}
+
+function showSection(id) {
+    document.getElementById("mainWebsite").style.display = "none";
+    document.getElementById("customerDashboard").style.display = "none";
+    document.getElementById("driverDashboard").style.display = "none";
+    document.getElementById("restaurantDashboard").style.display = "none";
+    document.getElementById("adminDashboard").style.display = "none";
+    document.getElementById(id).style.display = "block";
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem("acaciaActiveSession");
+    showSection("mainWebsite");
+    renderPublicTestimonials();
+}
+
+function toggleAIChat() {
+    const box = document.getElementById("aiChatBox");
+    box.style.display = box.style.display === "flex" ? "none" : "flex";
+}
+
+function askAIGuide(topic) {
+    const body = document.getElementById("aiChatBody");
+    if (topic === 'driver_setup') {
+        body.innerHTML += `<div class="ai-msg user">How do I set up a Driver Account?</div>`;
+        body.innerHTML += `
+            <div class="ai-msg bot">
+                <strong>Driver Setup Guide:</strong><br>
+                1. Click <b>Register</b> and select <i>Driver</i>.<br>
+                2. Log in and open <b>Vehicle Status</b> tab.<br>
+                3. Enter your vehicle model and plate number.<br>
+                4. Toggle your status to <b>Online</b> to receive live passenger and parcel jobs!<br>
+                5. Earn 80% per completed trip directly to your wallet.
+            </div>`;
+    } else if (topic === 'restaurant_setup') {
+        body.innerHTML += `<div class="ai-msg user">How do I set up a Restaurant Account?</div>`;
+        body.innerHTML += `
+            <div class="ai-msg bot">
+                <strong>Restaurant Setup Guide:</strong><br>
+                1. Click <b>Register</b> and select <i>Restaurant / Merchant</i>.<br>
+                2. Log into your merchant portal.<br>
+                3. Go to <b>Manage Menu</b> tab to review your active dishes.<br>
+                4. Incoming food orders appear on your <b>Orders</b> tab in real time.<br>
+                5. Click <i>Fulfill Order</i> to complete deliveries and receive payout.
+            </div>`;
+    } else if (topic === 'customer_setup') {
+        body.innerHTML += `<div class="ai-msg user">How do I request a ride or order food?</div>`;
+        body.innerHTML += `
+            <div class="ai-msg bot">
+                <strong>Customer User Guide:</strong><br>
+                1. Sign up as a Customer.<br>
+                2. Use the <b>Wallet & Topup</b> tab to fund your account via M-Pesa.<br>
+                3. Click <b>Request Custom Ride</b> or <b>Order Food</b>.<br>
+                4. Use <i>Use GPS</i> for instant location auto-filling.
+            </div>`;
+    }
+    body.scrollTop = body.scrollHeight;
+}
+
+function sendAIMessage() {
+    const input = document.getElementById("aiInput");
+    const val = input.value.trim();
+    if (!val) return;
+    const body = document.getElementById("aiChatBody");
+    body.innerHTML += `<div class="ai-msg user">${val}</div>`;
+    input.value = "";
+
+    const text = val.toLowerCase();
+    setTimeout(() => {
+        let reply = "I can guide you on account setup for Drivers, Restaurants, and Customers! Select an option below or ask about registration, vehicle details, or wallet top-ups.";
+        if (text.includes("driver") || text.includes("car") || text.includes("vehicle")) {
+            reply = "To set up as a Driver: Register with the 'Driver' role. After logging in, set your vehicle details in the Vehicle Status tab, then toggle your status to 'Online' to accept incoming ride requests.";
+        } else if (text.includes("restaurant") || text.includes("food") || text.includes("merchant") || text.includes("menu")) {
+            reply = "To set up a Restaurant: Register under 'Restaurant / Merchant'. Manage your catalog in 'Manage Menu', and click 'Fulfill Order' when customer requests arrive.";
+        } else if (text.includes("wallet") || text.includes("pay") || text.includes("m-pesa") || text.includes("money")) {
+            reply = "To top up your wallet: Navigate to the 'Wallet & Topup' menu in your dashboard, enter the amount in KES, and submit to deposit funds.";
+        }
+        body.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
+        body.scrollTop = body.scrollHeight;
+    }, 400);
+}
+
+function switchCustomerTab(tab) {
+    const panels = ['Main', 'Wallet', 'History', 'Complaints'];
+    panels.forEach(p => {
+        const el = document.getElementById(`customer${p}Panel`);
+        if(el) el.style.display = (p.toLowerCase() === tab) ? 'block' : 'none';
+    });
+    document.getElementById("custMainTab").className = tab === 'main' ? 'active' : '';
+    document.getElementById("custWalletTab").className = tab === 'wallet' ? 'active' : '';
+    document.getElementById("custHistoryTab").className = tab === 'history' ? 'active' : '';
+    document.getElementById("custSupportTab").className = tab === 'complaints' ? 'active' : '';
+
+    if (tab === 'history') renderCustomerHistory();
+}
+
+function renderCustomerDashboard() {
+    document.getElementById("customerName").textContent = currentUser.name;
+    document.getElementById("custWallet").textContent = "KES " + (currentUser.balance || 0).toLocaleString();
+    document.getElementById("custWalletDisplay").textContent = "KES " + (currentUser.balance || 0).toLocaleString();
+    document.getElementById("custTrips").textContent = currentUser.actionsCount || 0;
+
+    const rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]").filter(r => r.email === currentUser.email);
+    const foods = JSON.parse(localStorage.getItem("acaciaFoods") || "[]").filter(f => f.email === currentUser.email);
+    document.getElementById("custPending").textContent = rides.filter(r => !["completed","cancelled"].includes(r.status)).length + foods.length;
+
+    const activity = document.getElementById("custRecentActivity");
+    if(rides.length === 0 && foods.length === 0) {
+        activity.innerHTML = `<p style="color:#6b7280;">No active pending orders. Request a service above!</p>`;
+    } else {
+        let html = '';
+        rides.slice().sort((x, y) => (y.createdAt || y.id) - (x.createdAt || x.id)).forEach(r => {
+            const status = r.status || 'requested';
+            const statusClass = status === 'completed' ? 'completed' : status === 'cancelled' ? 'cancelled' : 'pending';
+            const closed = status === 'completed' || status === 'cancelled';
+            html += `
+            <div class="activity-item customer-item">
+                <div>
+                    <strong>${r.rideType || 'Economy'} ride: ${r.pickup} ➔ ${r.dropoff}</strong>
+                    <span>Fare: KES ${r.fare}</span><br>
+                    ${closed ? '' : `<a href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(r.pickup)}&destination=${encodeURIComponent(r.dropoff)}" target="_blank" rel="noopener" class="maps-link"><i class="fa-solid fa-map-location-dot"></i> View Route on Google Maps</a>`}
+                    ${status === 'requested' ? `<button type="button" class="ride-cancel-link" onclick="cancelRide(${r.id})">Cancel ride</button>` : ''}
+                </div>
+                <span class="status ${statusClass}">${RIDE_STATUS_LABELS[status] || status}</span>
+            </div>`;
+        });
+        foods.forEach(f => {
+            html += `<div class="activity-item customer-item"><div><strong>Food Order: ${f.item}</strong><span>Price: KES ${f.price}</span></div><span class="status pending">Kitchen Preparing</span></div>`;
+        });
+        activity.innerHTML = html;
+    }
+}
+
+function topUpWallet() {
+    const amt = parseFloat(document.getElementById("topupAmount").value);
+    if (!amt || amt < 100) return alert("Please enter a valid top-up amount (min KES 100).");
+    currentUser.balance = (currentUser.balance || 0) + amt;
+    updateUserInStorage(currentUser);
+    document.getElementById("topupAmount").value = "";
+    alert(`KES ${amt} added to your wallet!`);
+    renderCustomerDashboard();
+}
+
+const RIDE_BASE_FARES = { Economy: 180, Premium: 300, XL: 400, Motorbike: 100 };
+const RIDE_STATUS_LABELS = { requested: 'Finding driver', accepted: 'Driver assigned', arrived: 'Driver arrived', in_progress: 'Trip in progress', completed: 'Completed', cancelled: 'Cancelled' };
+
+function showRideToast(message) {
+    let toast = document.getElementById('rideToast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'rideToast';
+        toast.className = 'ride-toast';
+        toast.setAttribute('role', 'status');
+        toast.setAttribute('aria-live', 'polite');
+        document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(showRideToast._timer);
+    showRideToast._timer = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function openRideModal() {
+    if (document.getElementById('rideRequestModal')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'rideRequestModal';
+    overlay.className = 'ride-modal-overlay';
+    overlay.innerHTML = `
+        <div class="ride-modal" role="dialog" aria-modal="true" aria-labelledby="rideModalTitle">
+            <h3 id="rideModalTitle">Request a ride</h3>
+            <label for="ridePickup">Pickup</label>
+            <input id="ridePickup" type="text" value="Nairobi CBD" autocomplete="off">
+            <button type="button" class="ride-gps-btn" onclick="useCurrentLocationForRide()"><i class="fa-solid fa-location-crosshairs"></i> Use my current location</button>
+            <label for="rideDropoff">Destination</label>
+            <input id="rideDropoff" type="text" value="Westlands" autocomplete="off">
+            <div class="ride-types" role="radiogroup" aria-label="Ride category">
+                ${Object.keys(RIDE_BASE_FARES).map((type, i) => `
+                <label class="ride-type-option">
+                    <input type="radio" name="rideCategory" value="${type}" ${i === 0 ? 'checked' : ''} onchange="updateRideQuote()">
+                    <span><strong>${type}</strong><em>KES ${RIDE_BASE_FARES[type]}</em></span>
+                </label>`).join('')}
+            </div>
+            <p class="ride-quote" id="rideQuoteText"></p>
+            <div class="ride-modal-actions">
+                <button type="button" class="ride-cancel-btn" onclick="closeRideModal()">Cancel</button>
+                <button type="button" class="ride-confirm-btn" onclick="confirmRideRequest()">Request ride</button>
+            </div>
+        </div>`;
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeRideModal(); });
+    document.addEventListener('keydown', rideModalEscape);
+    document.body.appendChild(overlay);
+    updateRideQuote();
+    document.getElementById('ridePickup').focus();
+}
+
+function rideModalEscape(e) {
+    if (e.key === 'Escape') closeRideModal();
+}
+
+function closeRideModal() {
+    document.getElementById('rideRequestModal')?.remove();
+    document.removeEventListener('keydown', rideModalEscape);
+}
+
+function selectedRideType() {
+    return document.querySelector('input[name="rideCategory"]:checked')?.value || 'Economy';
+}
+
+function updateRideQuote() {
+    const fare = RIDE_BASE_FARES[selectedRideType()];
+    const balance = currentUser.balance || 0;
+    const el = document.getElementById('rideQuoteText');
+    if (!el) return;
+    el.textContent = balance >= fare
+        ? `Provisional base quote: KES ${fare}. This is held from your wallet and refunded if you cancel before a driver accepts.`
+        : `Provisional base quote: KES ${fare}. Your wallet balance (KES ${balance}) is too low, so please top up first.`;
+    el.classList.toggle('ride-quote-warning', balance < fare);
+}
+
+function useCurrentLocationForRide() {
+    if (!navigator.geolocation) return showRideToast('Location is not supported by this browser.');
+    navigator.geolocation.getCurrentPosition(
+        pos => {
+            document.getElementById('ridePickup').value = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+        },
+        () => showRideToast('Could not access your location. Type your pickup instead.')
+    );
+}
+
+function confirmRideRequest() {
+    const pickup = document.getElementById('ridePickup').value.trim();
+    const dropoff = document.getElementById('rideDropoff').value.trim();
+    if (!pickup || !dropoff) return showRideToast('Enter both a pickup and a destination.');
+    if (pickup.toLowerCase() === dropoff.toLowerCase()) return showRideToast('Pickup and destination must be different.');
+
+    const rideType = selectedRideType();
+    const fare = RIDE_BASE_FARES[rideType];
+    if ((currentUser.balance || 0) < fare) {
+        closeRideModal();
+        showRideToast('Insufficient wallet balance. Please top up your wallet.');
+        switchCustomerTab('wallet');
+        return;
+    }
+
+    currentUser.balance -= fare;
+    updateUserInStorage(currentUser);
+
+    const rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    rides.push({ id: Date.now(), customer: currentUser.name, email: currentUser.email, pickup, dropoff, fare, rideType, status: 'requested', createdAt: Date.now() });
+    localStorage.setItem("acaciaRides", JSON.stringify(rides));
+
+    closeRideModal();
+    showRideToast(`${rideType} ride requested. KES ${fare} held from your wallet.`);
+    renderCustomerDashboard();
+}
+
+function cancelRide(id) {
+    const rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    const ride = rides.find(r => r.id === id && r.email === currentUser.email);
+    if (!ride) return showRideToast('Ride not found.');
+    if ((ride.status || 'requested') !== 'requested') return showRideToast('A driver has already accepted this ride, so it can no longer be cancelled here.');
+    if (!confirm('Cancel this ride? Your fare will be refunded to your wallet.')) return;
+
+    ride.status = 'cancelled';
+    currentUser.balance = (currentUser.balance || 0) + (ride.fare || 0);
+    updateUserInStorage(currentUser);
+    localStorage.setItem("acaciaRides", JSON.stringify(rides));
+    showRideToast(`Ride cancelled. KES ${ride.fare} refunded to your wallet.`);
+    renderCustomerDashboard();
+}
+
+function openFoodModal() {
+    const item = prompt("What would you like to order?", "Deluxe Pizza Deal");
+    if (!item) return;
+    const price = 800;
+
+    if ((currentUser.balance || 0) < price) {
+        alert("Insufficient balance! Top up your wallet first.");
+        switchCustomerTab('wallet');
+        return;
+    }
+
+    currentUser.balance -= price;
+    updateUserInStorage(currentUser);
+
+    let foods = JSON.parse(localStorage.getItem("acaciaFoods") || "[]");
+    foods.push({ id: Date.now(), customer: currentUser.name, email: currentUser.email, item, price });
+    localStorage.setItem("acaciaFoods", JSON.stringify(foods));
+
+    alert(`Order sent to kitchen! KES ${price} paid.`);
+    renderCustomerDashboard();
+}
+
+function openParcelModal() {
+    const details = prompt("Enter parcel contents & delivery address:", "Documents to Kilimani");
+    if (!details) return;
+    const fare = 400;
+
+    if ((currentUser.balance || 0) < fare) {
+        alert("Insufficient balance!");
+        switchCustomerTab('wallet');
+        return;
+    }
+
+    currentUser.balance -= fare;
+    updateUserInStorage(currentUser);
+
+    let rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    rides.push({ id: Date.now(), customer: currentUser.name, email: currentUser.email, pickup: "Parcel Pickup", dropoff: details, fare });
+    localStorage.setItem("acaciaRides", JSON.stringify(rides));
+
+    alert("Courier dispatched for delivery!");
+    renderCustomerDashboard();
+}
+
+function renderCustomerHistory() {
+    const container = document.getElementById("custFullHistory");
+    const hist = getHistory().filter(h => h.userEmail === currentUser.email);
+    if(hist.length === 0) {
+        container.innerHTML = `<p style="color:#6b7280;">No completed transactions recorded yet.</p>`;
+        return;
+    }
+    container.innerHTML = hist.map(h => `
+        <div class="activity-item customer-item">
+            <div>
+                <strong>${h.title}</strong>
+                <span>Date: ${new Date(h.timestamp).toLocaleDateString()}</span>
+            </div>
+            <span class="status completed">KES ${h.amount}</span>
         </div>
-        ${bet.selections.map(s => `<div class="mybet-sel">${s.pick} <span style="color:var(--gold)">@ ${s.odds.toFixed(2)}</span></div>`).join('')}
-        <div class="mybet-nums">
-          <span>Stake <b>${formatKsh(bet.stake)}</b></span>
-          <span>Potential <b>${formatKsh(bet.potentialWin)}</b></span>
-        </div>
-        ${bet.status === 'pending' ? `<button class="btn btn-gold btn-sm" style="width:100%; margin-top:10px;" data-cashout="${bet.id}">Cash out for ${formatKsh(bet.stake * bet.totalOdds * 0.85)}</button>` : ''}
-      </div>
     `).join('');
-  }
+}
 
-  document.getElementById('mybets-list').addEventListener('click', (e) => {
-    const id = e.target.getAttribute('data-cashout');
-    if (!id) return;
-    const bet = placedBets.find(b => b.id === parseInt(id));
-    if (!bet || bet.status !== 'pending') return;
-    const cashOutValue = Math.round(bet.stake * bet.totalOdds * 0.85);
-    balance += cashOutValue;
-    bet.status = 'cashed_out';
-    updateHeaderBalance();
-    renderMyBets();
-    showToast('Cashed out for ' + formatKsh(cashOutValue));
-  });
+function submitComplaint() {
+    const text = document.getElementById("complaintText").value.trim();
+    if (!text) return alert("Please type your complaint.");
+    let complaints = JSON.parse(localStorage.getItem("acaciaComplaints") || "[]");
+    complaints.push({ id: Date.now(), user: currentUser.name, email: currentUser.email, text: text });
+    localStorage.setItem("acaciaComplaints", JSON.stringify(complaints));
+    document.getElementById("complaintText").value = "";
+    alert("Ticket submitted to Admin.");
+    switchCustomerTab('main');
+}
 
-  const mybetsOverlay = document.getElementById('mybets-overlay');
-  document.getElementById('menu-mybets').addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('account-dropdown').classList.remove('open');
-    renderMyBets();
-    mybetsOverlay.classList.add('open');
-  });
-  document.getElementById('mybets-close').addEventListener('click', () => mybetsOverlay.classList.remove('open'));
-  mybetsOverlay.addEventListener('click', (e) => { if (e.target === mybetsOverlay) mybetsOverlay.classList.remove('open'); });
+function switchDriverTab(tab) {
+    document.getElementById("driverJobsPanel").style.display = tab === 'jobs' ? 'block' : 'none';
+    document.getElementById("driverVehiclePanel").style.display = tab === 'vehicle' ? 'block' : 'none';
+    document.getElementById("driverEarningsPanel").style.display = tab === 'earnings' ? 'block' : 'none';
+    document.getElementById("drvJobsTab").className = tab === 'jobs' ? 'active' : '';
+    document.getElementById("drvVehicleTab").className = tab === 'vehicle' ? 'active' : '';
+    document.getElementById("drvEarningsTab").className = tab === 'earnings' ? 'active' : '';
+}
 
-  const rgOverlay = document.getElementById('rg-overlay');
-  document.getElementById('menu-rg').addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('account-dropdown').classList.remove('open');
-    rgOverlay.classList.add('open');
-  });
-  document.getElementById('rg-close').addEventListener('click', () => rgOverlay.classList.remove('open'));
-  rgOverlay.addEventListener('click', (e) => { if (e.target === rgOverlay) rgOverlay.classList.remove('open'); });
-  document.getElementById('rg-save').addEventListener('click', () => {
-    const val = document.getElementById('rg-deposit-limit').value;
-    if (val) showToast('Daily deposit limit set to ' + formatKsh(parseFloat(val)));
-    rgOverlay.classList.remove('open');
-  });
-  document.getElementById('rg-selfexclude').addEventListener('click', (e) => {
-    e.preventDefault();
-    rgOverlay.classList.remove('open');
-    document.getElementById('logout-btn').click();
-    showToast('You are self-excluded for 24 hours.');
-  });
+function renderDriverDashboard() {
+    document.getElementById("driverName").textContent = currentUser.name;
+    document.getElementById("driverEarnings").textContent = "KES " + (currentUser.balance || 0).toLocaleString();
+    document.getElementById("driverCount").textContent = currentUser.actionsCount || 0;
 
-  const depositOverlay = document.getElementById('deposit-overlay');
-  const depositFormWrap = document.getElementById('deposit-form-wrap');
-  const depositProcessing = document.getElementById('deposit-processing');
-  const depositProcessingText = document.getElementById('deposit-processing-text');
-  const depositConfirm = document.getElementById('deposit-confirm');
-  const depositAmountInput = document.getElementById('deposit-amount');
-  const stkPhone = document.getElementById('deposit-stk');
-  const pinDots = document.querySelectorAll('#pin-dots .dot');
-  let pinDigits = [];
-  let pendingDepositAmount = 0;
-
-  function resetPin(){
-    pinDigits = [];
-    pinDots.forEach(d => d.classList.remove('filled'));
-  }
-
-  function openDeposit(){
-    depositFormWrap.style.display = 'block';
-    depositProcessing.classList.remove('show');
-    stkPhone.classList.remove('show');
-    depositConfirm.classList.remove('show');
-    resetPin();
-    depositOverlay.classList.add('open');
-  }
-  function closeDeposit(){
-    depositOverlay.classList.remove('open');
-    stkPhone.classList.remove('show');
-    depositProcessing.classList.remove('show');
-    depositFormWrap.style.display = 'block';
-  }
-
-  document.getElementById('deposit-close').addEventListener('click', closeDeposit);
-  document.getElementById('deposit-confirm-close').addEventListener('click', closeDeposit);
-  depositOverlay.addEventListener('click', (e) => { if (e.target === depositOverlay) closeDeposit(); });
-
-  document.querySelectorAll('.header-actions .btn-ghost.btn-sm').forEach(b => b.addEventListener('click', openDeposit));
-  document.querySelectorAll('#hero-cta-auth .btn-gold').forEach(b => b.addEventListener('click', openDeposit));
-
-  document.querySelectorAll('#amount-chips button').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('#amount-chips button').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      depositAmountInput.value = chip.getAttribute('data-amount');
-    });
-  });
-
-  document.getElementById('deposit-submit').addEventListener('click', () => {
-    const amount = parseFloat(depositAmountInput.value) || 0;
-    const phone = document.getElementById('deposit-phone').value.trim();
-    if (amount < 20 || !phone) { showToast('Enter a phone number and an amount of at least KSh 20.'); return; }
-    pendingDepositAmount = amount;
-    depositFormWrap.style.display = 'none';
-    depositProcessingText.textContent = 'Sending payment request to ' + phone + '…';
-    depositProcessing.classList.add('show');
-    setTimeout(() => {
-      depositProcessing.classList.remove('show');
-      document.getElementById('stk-amount').textContent = formatKsh(pendingDepositAmount);
-      resetPin();
-      stkPhone.classList.add('show');
-    }, 1400);
-  });
-
-  function confirmStkPin(){
-    stkPhone.classList.remove('show');
-    depositProcessingText.textContent = 'Confirming M-Pesa payment…';
-    depositProcessing.classList.add('show');
-    setTimeout(() => {
-      balance += pendingDepositAmount;
-      updateHeaderBalance();
-      depositProcessing.classList.remove('show');
-      document.getElementById('deposit-confirm-title').textContent = 'Deposit successful — ' + formatKsh(pendingDepositAmount);
-      depositConfirm.classList.add('show');
-    }, 1300);
-  }
-
-  document.querySelectorAll('.keypad button[data-key]').forEach(key => {
-    key.addEventListener('click', () => {
-      if (pinDigits.length >= 4) return;
-      pinDigits.push(key.getAttribute('data-key'));
-      pinDots[pinDigits.length - 1].classList.add('filled');
-      if (pinDigits.length === 4) setTimeout(confirmStkPin, 250);
-    });
-  });
-  document.getElementById('stk-del').addEventListener('click', () => {
-    if (pinDigits.length === 0) return;
-    pinDigits.pop();
-    pinDots[pinDigits.length].classList.remove('filled');
-  });
-  document.getElementById('stk-cancel').addEventListener('click', () => {
-    stkPhone.classList.remove('show');
-    depositFormWrap.style.display = 'block';
-    showToast('M-Pesa payment cancelled.');
-  });
-
-  const withdrawOverlay = document.getElementById('withdraw-overlay');
-  const withdrawFormWrap = document.getElementById('withdraw-form-wrap');
-  const withdrawProcessing = document.getElementById('withdraw-processing');
-  const withdrawConfirm = document.getElementById('withdraw-confirm');
-  const withdrawAmountInput = document.getElementById('withdraw-amount');
-
-  function openWithdraw(){
-    document.getElementById('account-dropdown').classList.remove('open');
-    document.getElementById('withdraw-available').textContent = formatKsh(balance);
-    withdrawFormWrap.style.display = 'block';
-    withdrawProcessing.classList.remove('show');
-    withdrawConfirm.classList.remove('show');
-    document.getElementById('withdraw-insufficient').classList.remove('show');
-    withdrawOverlay.classList.add('open');
-  }
-  function closeWithdraw(){ withdrawOverlay.classList.remove('open'); }
-
-  document.getElementById('menu-withdraw').addEventListener('click', (e) => { e.preventDefault(); openWithdraw(); });
-  document.getElementById('withdraw-close').addEventListener('click', closeWithdraw);
-  document.getElementById('withdraw-confirm-close').addEventListener('click', closeWithdraw);
-  withdrawOverlay.addEventListener('click', (e) => { if (e.target === withdrawOverlay) closeWithdraw(); });
-
-  document.querySelectorAll('#withdraw-chips button').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const pct = parseFloat(chip.getAttribute('data-pct'));
-      withdrawAmountInput.value = Math.floor(balance * pct / 100);
-    });
-  });
-
-  document.getElementById('withdraw-submit').addEventListener('click', () => {
-    const amount = parseFloat(withdrawAmountInput.value) || 0;
-    const phone = document.getElementById('withdraw-phone').value.trim();
-    const insufficientEl = document.getElementById('withdraw-insufficient');
-    if (!phone || amount < 50) { showToast('Enter a phone number and an amount of at least KSh 50.'); return; }
-    if (amount > balance) { insufficientEl.classList.add('show'); return; }
-    insufficientEl.classList.remove('show');
-    withdrawFormWrap.style.display = 'none';
-    withdrawProcessing.classList.add('show');
-    setTimeout(() => {
-      balance -= amount;
-      updateHeaderBalance();
-      withdrawProcessing.classList.remove('show');
-      document.getElementById('withdraw-confirm-title').textContent = 'Withdrawal successful — ' + formatKsh(amount);
-      withdrawConfirm.classList.add('show');
-    }, 1500);
-  });
-
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const sport = tab.getAttribute('data-sport');
-      ['football','basketball','rugby','tennis'].forEach(s => {
-        const el = document.getElementById('fixture-list-' + s);
-        if (el) el.style.display = (s === sport) ? 'block' : 'none';
-      });
-      document.getElementById('league-filter').style.display = (sport === 'football') ? 'flex' : 'none';
-    });
-  });
-
-  let activeLeague = 'all';
-  function applyFixtureFilters(){
-    const q = (fixtureSearch ? fixtureSearch.value : '').trim().toLowerCase();
-    document.querySelectorAll('#fixture-list-football .fixture').forEach(row => {
-      const league = row.querySelector('.league').textContent;
-      const text = row.querySelector('.fixture-info').textContent.toLowerCase();
-      const matchesLeague = activeLeague === 'all' || league === activeLeague;
-      const matchesSearch = !q || text.includes(q);
-      row.style.display = (matchesLeague && matchesSearch) ? '' : 'none';
-    });
-  }
-  document.querySelectorAll('.league-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.league-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      activeLeague = chip.getAttribute('data-league');
-      applyFixtureFilters();
-    });
-  });
-
-  const overlay = document.getElementById('auth-overlay');
-  const modalTitle = document.getElementById('modal-title');
-  const loginForm = document.getElementById('login-form');
-  const registerForm = document.getElementById('register-form');
-  const confirmPanel = document.getElementById('form-confirm');
-  const modalTabs = document.querySelectorAll('.modal-tab');
-
-  function setMode(mode){
-    modalTabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-mode') === mode));
-    loginForm.style.display = mode === 'login' ? 'block' : 'none';
-    registerForm.style.display = mode === 'register' ? 'block' : 'none';
-    confirmPanel.classList.remove('show');
-    modalTitle.textContent = mode === 'login' ? 'Log in' : 'Create your account';
-  }
-
-  function openModal(mode){ setMode(mode); overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-  function closeModal(){ overlay.classList.remove('open'); document.body.style.overflow = ''; }
-
-  document.getElementById('open-login').addEventListener('click', () => openModal('login'));
-  document.getElementById('open-register').addEventListener('click', () => openModal('register'));
-  document.getElementById('hero-register').addEventListener('click', () => openModal('register'));
-  document.getElementById('modal-close').addEventListener('click', closeModal);
-  document.getElementById('confirm-close').addEventListener('click', closeModal);
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
-  modalTabs.forEach(tab => tab.addEventListener('click', () => setMode(tab.getAttribute('data-mode'))));
-  document.querySelectorAll('[data-switch-to]').forEach(link => {
-    link.addEventListener('click', (e) => { e.preventDefault(); setMode(link.getAttribute('data-switch-to')); });
-  });
-
-  function logIn(){
-    document.body.classList.add('logged-in');
-    updateHeaderBalance();
-    loginForm.style.display = 'none';
-    registerForm.style.display = 'none';
-    confirmPanel.classList.add('show');
-  }
-
-  loginForm.addEventListener('submit', (e) => { e.preventDefault(); logIn(); });
-  registerForm.addEventListener('submit', (e) => { e.preventDefault(); logIn(); });
-
-  const accountBtn = document.getElementById('account-btn');
-  const accountDropdown = document.getElementById('account-dropdown');
-  accountBtn.addEventListener('click', (e) => { e.stopPropagation(); accountDropdown.classList.toggle('open'); });
-  document.addEventListener('click', () => accountDropdown.classList.remove('open'));
-
-  document.getElementById('logout-btn').addEventListener('click', () => {
-    document.body.classList.remove('logged-in');
-    document.body.classList.remove('has-selections');
-    accountDropdown.classList.remove('open');
-    selections.clear();
-    renderSlip();
-    showToast('Logged out');
-  });
-
-  function keyFor(match, pick){ return match + '::' + pick; }
-
-  function renderSlip(){
-    const items = Array.from(selections.values());
-    const count = items.length;
-    const totalOdds = items.length ? items.reduce((acc, s) => acc * s.odds, 1) : 0;
-
-    const buildRow = (s) => `
-      <div class="slip-item">
-        <div class="slip-item-top">
-          <div><div class="slip-item-top match">${s.match}</div><div class="slip-item-pick">${s.pick}</div></div>
-          <div style="display:flex; align-items:flex-start; gap:10px;">
-            <span class="slip-item-odds">${s.odds.toFixed(2)}</span>
-            <button class="remove-btn" data-key="${s.key}" aria-label="Remove selection">✕</button>
-          </div>
+    const container = document.getElementById("rideRequestsContainer");
+    const rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    if(rides.length === 0) {
+        container.innerHTML = `<p style='color:#6b7280;'>No available ride/parcel requests in your area.</p>`;
+        return;
+    }
+    const rate = currentCommissionRate / 100;
+    container.innerHTML = rides.filter(ride => !['completed','cancelled'].includes(ride.status) && (!ride.driverEmail || ride.driverEmail === currentUser.email)).map(ride => `
+        <div class="activity-item driver-item">
+            <div>
+                <strong>${ride.pickup} ➔ ${ride.dropoff}</strong>
+                <span>Passenger: ${ride.customer} · ${ride.rideType || 'Economy'} · ${ride.status || 'requested'}</span><br>
+                <a href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(ride.pickup)}&destination=${encodeURIComponent(ride.dropoff)}" target="_blank" class="maps-link"><i class="fa-solid fa-map-location-dot"></i> Open route</a>
+            </div>
+            <div>
+                <span style="font-weight:bold; color:#10b981; margin-right:15px;">Est. payout: KES ${Math.round(ride.fare * (1 - rate))}</span>
+                ${ride.status && ride.status !== 'requested' ? `<button class="request-btn" onclick="advanceRide(${ride.id})">${ride.status === 'accepted' ? 'Mark arrived' : ride.status === 'arrived' ? 'Start trip' : 'Complete trip'}</button>` : `<button class="request-btn" onclick="acceptRide(${ride.id}, ${ride.fare})">Accept ride</button>`}
+            </div>
         </div>
-      </div>`;
-    const rowsHtml = items.map(buildRow).join('');
+    `).join('') || `<p style='color:#6b7280;'>No available rides.</p>`;
+}
 
-    document.getElementById('desktop-items').innerHTML = rowsHtml;
-    document.getElementById('mobile-items').innerHTML = rowsHtml;
+function acceptRide(id, grossFare) {
+    const rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    const ride = rides.find(r => r.id === id);
+    if (!ride || (ride.status && ride.status !== 'requested')) return alert('This ride is no longer available.');
+    ride.status = 'accepted';
+    ride.driver = currentUser.name;
+    ride.driverEmail = currentUser.email;
+    ride.acceptedAt = Date.now();
+    localStorage.setItem("acaciaRides", JSON.stringify(rides));
+    alert('Ride accepted. Contact the rider and proceed to pickup.');
+    renderDriverDashboard();
+}
 
-    document.getElementById('desktop-empty').style.display = count ? 'none' : 'block';
-    document.getElementById('desktop-footer').style.display = count ? 'block' : 'none';
-    const dCount = document.getElementById('desktop-count');
-    dCount.style.display = count ? 'inline-block' : 'none';
-    dCount.textContent = count;
-
-    document.getElementById('mobile-footer').style.display = count ? 'block' : 'none';
-    const isLoggedIn = document.body.classList.contains('logged-in');
-    document.getElementById('mobile-bar').classList.toggle('force-hidden', !(isLoggedIn && count > 0));
-    document.body.classList.toggle('has-selections', isLoggedIn && count > 0);
-    document.getElementById('mobile-bar-text').textContent = count + (count === 1 ? ' selection' : ' selections');
-
-    const stakeD = parseFloat(document.getElementById('desktop-stake').value) || 0;
-    const stakeM = parseFloat(document.getElementById('mobile-stake').value) || 0;
-    document.getElementById('desktop-total-odds').textContent = totalOdds ? totalOdds.toFixed(2) : '0.00';
-    document.getElementById('mobile-total-odds').textContent = totalOdds ? totalOdds.toFixed(2) : '0.00';
-    document.getElementById('desktop-potential').textContent = formatKsh(stakeD * totalOdds);
-    document.getElementById('mobile-potential').textContent = formatKsh(stakeM * totalOdds);
-    document.getElementById('mobile-bar-odds').textContent = count ? 'Total ' + totalOdds.toFixed(2) + ' →' : 'View slip →';
-
-    const dInsufficient = stakeD > balance && count > 0;
-    const mInsufficient = stakeM > balance && count > 0;
-    document.getElementById('desktop-insufficient').classList.toggle('show', dInsufficient);
-    document.getElementById('mobile-insufficient').classList.toggle('show', mInsufficient);
-    document.getElementById('desktop-place').disabled = count === 0 || dInsufficient;
-    document.getElementById('mobile-place').disabled = count === 0 || mInsufficient;
-
-    document.querySelectorAll('.odds-row[data-match] .odds-btn[data-pick]').forEach(btn => {
-      const row = btn.closest('.odds-row');
-      const match = row.getAttribute('data-match');
-      const pick = btn.getAttribute('data-pick');
-      btn.classList.toggle('selected', selections.has(keyFor(match, pick)));
-    });
-  }
-
-  document.querySelectorAll('.odds-row[data-match] .odds-btn[data-odds]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (!document.body.classList.contains('logged-in')) { openModal('login'); return; }
-      const row = btn.closest('.odds-row');
-      const match = row.getAttribute('data-match');
-      const pick = btn.getAttribute('data-pick');
-      const odds = parseFloat(btn.getAttribute('data-odds'));
-      const k = keyFor(match, pick);
-      const label = btn.querySelector('.label').textContent;
-
-      Array.from(selections.keys()).forEach(existingKey => {
-        if (existingKey.startsWith(match + '::')) selections.delete(existingKey);
-      });
-      if (!selections.has(k)) selections.set(k, { key: k, match, pick: match + ' — ' + label, odds });
-      renderSlip();
-    });
-  });
-
-  document.addEventListener('click', (e) => {
-    if (e.target.matches('.remove-btn')) { selections.delete(e.target.getAttribute('data-key')); renderSlip(); }
-  });
-
-  ['desktop-stake', 'mobile-stake'].forEach(id => document.getElementById(id).addEventListener('input', renderSlip));
-
-  function placeBet(stakeInputId){
-    const stake = parseFloat(document.getElementById(stakeInputId).value) || 0;
-    const totalOdds = Array.from(selections.values()).reduce((acc, s) => acc * s.odds, 1);
-    if (selections.size === 0 || stake > balance || stake <= 0) return;
-    balance -= stake;
-    updateHeaderBalance();
-    placedBets.push({
-      id: betIdCounter++,
-      selections: Array.from(selections.values()).map(s => ({ pick: s.pick, odds: s.odds })),
-      stake, totalOdds, potentialWin: stake * totalOdds, status: 'pending'
-    });
-    showToast('Bet placed — ' + formatKsh(stake) + ' staked, potential win ' + formatKsh(stake * totalOdds));
-    selections.clear();
-    renderSlip();
-    document.getElementById('slip-overlay').classList.remove('open');
-  }
-  document.getElementById('desktop-place').addEventListener('click', () => placeBet('desktop-stake'));
-  document.getElementById('mobile-place').addEventListener('click', () => placeBet('mobile-stake'));
-
-  const slipOverlay = document.getElementById('slip-overlay');
-  document.getElementById('mobile-bar').addEventListener('click', () => slipOverlay.classList.add('open'));
-  document.getElementById('slip-close').addEventListener('click', () => slipOverlay.classList.remove('open'));
-  slipOverlay.addEventListener('click', (e) => { if (e.target === slipOverlay) slipOverlay.classList.remove('open'); });
-
-  renderSlip();
-
-})();
-
-(function(){
-  if (!document.body.classList.contains('page-saccaia-trading-demo')) return;
-
-  const orderBackdrop = document.getElementById('orderModalBackdrop');
-  const orderModalTitle = document.getElementById('orderModalTitle');
-  const modalPrice = document.getElementById('modalPrice');
-  const openOrderModal = (title, price) => {
-    orderModalTitle.textContent = title;
-    if(price) modalPrice.textContent = price;
-    orderBackdrop.classList.add('open');
-  };
-  document.getElementById('orderModalClose').addEventListener('click', () => orderBackdrop.classList.remove('open'));
-  orderBackdrop.addEventListener('click', (e) => { if (e.target === orderBackdrop) orderBackdrop.classList.remove('open'); });
-  let pendingOrder = null;
-  document.getElementById('orderModalSubmit').addEventListener('click', () => {
-    orderBackdrop.classList.remove('open');
-    if(pendingOrder){
-      addOrder(pendingOrder);
-      pendingOrder = null;
+function advanceRide(id) {
+    const rides = JSON.parse(localStorage.getItem('acaciaRides') || '[]');
+    const ride = rides.find(r => r.id === id && r.driverEmail === currentUser.email);
+    if (!ride) return alert('Ride not found for this driver.');
+    const next = { accepted: 'arrived', arrived: 'in_progress', in_progress: 'completed' };
+    const previous = ride.status;
+    ride.status = next[previous];
+    ride.updatedAt = Date.now();
+    if (ride.status === 'completed') {
+        const rate = currentCommissionRate / 100;
+        const driverCut = ride.fare * (1 - rate);
+        currentUser.balance = (currentUser.balance || 0) + driverCut;
+        currentUser.actionsCount = (currentUser.actionsCount || 0) + 1;
+        updateUserInStorage(currentUser);
+        addRevenue(ride.fare * rate);
+        addHistoryItem({ userEmail: ride.email, title: `Completed Trip: ${ride.pickup} to ${ride.dropoff}`, amount: ride.fare, timestamp: Date.now() });
+        alert(`Trip completed. KES ${Math.round(driverCut)} recorded as estimated driver earnings.`);
     }
-    showToast('This is a demo — no order was placed');
-  });
+    localStorage.setItem('acaciaRides', JSON.stringify(rides));
+    renderDriverDashboard();
+}
 
-  document.querySelectorAll('.trade-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const row = btn.closest('.mt-row');
-      const name = row.dataset.name;
-      const price = row.dataset.price;
-      const side = btn.classList.contains('buy') ? 'Buy' : 'Sell';
-      pendingOrder = { name, price, side };
-      openOrderModal(side + ' ' + name, price);
-    });
-  });
+function toggleDriverStatus(val) {
+    currentUser.status = val;
+    updateUserInStorage(currentUser);
+    alert(`Status changed to ${val}`);
+}
 
-  const backdrop = document.getElementById('modalBackdrop');
-  const modalTitle = document.getElementById('modalTitle');
+function switchRestaurantTab(tab) {
+    document.getElementById("rstOrdersPanel").style.display = tab === 'orders' ? 'block' : 'none';
+    document.getElementById("rstMenuPanel").style.display = tab === 'menu' ? 'block' : 'none';
+    document.getElementById("rstEarningsPanel").style.display = tab === 'earnings' ? 'block' : 'none';
+    document.getElementById("rstOrdersTab").className = tab === 'orders' ? 'active' : '';
+    document.getElementById("rstMenuTab").className = tab === 'menu' ? 'active' : '';
+    document.getElementById("rstEarningsTab").className = tab === 'earnings' ? 'active' : '';
+}
 
-  function switchModalTab(formId){
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.form === formId));
-    document.querySelectorAll('.modal-form').forEach(f => f.classList.toggle('active', f.id === formId));
-    modalTitle.textContent = formId === 'signupForm' ? 'Create demo account' : 'Welcome back';
-  }
-  document.querySelectorAll('.modal-tab').forEach(tab => {
-    tab.addEventListener('click', () => switchModalTab(tab.dataset.form));
-  });
+function renderRestaurantDashboard() {
+    document.getElementById("restaurantName").textContent = currentUser.name;
+    document.getElementById("restEarnings").textContent = "KES " + (currentUser.balance || 0).toLocaleString();
+    document.getElementById("restCount").textContent = currentUser.actionsCount || 0;
 
-  const openModal = (formId) => { switchModalTab(formId || 'loginForm'); backdrop.classList.add('open'); };
-  document.getElementById('loginBtn').addEventListener('click', () => openModal('loginForm'));
-  document.getElementById('signupBtn').addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('heroSignup').addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('modalClose').addEventListener('click', () => backdrop.classList.remove('open'));
-  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.classList.remove('open'); });
-
-  function setError(fieldId, show){
-    document.getElementById(fieldId).classList.toggle('has-error', show);
-  }
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    setError('loginEmailField', !emailOk);
-    setError('loginPasswordField', !passOk);
-    if(!emailOk || !passOk) return;
-    startFakeSession(email.split('@')[0]);
-  });
-
-  document.getElementById('signupForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value.trim();
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('signupConfirm').value;
-    const nameOk = name.length > 0;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    const confirmOk = passOk && password === confirm;
-    setError('signupNameField', !nameOk);
-    setError('signupEmailField', !emailOk);
-    setError('signupPasswordField', !passOk);
-    setError('signupConfirmField', !confirmOk);
-    if(!nameOk || !emailOk || !passOk || !confirmOk) return;
-    startFakeSession(name);
-  });
-
-  function startFakeSession(name){
-    sessionStorage.setItem('saccaia-demo-user', name);
-    backdrop.classList.remove('open');
-    applySessionUI(name);
-    showToast('Signed in as ' + name + ' — demo session only, nothing was sent to a server');
-  }
-
-  function applySessionUI(name){
-    document.getElementById('loggedOutActions').style.display = 'none';
-    document.getElementById('accountMenu').style.display = 'block';
-    document.getElementById('accountName').textContent = name;
-    document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
-  }
-
-  function clearSessionUI(){
-    document.getElementById('loggedOutActions').style.display = 'flex';
-    document.getElementById('accountMenu').style.display = 'none';
-    document.getElementById('accountDropdown').classList.remove('open');
-  }
-
-  document.getElementById('accountChip').addEventListener('click', () => {
-    document.getElementById('accountDropdown').classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    const menu = document.getElementById('accountMenu');
-    if(menu.style.display !== 'none' && !menu.contains(e.target)){
-      document.getElementById('accountDropdown').classList.remove('open');
+    const container = document.getElementById("foodRequestsContainer");
+    const foods = JSON.parse(localStorage.getItem("acaciaFoods") || "[]");
+    if(foods.length === 0) {
+        container.innerHTML = `<p style='color:#6b7280;'>No pending food orders.</p>`;
+        return;
     }
-  });
+    const rate = currentCommissionRate / 100;
+    container.innerHTML = foods.map(food => `
+        <div class="activity-item restaurant-item">
+            <div><strong>${food.item}</strong><span>Customer: ${food.customer}</span></div>
+            <div>
+                <span style="font-weight:bold; color:#f59e0b; margin-right:15px;">Payout: KES ${food.price * (1 - rate)}</span>
+                <button class="request-btn" style="background:#f59e0b;" onclick="acceptFood(${food.id}, ${food.price})">Fulfill Order</button>
+            </div>
+        </div>
+    `).join('');
+}
 
-  function addOrder(order){
-    const pane = document.getElementById('ordersPane');
-    const emptyMsg = document.getElementById('ordersEmptyMsg');
-    if(emptyMsg) emptyMsg.remove();
-    let list = pane.querySelector('.order-list');
-    if(!list){
-      list = document.createElement('div');
-      list.className = 'order-list';
-      pane.appendChild(list);
+function acceptFood(id, grossPrice) {
+    let foods = JSON.parse(localStorage.getItem("acaciaFoods") || "[]");
+    const food = foods.find(f => f.id === id);
+    foods = foods.filter(f => f.id !== id);
+    localStorage.setItem("acaciaFoods", JSON.stringify(foods));
+
+    const rate = currentCommissionRate / 100;
+    const restCut = grossPrice * (1 - rate);
+    const systemCut = grossPrice * rate;
+
+    currentUser.balance = (currentUser.balance || 0) + restCut;
+    currentUser.actionsCount = (currentUser.actionsCount || 0) + 1;
+    updateUserInStorage(currentUser);
+    addRevenue(systemCut);
+
+    if (food) {
+        addHistoryItem({
+            userEmail: food.email,
+            title: `Food Order Delivered: ${food.item}`,
+            amount: grossPrice,
+            timestamp: Date.now()
+        });
     }
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:13.5px;';
-    row.innerHTML = `<span>${order.side} ${order.name}</span><span style="font-family:var(--mono); font-weight:600; color:var(--gold-dim);">${order.price}</span>`;
-    list.appendChild(row);
-  }
 
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
+    alert(`Order dispatched! KES ${restCut} added to store sales.`);
+    renderRestaurantDashboard();
+}
+
+function switchAdminTab(panelName) {
+    const panels = ['revenue', 'customers', 'drivers', 'restaurants', 'feedback', 'support', 'settings'];
+    panels.forEach(p => {
+        document.getElementById(`admin${p.charAt(0).toUpperCase() + p.slice(1)}Panel`).style.display = (p === panelName) ? 'block' : 'none';
+        document.getElementById(`admin${p.charAt(0).toUpperCase() + p.slice(1)}Tab`).className = (p === panelName) ? 'active' : '';
     });
-  });
 
-  document.querySelectorAll('.tf-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.tf-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-    });
-  });
+    if (panelName === 'revenue') {
+        document.getElementById("adminRevenue").textContent = "KES " + getRevenue().toLocaleString();
+        document.getElementById("adminTotalTxCount").textContent = getHistory().length;
+    }
+    if (panelName === 'customers') {
+        const list = document.getElementById("adminCustomersList");
+        const match = getUsers().filter(u => u.role === 'customer');
+        document.getElementById("adminTotalCustomersCount").textContent = match.length;
+        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8;">No registered customers.</p>`;
+        else list.innerHTML = match.map(u => `<div class="activity-item customer-item"><div><strong>${u.name}</strong><span>${u.email} | Wallet: KES ${u.balance || 0}</span></div><span class="status completed">Active</span></div>`).join('');
+    }
+    if (panelName === 'drivers') {
+        const list = document.getElementById("adminDriversList");
+        const match = getUsers().filter(u => u.role === 'driver');
+        document.getElementById("adminTotalDriversCount").textContent = match.length;
+        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8;">No drivers registered.</p>`;
+        else list.innerHTML = match.map(u => `<div class="activity-item driver-item"><div><strong>${u.name}</strong><span>${u.email} | Earnings: KES ${u.balance || 0}</span></div><span class="status completed">${u.status || 'Online'}</span></div>`).join('');
+    }
+    if (panelName === 'restaurants') {
+        const list = document.getElementById("adminRestaurantsList");
+        const match = getUsers().filter(u => u.role === 'restaurant');
+        document.getElementById("adminTotalRestaurantsCount").textContent = match.length;
+        if(match.length === 0) list.innerHTML = `<p style="color:#94a3b8;">No merchants registered.</p>`;
+        else list.innerHTML = match.map(u => `<div class="activity-item restaurant-item"><div><strong>${u.name}</strong><span>${u.email} | Sales: KES ${u.balance || 0}</span></div><span class="status completed">Store Open</span></div>`).join('');
+    }
+    if (panelName === 'feedback') {
+        const pubList = document.getElementById("adminTestimonialsModerationList");
+        const privList = document.getElementById("adminPrivateFeedbackList");
+        const allFb = getFeedback();
 
-  document.querySelectorAll('.wallet-tab').forEach(tabBtn => {
-    tabBtn.addEventListener('click', () => {
-      document.querySelectorAll('.wallet-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.wallet-pane').forEach(p => p.classList.remove('active'));
-      tabBtn.classList.add('active');
-      document.getElementById(tabBtn.dataset.pane).classList.add('active');
-    });
-  });
-  document.getElementById('depositBtn').addEventListener('click', () => showToast('This is a demo — no real deposit was made'));
-  document.getElementById('withdrawBtn').addEventListener('click', () => showToast('This is a demo — no real withdrawal was made'));
+        const pubItems = allFb.filter(f => f.type === 'public');
+        const privItems = allFb.filter(f => f.type === 'private');
 
-  (function(){
-    const toggle = document.getElementById('liveToggle');
-    const toggleLabel = document.getElementById('liveToggleLabel');
-    if(!toggle) return;
-    let live = false;
-    let tickTimer = null;
+        if(pubItems.length === 0) pubList.innerHTML = `<p style="color:#64748b;">No public testimonials submitted.</p>`;
+        else pubList.innerHTML = pubItems.map(item => `
+            <div class="activity-item">
+                <div>
+                    <strong>${item.author} (${item.stars} Stars) - ${item.approved ? '<span style="color:#16a34a;">Published</span>' : '<span style="color:#eab308;">Pending Approval</span>'}</strong>
+                    <p style="font-size:13px; color:#475569;">"${item.text}"</p>
+                </div>
+                <div>
+                    <button class="request-btn" onclick="toggleTestimonialApproval(${item.id})">${item.approved ? 'Unpublish' : 'Approve'}</button>
+                    <button class="request-btn danger" onclick="deleteFeedbackItem(${item.id})">Delete</button>
+                </div>
+            </div>
+        `).join('');
 
-    function tick(){
-      document.querySelectorAll('.mt-row').forEach(row => {
-        const base = parseFloat(row.dataset.price);
-        const wiggle = base * (Math.random() - 0.5) * 0.0015; // small simulated move
-        const newPrice = base + wiggle;
-        row.dataset.price = newPrice.toFixed(newPrice < 10 ? 4 : 2);
-
-        const priceEl = row.querySelector('.mt-val');
-        const changeEl = row.querySelector('.mt-change');
-        if(priceEl) priceEl.textContent = Number(newPrice).toLocaleString(undefined, {minimumFractionDigits: newPrice < 10 ? 4 : 2, maximumFractionDigits: newPrice < 10 ? 4 : 2});
-
-        if(changeEl){
-          const pct = (wiggle / base * 100);
-          const up = pct >= 0;
-          changeEl.textContent = (up ? '+' : '') + pct.toFixed(2) + '%';
-          changeEl.classList.toggle('up', up);
-          changeEl.classList.toggle('down', !up);
-          row.classList.remove('flash-up', 'flash-down');
-          void row.offsetWidth;
-          row.classList.add(up ? 'flash-up' : 'flash-down');
+        if(privItems.length === 0) privList.innerHTML = `<p style="color:#64748b;">No low rating service feedback submitted.</p>`;
+        else privList.innerHTML = privItems.map(item => `
+            <div class="activity-item" style="border-left-color:#e11d48;">
+                <div>
+                    <strong>From: ${item.email} (${item.stars} Stars)</strong>
+                    <p style="font-size:13px; color:#475569;">"${item.text}"</p>
+                </div>
+                <button class="request-btn danger" onclick="deleteFeedbackItem(${item.id})">Dismiss</button>
+            </div>
+        `).join('');
+    }
+    if (panelName === 'support') {
+        const container = document.getElementById("adminComplaintsList");
+        const complaints = JSON.parse(localStorage.getItem("acaciaComplaints") || "[]");
+        if(complaints.length === 0) {
+            container.innerHTML = `<p style="color:#6b7280;">No open complaints in inbox.</p>`;
+            return;
         }
-      });
+        container.innerHTML = complaints.map(c => `
+            <div class="activity-item" style="border-left-color: #ef4444;">
+                <div>
+                    <strong>From: ${c.user} (${c.email})</strong>
+                    <p style="margin-top:6px; color:#475569;">"${c.text}"</p>
+                </div>
+                <button class="request-btn danger" onclick="resolveComplaint(${c.id})">Resolve Ticket</button>
+            </div>
+        `).join('');
     }
+}
 
-    toggle.addEventListener('click', () => {
-      live = !live;
-      toggle.classList.toggle('on', live);
-      toggleLabel.textContent = 'Live ticks: ' + (live ? 'on (simulated)' : 'off');
-      if(live){
-        tickTimer = setInterval(tick, 2000);
-      } else {
-        clearInterval(tickTimer);
-      }
-    });
-  })();
-
-  const themeToggle = document.getElementById('themeToggle');
-  function applyTheme(theme){
-    if(theme === 'dark'){
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeToggle.textContent = '☀️';
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      themeToggle.textContent = '🌙';
+function toggleTestimonialApproval(id) {
+    let list = getFeedback();
+    const idx = list.findIndex(item => item.id === id);
+    if(idx !== -1) {
+        list[idx].approved = !list[idx].approved;
+        saveFeedback(list);
+        switchAdminTab('feedback');
+        renderPublicTestimonials();
     }
-  }
-  const savedTheme = localStorage.getItem('saccaia-theme') || 'light';
-  applyTheme(savedTheme);
-  themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('saccaia-theme', next);
-  });
+}
 
-  let toastTimer;
-  function showToast(msg){
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
-  }
+function deleteFeedbackItem(id) {
+    let list = getFeedback().filter(item => item.id !== id);
+    saveFeedback(list);
+    switchAdminTab('feedback');
+    renderPublicTestimonials();
+}
 
-})();
+function saveCommissionRate() {
+    const val = parseFloat(document.getElementById("commissionRate").value);
+    if(isNaN(val) || val < 0 || val > 100) return alert("Enter valid commission %");
+    currentCommissionRate = val;
+    alert(`System platform fee rate updated to ${currentCommissionRate}%`);
+}
 
-(function(){
-  if (!document.body.classList.contains('page-trading-how')) return;
+function resolveComplaint(id) {
+    let complaints = JSON.parse(localStorage.getItem("acaciaComplaints") || "[]");
+    complaints = complaints.filter(c => c.id !== id);
+    localStorage.setItem("acaciaComplaints", JSON.stringify(complaints));
+    alert("Support ticket marked resolved!");
+    switchAdminTab('support');
+}
 
-  const orderBackdrop = document.getElementById('orderModalBackdrop');
-  const orderModalTitle = document.getElementById('orderModalTitle');
-  const modalPrice = document.getElementById('modalPrice');
-  const openOrderModal = (title, price) => {
-    orderModalTitle.textContent = title;
-    if(price) modalPrice.textContent = price;
-    orderBackdrop.classList.add('open');
-  };
-  document.getElementById('orderModalClose').addEventListener('click', () => orderBackdrop.classList.remove('open'));
-  orderBackdrop.addEventListener('click', (e) => { if (e.target === orderBackdrop) orderBackdrop.classList.remove('open'); });
-  let pendingOrder = null;
-  document.getElementById('orderModalSubmit').addEventListener('click', () => {
-    orderBackdrop.classList.remove('open');
-    if(pendingOrder){
-      addOrder(pendingOrder);
-      pendingOrder = null;
+function submitGuestRideRequest() {
+    const pickup = document.getElementById("heroPickup").value.trim();
+    const dropoff = document.getElementById("heroDropoff").value.trim();
+    if (!pickup || !dropoff) return alert("Please specify both pickup and destination locations.");
+    let rides = JSON.parse(localStorage.getItem("acaciaRides") || "[]");
+    const rideType = document.getElementById('heroRideType')?.value || 'Economy';
+    const base = { Economy: 180, Premium: 300, XL: 400, Motorbike: 100 }[rideType] || 180;
+    const fare = base; // provisional base quote; distance-based pricing requires a routing API
+    rides.push({ id: Date.now(), customer: "Guest Rider", email: "guest@acacia.com", pickup, dropoff, fare, rideType, status: 'requested', createdAt: Date.now() });
+    localStorage.setItem("acaciaRides", JSON.stringify(rides));
+    alert(`Ride request saved. Provisional ${rideType} base quote: KES ${fare}. Driver dispatch is not live until the shared backend is configured.`);
+    document.getElementById("heroPickup").value = "";
+    document.getElementById("heroDropoff").value = "";
+}
+
+function updateUserInStorage(userObj) {
+    let users = getUsers();
+    const idx = users.findIndex(u => u.email === userObj.email);
+    if(idx !== -1) { users[idx] = userObj; saveUsers(users); }
+    if (currentUser && currentUser.email === userObj.email) {
+        localStorage.setItem("acaciaActiveSession", JSON.stringify(userObj));
     }
-    showToast('This is a demo — no order was placed');
-  });
-
-  document.querySelectorAll('.trade-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const row = btn.closest('.mt-row');
-      const name = row.dataset.name;
-      const price = row.dataset.price;
-      const side = btn.classList.contains('buy') ? 'Buy' : 'Sell';
-      pendingOrder = { name, price, side };
-      openOrderModal(side + ' ' + name, price);
-    });
-  });
-
-  const backdrop = document.getElementById('modalBackdrop');
-  const modalTitle = document.getElementById('modalTitle');
-
-  function switchModalTab(formId){
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.form === formId));
-    document.querySelectorAll('.modal-form').forEach(f => f.classList.toggle('active', f.id === formId));
-    modalTitle.textContent = formId === 'signupForm' ? 'Create demo account' : 'Welcome back';
-  }
-  document.querySelectorAll('.modal-tab').forEach(tab => {
-    tab.addEventListener('click', () => switchModalTab(tab.dataset.form));
-  });
-
-  const openModal = (formId) => { switchModalTab(formId || 'loginForm'); backdrop.classList.add('open'); };
-  document.getElementById('loginBtn').addEventListener('click', () => openModal('loginForm'));
-  document.getElementById('signupBtn').addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('heroSignup')?.addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('modalClose').addEventListener('click', () => backdrop.classList.remove('open'));
-  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.classList.remove('open'); });
-
-  function setError(fieldId, show){
-    document.getElementById(fieldId).classList.toggle('has-error', show);
-  }
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    setError('loginEmailField', !emailOk);
-    setError('loginPasswordField', !passOk);
-    if(!emailOk || !passOk) return;
-    startFakeSession(email.split('@')[0]);
-  });
-
-  document.getElementById('signupForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value.trim();
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('signupConfirm').value;
-    const nameOk = name.length > 0;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    const confirmOk = passOk && password === confirm;
-    setError('signupNameField', !nameOk);
-    setError('signupEmailField', !emailOk);
-    setError('signupPasswordField', !passOk);
-    setError('signupConfirmField', !confirmOk);
-    if(!nameOk || !emailOk || !passOk || !confirmOk) return;
-    startFakeSession(name);
-  });
-
-  function startFakeSession(name){
-    sessionStorage.setItem('saccaia-demo-user', name);
-    backdrop.classList.remove('open');
-    applySessionUI(name);
-    showToast('Signed in as ' + name + ' — demo session only, nothing was sent to a server');
-  }
-
-  function applySessionUI(name){
-    document.getElementById('loggedOutActions').style.display = 'none';
-    document.getElementById('accountMenu').style.display = 'block';
-    document.getElementById('accountName').textContent = name;
-    document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
-  }
-
-  function clearSessionUI(){
-    document.getElementById('loggedOutActions').style.display = 'flex';
-    document.getElementById('accountMenu').style.display = 'none';
-    document.getElementById('accountDropdown').classList.remove('open');
-  }
-
-  document.getElementById('accountChip').addEventListener('click', () => {
-    document.getElementById('accountDropdown').classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    const menu = document.getElementById('accountMenu');
-    if(menu.style.display !== 'none' && !menu.contains(e.target)){
-      document.getElementById('accountDropdown').classList.remove('open');
-    }
-  });
-
-  function addOrder(order){
-    const pane = document.getElementById('ordersPane');
-    if(!pane){
-      showToast(order.side + ' ' + order.name + ' saved — view it on the Wallet page (demo)');
-      return;
-    }
-    const emptyMsg = document.getElementById('ordersEmptyMsg');
-    if(emptyMsg) emptyMsg.remove();
-    let list = pane.querySelector('.order-list');
-    if(!list){
-      list = document.createElement('div');
-      list.className = 'order-list';
-      pane.appendChild(list);
-    }
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:13.5px;';
-    row.innerHTML = `<span>${order.side} ${order.name}</span><span style="font-family:var(--mono); font-weight:600; color:var(--gold-dim);">${order.price}</span>`;
-    list.appendChild(row);
-  }
-
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.tf-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.tf-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.wallet-tab').forEach(tabBtn => {
-    tabBtn.addEventListener('click', () => {
-      document.querySelectorAll('.wallet-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.wallet-pane').forEach(p => p.classList.remove('active'));
-      tabBtn.classList.add('active');
-      document.getElementById(tabBtn.dataset.pane).classList.add('active');
-    });
-  });
-  document.getElementById('depositBtn')?.addEventListener('click', () => showToast('This is a demo — no real deposit was made'));
-  document.getElementById('withdrawBtn')?.addEventListener('click', () => showToast('This is a demo — no real withdrawal was made'));
-
-  (function(){
-    const toggle = document.getElementById('liveToggle');
-    const toggleLabel = document.getElementById('liveToggleLabel');
-    if(!toggle) return;
-    let live = false;
-    let tickTimer = null;
-
-    function tick(){
-      document.querySelectorAll('.mt-row').forEach(row => {
-        const base = parseFloat(row.dataset.price);
-        const wiggle = base * (Math.random() - 0.5) * 0.0015; // small simulated move
-        const newPrice = base + wiggle;
-        row.dataset.price = newPrice.toFixed(newPrice < 10 ? 4 : 2);
-
-        const priceEl = row.querySelector('.mt-val');
-        const changeEl = row.querySelector('.mt-change');
-        if(priceEl) priceEl.textContent = Number(newPrice).toLocaleString(undefined, {minimumFractionDigits: newPrice < 10 ? 4 : 2, maximumFractionDigits: newPrice < 10 ? 4 : 2});
-
-        if(changeEl){
-          const pct = (wiggle / base * 100);
-          const up = pct >= 0;
-          changeEl.textContent = (up ? '+' : '') + pct.toFixed(2) + '%';
-          changeEl.classList.toggle('up', up);
-          changeEl.classList.toggle('down', !up);
-          row.classList.remove('flash-up', 'flash-down');
-          void row.offsetWidth;
-          row.classList.add(up ? 'flash-up' : 'flash-down');
-        }
-      });
-    }
-
-    toggle.addEventListener('click', () => {
-      live = !live;
-      toggle.classList.toggle('on', live);
-      toggleLabel.textContent = 'Live ticks: ' + (live ? 'on (simulated)' : 'off');
-      if(live){
-        tickTimer = setInterval(tick, 2000);
-      } else {
-        clearInterval(tickTimer);
-      }
-    });
-  })();
-
-  const themeToggle = document.getElementById('themeToggle');
-  function applyTheme(theme){
-    if(theme === 'dark'){
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeToggle.textContent = '☀️';
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      themeToggle.textContent = '🌙';
-    }
-  }
-  const savedTheme = localStorage.getItem('saccaia-theme') || 'light';
-  applyTheme(savedTheme);
-  themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('saccaia-theme', next);
-  });
-
-  let toastTimer;
-  document.getElementById('footerSubscribe')?.addEventListener('click', () => {
-    const val = document.getElementById('footerEmail').value.trim();
-    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){
-      document.getElementById('footerEmail').value = '';
-      showToast('Demo only — no email was sent or stored');
-    } else {
-      showToast('Enter a valid email to try the demo signup');
-    }
-  });
-
-  function showToast(msg){
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
-  }
-
-})();
-
-(function(){
-  if (!document.body.classList.contains('page-trading-markets')) return;
-
-  const orderBackdrop = document.getElementById('orderModalBackdrop');
-  const orderModalTitle = document.getElementById('orderModalTitle');
-  const modalPrice = document.getElementById('modalPrice');
-  const openOrderModal = (title, price) => {
-    orderModalTitle.textContent = title;
-    if(price) modalPrice.textContent = price;
-    orderBackdrop.classList.add('open');
-  };
-  document.getElementById('orderModalClose').addEventListener('click', () => orderBackdrop.classList.remove('open'));
-  orderBackdrop.addEventListener('click', (e) => { if (e.target === orderBackdrop) orderBackdrop.classList.remove('open'); });
-  let pendingOrder = null;
-  document.getElementById('orderModalSubmit').addEventListener('click', () => {
-    orderBackdrop.classList.remove('open');
-    if(pendingOrder){
-      addOrder(pendingOrder);
-      pendingOrder = null;
-    }
-    showToast('This is a demo — no order was placed');
-  });
-
-  document.querySelectorAll('.trade-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const row = btn.closest('.mt-row');
-      const name = row.dataset.name;
-      const price = row.dataset.price;
-      const side = btn.classList.contains('buy') ? 'Buy' : 'Sell';
-      pendingOrder = { name, price, side };
-      openOrderModal(side + ' ' + name, price);
-    });
-  });
-
-  const backdrop = document.getElementById('modalBackdrop');
-  const modalTitle = document.getElementById('modalTitle');
-
-  function switchModalTab(formId){
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.form === formId));
-    document.querySelectorAll('.modal-form').forEach(f => f.classList.toggle('active', f.id === formId));
-    modalTitle.textContent = formId === 'signupForm' ? 'Create demo account' : 'Welcome back';
-  }
-  document.querySelectorAll('.modal-tab').forEach(tab => {
-    tab.addEventListener('click', () => switchModalTab(tab.dataset.form));
-  });
-
-  const openModal = (formId) => { switchModalTab(formId || 'loginForm'); backdrop.classList.add('open'); };
-  document.getElementById('loginBtn').addEventListener('click', () => openModal('loginForm'));
-  document.getElementById('signupBtn').addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('heroSignup')?.addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('modalClose').addEventListener('click', () => backdrop.classList.remove('open'));
-  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.classList.remove('open'); });
-
-  function setError(fieldId, show){
-    document.getElementById(fieldId).classList.toggle('has-error', show);
-  }
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    setError('loginEmailField', !emailOk);
-    setError('loginPasswordField', !passOk);
-    if(!emailOk || !passOk) return;
-    startFakeSession(email.split('@')[0]);
-  });
-
-  document.getElementById('signupForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value.trim();
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('signupConfirm').value;
-    const nameOk = name.length > 0;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    const confirmOk = passOk && password === confirm;
-    setError('signupNameField', !nameOk);
-    setError('signupEmailField', !emailOk);
-    setError('signupPasswordField', !passOk);
-    setError('signupConfirmField', !confirmOk);
-    if(!nameOk || !emailOk || !passOk || !confirmOk) return;
-    startFakeSession(name);
-  });
-
-  function startFakeSession(name){
-    sessionStorage.setItem('saccaia-demo-user', name);
-    backdrop.classList.remove('open');
-    applySessionUI(name);
-    showToast('Signed in as ' + name + ' — demo session only, nothing was sent to a server');
-  }
-
-  function applySessionUI(name){
-    document.getElementById('loggedOutActions').style.display = 'none';
-    document.getElementById('accountMenu').style.display = 'block';
-    document.getElementById('accountName').textContent = name;
-    document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
-  }
-
-  function clearSessionUI(){
-    document.getElementById('loggedOutActions').style.display = 'flex';
-    document.getElementById('accountMenu').style.display = 'none';
-    document.getElementById('accountDropdown').classList.remove('open');
-  }
-
-  document.getElementById('accountChip').addEventListener('click', () => {
-    document.getElementById('accountDropdown').classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    const menu = document.getElementById('accountMenu');
-    if(menu.style.display !== 'none' && !menu.contains(e.target)){
-      document.getElementById('accountDropdown').classList.remove('open');
-    }
-  });
-
-  function addOrder(order){
-    const pane = document.getElementById('ordersPane');
-    if(!pane){
-      showToast(order.side + ' ' + order.name + ' saved — view it on the Wallet page (demo)');
-      return;
-    }
-    const emptyMsg = document.getElementById('ordersEmptyMsg');
-    if(emptyMsg) emptyMsg.remove();
-    let list = pane.querySelector('.order-list');
-    if(!list){
-      list = document.createElement('div');
-      list.className = 'order-list';
-      pane.appendChild(list);
-    }
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:13.5px;';
-    row.innerHTML = `<span>${order.side} ${order.name}</span><span style="font-family:var(--mono); font-weight:600; color:var(--gold-dim);">${order.price}</span>`;
-    list.appendChild(row);
-  }
-
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.tf-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.tf-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.wallet-tab').forEach(tabBtn => {
-    tabBtn.addEventListener('click', () => {
-      document.querySelectorAll('.wallet-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.wallet-pane').forEach(p => p.classList.remove('active'));
-      tabBtn.classList.add('active');
-      document.getElementById(tabBtn.dataset.pane).classList.add('active');
-    });
-  });
-  document.getElementById('depositBtn')?.addEventListener('click', () => showToast('This is a demo — no real deposit was made'));
-  document.getElementById('withdrawBtn')?.addEventListener('click', () => showToast('This is a demo — no real withdrawal was made'));
-
-  (function(){
-    const toggle = document.getElementById('liveToggle');
-    const toggleLabel = document.getElementById('liveToggleLabel');
-    if(!toggle) return;
-    let live = false;
-    let tickTimer = null;
-
-    function tick(){
-      document.querySelectorAll('.mt-row').forEach(row => {
-        const base = parseFloat(row.dataset.price);
-        const wiggle = base * (Math.random() - 0.5) * 0.0015; // small simulated move
-        const newPrice = base + wiggle;
-        row.dataset.price = newPrice.toFixed(newPrice < 10 ? 4 : 2);
-
-        const priceEl = row.querySelector('.mt-val');
-        const changeEl = row.querySelector('.mt-change');
-        if(priceEl) priceEl.textContent = Number(newPrice).toLocaleString(undefined, {minimumFractionDigits: newPrice < 10 ? 4 : 2, maximumFractionDigits: newPrice < 10 ? 4 : 2});
-
-        if(changeEl){
-          const pct = (wiggle / base * 100);
-          const up = pct >= 0;
-          changeEl.textContent = (up ? '+' : '') + pct.toFixed(2) + '%';
-          changeEl.classList.toggle('up', up);
-          changeEl.classList.toggle('down', !up);
-          row.classList.remove('flash-up', 'flash-down');
-          void row.offsetWidth;
-          row.classList.add(up ? 'flash-up' : 'flash-down');
-        }
-      });
-    }
-
-    toggle.addEventListener('click', () => {
-      live = !live;
-      toggle.classList.toggle('on', live);
-      toggleLabel.textContent = 'Live ticks: ' + (live ? 'on (simulated)' : 'off');
-      if(live){
-        tickTimer = setInterval(tick, 2000);
-      } else {
-        clearInterval(tickTimer);
-      }
-    });
-  })();
-
-  const themeToggle = document.getElementById('themeToggle');
-  function applyTheme(theme){
-    if(theme === 'dark'){
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeToggle.textContent = '☀️';
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      themeToggle.textContent = '🌙';
-    }
-  }
-  const savedTheme = localStorage.getItem('saccaia-theme') || 'light';
-  applyTheme(savedTheme);
-  themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('saccaia-theme', next);
-  });
-
-  let toastTimer;
-  document.getElementById('footerSubscribe')?.addEventListener('click', () => {
-    const val = document.getElementById('footerEmail').value.trim();
-    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){
-      document.getElementById('footerEmail').value = '';
-      showToast('Demo only — no email was sent or stored');
-    } else {
-      showToast('Enter a valid email to try the demo signup');
-    }
-  });
-
-  function showToast(msg){
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
-  }
-
-})();
-
-(function(){
-  if (!document.body.classList.contains('page-trading-wallet')) return;
-
-  const orderBackdrop = document.getElementById('orderModalBackdrop');
-  const orderModalTitle = document.getElementById('orderModalTitle');
-  const modalPrice = document.getElementById('modalPrice');
-  const openOrderModal = (title, price) => {
-    orderModalTitle.textContent = title;
-    if(price) modalPrice.textContent = price;
-    orderBackdrop.classList.add('open');
-  };
-  document.getElementById('orderModalClose').addEventListener('click', () => orderBackdrop.classList.remove('open'));
-  orderBackdrop.addEventListener('click', (e) => { if (e.target === orderBackdrop) orderBackdrop.classList.remove('open'); });
-  let pendingOrder = null;
-  document.getElementById('orderModalSubmit').addEventListener('click', () => {
-    orderBackdrop.classList.remove('open');
-    if(pendingOrder){
-      addOrder(pendingOrder);
-      pendingOrder = null;
-    }
-    showToast('This is a demo — no order was placed');
-  });
-
-  document.querySelectorAll('.trade-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const row = btn.closest('.mt-row');
-      const name = row.dataset.name;
-      const price = row.dataset.price;
-      const side = btn.classList.contains('buy') ? 'Buy' : 'Sell';
-      pendingOrder = { name, price, side };
-      openOrderModal(side + ' ' + name, price);
-    });
-  });
-
-  const backdrop = document.getElementById('modalBackdrop');
-  const modalTitle = document.getElementById('modalTitle');
-
-  function switchModalTab(formId){
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.form === formId));
-    document.querySelectorAll('.modal-form').forEach(f => f.classList.toggle('active', f.id === formId));
-    modalTitle.textContent = formId === 'signupForm' ? 'Create demo account' : 'Welcome back';
-  }
-  document.querySelectorAll('.modal-tab').forEach(tab => {
-    tab.addEventListener('click', () => switchModalTab(tab.dataset.form));
-  });
-
-  const openModal = (formId) => { switchModalTab(formId || 'loginForm'); backdrop.classList.add('open'); };
-  document.getElementById('loginBtn').addEventListener('click', () => openModal('loginForm'));
-  document.getElementById('signupBtn').addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('heroSignup')?.addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('modalClose').addEventListener('click', () => backdrop.classList.remove('open'));
-  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.classList.remove('open'); });
-
-  function setError(fieldId, show){
-    document.getElementById(fieldId).classList.toggle('has-error', show);
-  }
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    setError('loginEmailField', !emailOk);
-    setError('loginPasswordField', !passOk);
-    if(!emailOk || !passOk) return;
-    startFakeSession(email.split('@')[0]);
-  });
-
-  document.getElementById('signupForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value.trim();
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('signupConfirm').value;
-    const nameOk = name.length > 0;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    const confirmOk = passOk && password === confirm;
-    setError('signupNameField', !nameOk);
-    setError('signupEmailField', !emailOk);
-    setError('signupPasswordField', !passOk);
-    setError('signupConfirmField', !confirmOk);
-    if(!nameOk || !emailOk || !passOk || !confirmOk) return;
-    startFakeSession(name);
-  });
-
-  function startFakeSession(name){
-    sessionStorage.setItem('saccaia-demo-user', name);
-    backdrop.classList.remove('open');
-    applySessionUI(name);
-    showToast('Signed in as ' + name + ' — demo session only, nothing was sent to a server');
-  }
-
-  function applySessionUI(name){
-    document.getElementById('loggedOutActions').style.display = 'none';
-    document.getElementById('accountMenu').style.display = 'block';
-    document.getElementById('accountName').textContent = name;
-    document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
-  }
-
-  function clearSessionUI(){
-    document.getElementById('loggedOutActions').style.display = 'flex';
-    document.getElementById('accountMenu').style.display = 'none';
-    document.getElementById('accountDropdown').classList.remove('open');
-  }
-
-  document.getElementById('accountChip').addEventListener('click', () => {
-    document.getElementById('accountDropdown').classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    const menu = document.getElementById('accountMenu');
-    if(menu.style.display !== 'none' && !menu.contains(e.target)){
-      document.getElementById('accountDropdown').classList.remove('open');
-    }
-  });
-
-  function addOrder(order){
-    const pane = document.getElementById('ordersPane');
-    if(!pane){
-      showToast(order.side + ' ' + order.name + ' saved — view it on the Wallet page (demo)');
-      return;
-    }
-    const emptyMsg = document.getElementById('ordersEmptyMsg');
-    if(emptyMsg) emptyMsg.remove();
-    let list = pane.querySelector('.order-list');
-    if(!list){
-      list = document.createElement('div');
-      list.className = 'order-list';
-      pane.appendChild(list);
-    }
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:13.5px;';
-    row.innerHTML = `<span>${order.side} ${order.name}</span><span style="font-family:var(--mono); font-weight:600; color:var(--gold-dim);">${order.price}</span>`;
-    list.appendChild(row);
-  }
-
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.tf-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.tf-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.wallet-tab').forEach(tabBtn => {
-    tabBtn.addEventListener('click', () => {
-      document.querySelectorAll('.wallet-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.wallet-pane').forEach(p => p.classList.remove('active'));
-      tabBtn.classList.add('active');
-      document.getElementById(tabBtn.dataset.pane).classList.add('active');
-    });
-  });
-  document.getElementById('depositBtn')?.addEventListener('click', () => showToast('This is a demo — no real deposit was made'));
-  document.getElementById('withdrawBtn')?.addEventListener('click', () => showToast('This is a demo — no real withdrawal was made'));
-
-  (function(){
-    const toggle = document.getElementById('liveToggle');
-    const toggleLabel = document.getElementById('liveToggleLabel');
-    if(!toggle) return;
-    let live = false;
-    let tickTimer = null;
-
-    function tick(){
-      document.querySelectorAll('.mt-row').forEach(row => {
-        const base = parseFloat(row.dataset.price);
-        const wiggle = base * (Math.random() - 0.5) * 0.0015; // small simulated move
-        const newPrice = base + wiggle;
-        row.dataset.price = newPrice.toFixed(newPrice < 10 ? 4 : 2);
-
-        const priceEl = row.querySelector('.mt-val');
-        const changeEl = row.querySelector('.mt-change');
-        if(priceEl) priceEl.textContent = Number(newPrice).toLocaleString(undefined, {minimumFractionDigits: newPrice < 10 ? 4 : 2, maximumFractionDigits: newPrice < 10 ? 4 : 2});
-
-        if(changeEl){
-          const pct = (wiggle / base * 100);
-          const up = pct >= 0;
-          changeEl.textContent = (up ? '+' : '') + pct.toFixed(2) + '%';
-          changeEl.classList.toggle('up', up);
-          changeEl.classList.toggle('down', !up);
-          row.classList.remove('flash-up', 'flash-down');
-          void row.offsetWidth;
-          row.classList.add(up ? 'flash-up' : 'flash-down');
-        }
-      });
-    }
-
-    toggle.addEventListener('click', () => {
-      live = !live;
-      toggle.classList.toggle('on', live);
-      toggleLabel.textContent = 'Live ticks: ' + (live ? 'on (simulated)' : 'off');
-      if(live){
-        tickTimer = setInterval(tick, 2000);
-      } else {
-        clearInterval(tickTimer);
-      }
-    });
-  })();
-
-  const themeToggle = document.getElementById('themeToggle');
-  function applyTheme(theme){
-    if(theme === 'dark'){
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeToggle.textContent = '☀️';
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      themeToggle.textContent = '🌙';
-    }
-  }
-  const savedTheme = localStorage.getItem('saccaia-theme') || 'light';
-  applyTheme(savedTheme);
-  themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('saccaia-theme', next);
-  });
-
-  let toastTimer;
-  document.getElementById('footerSubscribe')?.addEventListener('click', () => {
-    const val = document.getElementById('footerEmail').value.trim();
-    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){
-      document.getElementById('footerEmail').value = '';
-      showToast('Demo only — no email was sent or stored');
-    } else {
-      showToast('Enter a valid email to try the demo signup');
-    }
-  });
-
-  function showToast(msg){
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
-  }
-
-})();
-
-(function(){
-  if (!document.body.classList.contains('page-trading')) return;
-
-  const orderBackdrop = document.getElementById('orderModalBackdrop');
-  const orderModalTitle = document.getElementById('orderModalTitle');
-  const modalPrice = document.getElementById('modalPrice');
-  const openOrderModal = (title, price) => {
-    orderModalTitle.textContent = title;
-    if(price) modalPrice.textContent = price;
-    orderBackdrop.classList.add('open');
-  };
-  document.getElementById('orderModalClose').addEventListener('click', () => orderBackdrop.classList.remove('open'));
-  orderBackdrop.addEventListener('click', (e) => { if (e.target === orderBackdrop) orderBackdrop.classList.remove('open'); });
-  let pendingOrder = null;
-  document.getElementById('orderModalSubmit').addEventListener('click', () => {
-    orderBackdrop.classList.remove('open');
-    if(pendingOrder){
-      addOrder(pendingOrder);
-      pendingOrder = null;
-    }
-    showToast('This is a demo — no order was placed');
-  });
-
-  document.querySelectorAll('.trade-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const row = btn.closest('.mt-row');
-      const name = row.dataset.name;
-      const price = row.dataset.price;
-      const side = btn.classList.contains('buy') ? 'Buy' : 'Sell';
-      pendingOrder = { name, price, side };
-      openOrderModal(side + ' ' + name, price);
-    });
-  });
-
-  const backdrop = document.getElementById('modalBackdrop');
-  const modalTitle = document.getElementById('modalTitle');
-
-  function switchModalTab(formId){
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.form === formId));
-    document.querySelectorAll('.modal-form').forEach(f => f.classList.toggle('active', f.id === formId));
-    modalTitle.textContent = formId === 'signupForm' ? 'Create demo account' : 'Welcome back';
-  }
-  document.querySelectorAll('.modal-tab').forEach(tab => {
-    tab.addEventListener('click', () => switchModalTab(tab.dataset.form));
-  });
-
-  const openModal = (formId) => { switchModalTab(formId || 'loginForm'); backdrop.classList.add('open'); };
-  document.getElementById('loginBtn').addEventListener('click', () => openModal('loginForm'));
-  document.getElementById('signupBtn').addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('heroSignup')?.addEventListener('click', () => openModal('signupForm'));
-  document.getElementById('modalClose').addEventListener('click', () => backdrop.classList.remove('open'));
-  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.classList.remove('open'); });
-
-  function setError(fieldId, show){
-    document.getElementById(fieldId).classList.toggle('has-error', show);
-  }
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    setError('loginEmailField', !emailOk);
-    setError('loginPasswordField', !passOk);
-    if(!emailOk || !passOk) return;
-    startFakeSession(email.split('@')[0]);
-  });
-
-  document.getElementById('signupForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value.trim();
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('signupConfirm').value;
-    const nameOk = name.length > 0;
-    const emailOk = isValidEmail(email);
-    const passOk = password.length >= 6;
-    const confirmOk = passOk && password === confirm;
-    setError('signupNameField', !nameOk);
-    setError('signupEmailField', !emailOk);
-    setError('signupPasswordField', !passOk);
-    setError('signupConfirmField', !confirmOk);
-    if(!nameOk || !emailOk || !passOk || !confirmOk) return;
-    startFakeSession(name);
-  });
-
-  function startFakeSession(name){
-    sessionStorage.setItem('saccaia-demo-user', name);
-    backdrop.classList.remove('open');
-    applySessionUI(name);
-    showToast('Signed in as ' + name + ' — demo session only, nothing was sent to a server');
-  }
-
-  function applySessionUI(name){
-    document.getElementById('loggedOutActions').style.display = 'none';
-    document.getElementById('accountMenu').style.display = 'block';
-    document.getElementById('accountName').textContent = name;
-    document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
-  }
-
-  function clearSessionUI(){
-    document.getElementById('loggedOutActions').style.display = 'flex';
-    document.getElementById('accountMenu').style.display = 'none';
-    document.getElementById('accountDropdown').classList.remove('open');
-  }
-
-  document.getElementById('accountChip').addEventListener('click', () => {
-    document.getElementById('accountDropdown').classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    const menu = document.getElementById('accountMenu');
-    if(menu.style.display !== 'none' && !menu.contains(e.target)){
-      document.getElementById('accountDropdown').classList.remove('open');
-    }
-  });
-
-  function addOrder(order){
-    const pane = document.getElementById('ordersPane');
-    if(!pane){
-      showToast(order.side + ' ' + order.name + ' saved — view it on the Wallet page (demo)');
-      return;
-    }
-    const emptyMsg = document.getElementById('ordersEmptyMsg');
-    if(emptyMsg) emptyMsg.remove();
-    let list = pane.querySelector('.order-list');
-    if(!list){
-      list = document.createElement('div');
-      list.className = 'order-list';
-      pane.appendChild(list);
-    }
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:13.5px;';
-    row.innerHTML = `<span>${order.side} ${order.name}</span><span style="font-family:var(--mono); font-weight:600; color:var(--gold-dim);">${order.price}</span>`;
-    list.appendChild(row);
-  }
-
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.tf-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.tf-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-    });
-  });
-
-  document.querySelectorAll('.wallet-tab').forEach(tabBtn => {
-    tabBtn.addEventListener('click', () => {
-      document.querySelectorAll('.wallet-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.wallet-pane').forEach(p => p.classList.remove('active'));
-      tabBtn.classList.add('active');
-      document.getElementById(tabBtn.dataset.pane).classList.add('active');
-    });
-  });
-  document.getElementById('depositBtn')?.addEventListener('click', () => showToast('This is a demo — no real deposit was made'));
-  document.getElementById('withdrawBtn')?.addEventListener('click', () => showToast('This is a demo — no real withdrawal was made'));
-
-  (function(){
-    const toggle = document.getElementById('liveToggle');
-    const toggleLabel = document.getElementById('liveToggleLabel');
-    if(!toggle) return;
-    let live = false;
-    let tickTimer = null;
-
-    function tick(){
-      document.querySelectorAll('.mt-row').forEach(row => {
-        const base = parseFloat(row.dataset.price);
-        const wiggle = base * (Math.random() - 0.5) * 0.0015; // small simulated move
-        const newPrice = base + wiggle;
-        row.dataset.price = newPrice.toFixed(newPrice < 10 ? 4 : 2);
-
-        const priceEl = row.querySelector('.mt-val');
-        const changeEl = row.querySelector('.mt-change');
-        if(priceEl) priceEl.textContent = Number(newPrice).toLocaleString(undefined, {minimumFractionDigits: newPrice < 10 ? 4 : 2, maximumFractionDigits: newPrice < 10 ? 4 : 2});
-
-        if(changeEl){
-          const pct = (wiggle / base * 100);
-          const up = pct >= 0;
-          changeEl.textContent = (up ? '+' : '') + pct.toFixed(2) + '%';
-          changeEl.classList.toggle('up', up);
-          changeEl.classList.toggle('down', !up);
-          row.classList.remove('flash-up', 'flash-down');
-          void row.offsetWidth;
-          row.classList.add(up ? 'flash-up' : 'flash-down');
-        }
-      });
-    }
-
-    toggle.addEventListener('click', () => {
-      live = !live;
-      toggle.classList.toggle('on', live);
-      toggleLabel.textContent = 'Live ticks: ' + (live ? 'on (simulated)' : 'off');
-      if(live){
-        tickTimer = setInterval(tick, 2000);
-      } else {
-        clearInterval(tickTimer);
-      }
-    });
-  })();
-
-  const themeToggle = document.getElementById('themeToggle');
-  function applyTheme(theme){
-    if(theme === 'dark'){
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeToggle.textContent = '☀️';
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      themeToggle.textContent = '🌙';
-    }
-  }
-  const savedTheme = localStorage.getItem('saccaia-theme') || 'light';
-  applyTheme(savedTheme);
-  themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('saccaia-theme', next);
-  });
-
-  let toastTimer;
-  document.getElementById('footerSubscribe')?.addEventListener('click', () => {
-    const val = document.getElementById('footerEmail').value.trim();
-    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){
-      document.getElementById('footerEmail').value = '';
-      showToast('Demo only — no email was sent or stored');
-    } else {
-      showToast('Enter a valid email to try the demo signup');
-    }
-  });
-
-  function showToast(msg){
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
-  }
+}
 
 })();
