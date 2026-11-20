@@ -40,6 +40,7 @@ function checkAutoLogin() {
     const savedUser = localStorage.getItem("acaciaActiveSession");
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
+        if (window.AcaciaAppearance) AcaciaAppearance.setUser(currentUser.email);
         if (currentUser.role === "customer") { showSection("customerDashboard"); renderCustomerDashboard(); }
         else if (currentUser.role === "driver") { showSection("driverDashboard"); renderDriverDashboard(); }
         else if (currentUser.role === "restaurant") { showSection("restaurantDashboard"); renderRestaurantDashboard(); }
@@ -296,6 +297,7 @@ function handleLogin(e) {
     }
 
     currentUser = match;
+    if (window.AcaciaAppearance) AcaciaAppearance.setUser(currentUser.email);
     localStorage.setItem("acaciaActiveSession", JSON.stringify(currentUser));
     closeAuth();
     if (currentUser.role === "customer") { showSection("customerDashboard"); renderCustomerDashboard(); }
@@ -314,6 +316,7 @@ function showSection(id) {
 
 function logout() {
     currentUser = null;
+    if (window.AcaciaAppearance) AcaciaAppearance.clearUser();
     localStorage.removeItem("acaciaActiveSession");
     showSection("mainWebsite");
     renderPublicTestimonials();
